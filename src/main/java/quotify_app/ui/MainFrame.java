@@ -31,7 +31,7 @@ public class MainFrame extends JFrame {
         mainPanel.add(userProfilePanel, "UserProfile");
 
         add(mainPanel);
-        setTitle("User Management");
+        setTitle("Quotify");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

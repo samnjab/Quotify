@@ -32,7 +32,13 @@ public class LoggedInPanel extends JPanel {
         profileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainFrame.showPanel("UserProfile");  // Navigate to User Profile screen
+                if (userController.getCurrentUser().equals("guest")) {
+                    // Show dialog if user is a guest
+                    showGuestAccessDialog();
+                } else {
+                    // Navigate to User Profile screen if user is not a guest
+                    mainFrame.showPanel("UserProfile");
+                }
             }
         });
 
@@ -90,8 +96,34 @@ public class LoggedInPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    // Method to refresh the welcome message if needed
     public void updateWelcomeMessage() {
         welcomeLabel.setText("Welcome, " + userController.getCurrentUser() + "!");
+    }
+
+    // Method to show dialog for guest users trying to access the profile
+    private void showGuestAccessDialog() {
+        int option = JOptionPane.showOptionDialog(
+                this,
+                "To access the profile, you must either register or log in.",
+                "Guest Access Restricted",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                new Object[]{"Register", "Login", "Cancel"},
+                "Register"
+        );
+
+        // Handle the user's choice
+        switch (option) {
+            case 0: // Register
+                mainFrame.showPanel("Register");
+                break;
+            case 1: // Login
+                mainFrame.showPanel("Login");
+                break;
+            case 2: // Cancel
+                // Do nothing and close the dialog
+                break;
+        }
     }
 }
