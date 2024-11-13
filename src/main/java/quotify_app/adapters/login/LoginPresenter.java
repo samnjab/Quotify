@@ -1,10 +1,9 @@
 package quotify_app.adapters.login;
 
 import quotify_app.adapters.ViewManagerModel;
+import quotify_app.adapters.signup.SignupViewModel;
 import quotify_app.usecases.login.LoginOutputBoundary;
 import quotify_app.usecases.login.LoginOutputData;
-import quotify_app.adapters.signup.SignupViewModel;
-import quotify_app.adapters.signup.SignupState;
 
 /**
  * The Presenter for the Login Use Case.
@@ -15,7 +14,11 @@ public class LoginPresenter implements LoginOutputBoundary {
     private final ViewManagerModel viewManagerModel;
     private final LoginViewModel loginViewModel;
 
-    public LoginPresenter(ViewManagerModel viewManagerModel, LoginViewModel loginViewModel, SignupViewModel signupViewModel) {
+    public LoginPresenter(
+            ViewManagerModel viewManagerModel,
+            LoginViewModel loginViewModel,
+            SignupViewModel signupViewModel
+    ) {
         this.viewManagerModel = viewManagerModel;
         this.loginViewModel = loginViewModel;
         this.signupViewModel = signupViewModel;
@@ -27,10 +30,9 @@ public class LoginPresenter implements LoginOutputBoundary {
         loginViewModel.getState().setLoginError("");
         loginViewModel.firePropertyChanged();
 
-        // Trigger view change if login is successful
-        viewManagerModel.setState("logged in");  // Assumes there's a "logged in" view state
+        // Trigger view change if login is successful, assumes there's a "logged in" view state
+        viewManagerModel.setState("logged in");
         viewManagerModel.firePropertyChanged();
-        //Debugging
         System.out.println("successfully logged in");
     }
 
@@ -46,7 +48,8 @@ public class LoginPresenter implements LoginOutputBoundary {
      */
     @Override
     public void goToSignup() {
-        viewManagerModel.setState(signupViewModel.getViewName());  // Transition to signup view
+        // Transition to signup view
+        viewManagerModel.setState(signupViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 }

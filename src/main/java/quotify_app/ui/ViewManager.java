@@ -1,10 +1,12 @@
 package quotify_app.ui;
 
 import java.awt.CardLayout;
-import javax.swing.JPanel;
-import quotify_app.adapters.ViewManagerModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.JPanel;
+
+import quotify_app.adapters.ViewManagerModel;
 
 /**
  * Manages transitions between different views.
@@ -24,7 +26,7 @@ public class ViewManager implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
-            String viewName = (String) evt.getNewValue();
+            final String viewName = (String) evt.getNewValue();
             System.out.println(viewName);
             cardLayout.show(viewPanel, viewName);
         }

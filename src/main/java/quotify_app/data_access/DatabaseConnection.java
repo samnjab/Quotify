@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Class that initializes connection with the SQLite server.
+ */
 public class DatabaseConnection {
     private static final String URL = "jdbc:sqlite:quotify.db";
 
@@ -21,7 +24,7 @@ public class DatabaseConnection {
      * Initializes the database by creating required tables if they don't exist.
      */
     public static void initializeDatabase() {
-        String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
+        final String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
                 + "username TEXT PRIMARY KEY,"
                 + "password TEXT NOT NULL,"
                 + "email TEXT UNIQUE NOT NULL"
@@ -31,8 +34,9 @@ public class DatabaseConnection {
              var stmt = conn.createStatement()) {
             stmt.execute(createUsersTable);
             System.out.println("Database initialized successfully. Users table created if it didn't exist.");
-        } catch (SQLException e) {
-            e.printStackTrace();
+        }
+        catch (SQLException error) {
+            error.printStackTrace();
         }
     }
 }

@@ -1,17 +1,18 @@
 package quotify_app.ui;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import quotify_app.adapters.login.LoginController;
-import quotify_app.adapters.login.LoginViewModel;
 import quotify_app.adapters.login.LoginState;
-import quotify_app.adapters.signup.SignupState;
+import quotify_app.adapters.login.LoginViewModel;
 
 /**
  * The view for logging in.
@@ -30,21 +31,21 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         this.loginViewModel.addPropertyChangeListener(this);
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        JLabel titleLabel = new JLabel(LoginViewModel.TITLE_LABEL);
+        final JLabel titleLabel = new JLabel(LoginViewModel.TITLE_LABEL);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(titleLabel);
 
-        JLabel usernameLabel = new JLabel(LoginViewModel.USERNAME_LABEL);
+        final JLabel usernameLabel = new JLabel(LoginViewModel.USERNAME_LABEL);
         add(usernameLabel);
         add(usernameField);
 
-        JLabel passwordLabel = new JLabel(LoginViewModel.PASSWORD_LABEL);
+        final JLabel passwordLabel = new JLabel(LoginViewModel.PASSWORD_LABEL);
         add(passwordLabel);
         add(passwordField);
 
         errorLabel.setForeground(Color.RED);
 
-        JButton loginButton = new JButton(LoginViewModel.LOGIN_BUTTON_LABEL);
+        final JButton loginButton = new JButton(LoginViewModel.LOGIN_BUTTON_LABEL);
         loginButton.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
@@ -60,8 +61,8 @@ public class LoginView extends JPanel implements PropertyChangeListener {
                 }
         );
 
-        JButton goToSignupButton = new JButton(LoginViewModel.TO_SIGNUP_BUTTON_LABEL);
-        goToSignupButton.addActionListener(e -> loginController.goToSignup());
+        final JButton goToSignupButton = new JButton(LoginViewModel.TO_SIGNUP_BUTTON_LABEL);
+        goToSignupButton.addActionListener(evt -> loginController.goToSignup());
 
         addUsernameListener();
         addPasswordListener();
@@ -133,7 +134,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        LoginState state = loginViewModel.getState();
+        final LoginState state = loginViewModel.getState();
         errorLabel.setText(state.getLoginError());
     }
 }

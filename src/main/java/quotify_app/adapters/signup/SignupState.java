@@ -59,6 +59,18 @@ public class SignupState {
         this.signupError = signupError;
     }
 
+    /**
+     * Resets the signup state.
+     */
+    public void clear() {
+        this.username = "";
+        this.usernameError = "";
+        this.password = "";
+        this.passwordError = "";
+        this.email = "";
+        this.signupError = "";
+    }
+
     @Override
     public String toString() {
         return "SignupState{"

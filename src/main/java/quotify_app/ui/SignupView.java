@@ -1,16 +1,18 @@
 package quotify_app.ui;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import quotify_app.adapters.signup.SignupController;
-import quotify_app.adapters.signup.SignupViewModel;
 import quotify_app.adapters.signup.SignupState;
+import quotify_app.adapters.signup.SignupViewModel;
 
 /**
  * The View for when the user is signing up.
@@ -39,27 +41,27 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         add(new JLabel(SignupViewModel.PASSWORD_LABEL));
         add(passwordField);
 
-        JButton signupButton = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
-        JButton toLoginButton = new JButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
+        final JButton signupButton = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
+        final JButton toLoginButton = new JButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
 
         // triggers the signup usecase upon button click
         signupButton.addActionListener(
-                new ActionListener() {
-                   public void actionPerformed(ActionEvent evt) {
-                       if (evt.getSource().equals(signupButton)) {
-                           final SignupState currentState = signupViewModel.getState();
-
-                           signupController.execute(
+            new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(signupButton)) {
+                            final SignupState currentState = signupViewModel.getState();
+                            // debug: before signupcontroller exec
+                            signupController.execute(
                                    currentState.getUsername(),
                                    currentState.getEmail(),
                                    currentState.getPassword()
-                           );
-                       }
-                   }
-               }
+                            );
+                        }
+                    }
+            }
         );
 
-        toLoginButton.addActionListener(e -> signupController.goToLogin());
+        toLoginButton.addActionListener(evt -> signupController.goToLogin());
 
         addEmailListener();
         addUsernameListener();
@@ -75,7 +77,7 @@ public class SignupView extends JPanel implements PropertyChangeListener {
 
             private void documentListenerHelper() {
                 final SignupState currentState = signupViewModel.getState();
-                currentState.setUsername(emailField.getText());
+                currentState.setEmail(emailField.getText());
                 signupViewModel.setState(currentState);
             }
 
@@ -154,8 +156,11 @@ public class SignupView extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        SignupState state = signupViewModel.getState();
+        final SignupState state = signupViewModel.getState();
         signupErrorLabel.setText(state.getSignupError());
+        emailField.setText(state.getEmail());
+        usernameField.setText(state.getUsername());
+        passwordField.setText(state.getPassword());
     }
 
     public String getViewName() {

@@ -21,10 +21,13 @@ public class SignupController {
      * @param password the password of the user signing up
      */
     public void execute(String username, String email, String password) {
-        SignupInputData inputData = new SignupInputData(username, email, password);
+        final SignupInputData inputData = new SignupInputData(username, email, password);
         signupInteractor.execute(inputData);
     }
 
+    /**
+     *  Executes the Switch to Login usecase.
+     */
     public void goToLogin() {
         signupInteractor.goToLogin();
     }

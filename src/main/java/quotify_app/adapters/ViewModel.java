@@ -38,6 +38,10 @@ public class ViewModel<T> {
         support.firePropertyChange("state", null, this.state);
     }
 
+    /**
+     * Fires a property change event to notify listeners of state changes with a certain property.
+     * @param propertyName the property related to the property change.
+     */
     public void firePropertyChanged(String propertyName) {
         support.firePropertyChange(propertyName, null, this.state);
     }
