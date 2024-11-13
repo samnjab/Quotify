@@ -3,32 +3,34 @@ package quotify_app.data_access;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class DatabaseConnection {
-    private static final String URL = "jdbc:sqlite:users.db";
+    private static final String URL = "jdbc:sqlite:quotify.db";
 
-    public static Connection getConnection() {
-        try {
-            Connection connection = DriverManager.getConnection(URL);
-            createUsersTableIfNotExists(connection);
-            return connection;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+    /**
+     * Establishes a new connection to the SQLite database.
+     *
+     * @return a new Connection to the SQLite database.
+     * @throws SQLException if a database access error occurs.
+     */
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL);
     }
 
-    // Method to create the users table if it doesn't exist
-    private static void createUsersTableIfNotExists(Connection connection) {
-        String createTableSQL = "CREATE TABLE IF NOT EXISTS users ("
-                + "email TEXT NOT NULL, "
-                + "username TEXT PRIMARY KEY, "
-                + "password TEXT NOT NULL"
+    /**
+     * Initializes the database by creating required tables if they don't exist.
+     */
+    public static void initializeDatabase() {
+        String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
+                + "username TEXT PRIMARY KEY,"
+                + "password TEXT NOT NULL,"
+                + "email TEXT UNIQUE NOT NULL"
                 + ");";
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute(createTableSQL);
-            System.out.println("Users table created or already exists.");
+
+        try (Connection conn = getConnection();
+             var stmt = conn.createStatement()) {
+            stmt.execute(createUsersTable);
+            System.out.println("Database initialized successfully. Users table created if it didn't exist.");
         } catch (SQLException e) {
             e.printStackTrace();
         }

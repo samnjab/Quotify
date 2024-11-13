@@ -33,3 +33,4 @@ bin/
 
 ### SQLite Generated Files ###
 users.db
+quotify.db
