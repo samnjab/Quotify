@@ -30,3 +30,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### SQLite Generated Files ###
+users.db
+quotify.db
