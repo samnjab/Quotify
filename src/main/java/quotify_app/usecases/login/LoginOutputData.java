@@ -12,10 +12,18 @@ public class LoginOutputData {
         this.loginFailed = loginFailed;
     }
 
+    /**
+     * Getter function for the username.
+     * @return a string representation of the input username.
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Check function for login status. NOT IN USE yet.
+     * @return the login status.
+     */
     public boolean isLoginFailed() {
         return loginFailed;
     }

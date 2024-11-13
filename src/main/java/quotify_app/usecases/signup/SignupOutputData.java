@@ -11,6 +11,10 @@ public class SignupOutputData {
         this.username = username;
     }
 
+    /**
+     * Getter function for username.
+     * @return a string representing the relevant username.
+     */
     public String getUsername() {
         return username;
     }

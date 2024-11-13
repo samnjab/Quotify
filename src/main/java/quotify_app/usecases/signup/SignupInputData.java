@@ -14,14 +14,26 @@ public class SignupInputData {
         this.password = password;
     }
 
+    /**
+     * Getter function for the input data username field.
+     * @return a string representation of the input username.
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Getter function for the input data email field.
+     * @return a string representation of the input email.
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Getter function for the input data password field.
+     * @return a string representation of the input password.
+     */
     public String getPassword() {
         return password;
     }

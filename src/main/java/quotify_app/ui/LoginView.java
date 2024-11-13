@@ -72,6 +72,9 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         add(errorLabel);
     }
 
+    /**
+     * Adds an event listener for the username input field.
+     */
     private void addUsernameListener() {
         usernameField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -98,6 +101,9 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         });
     }
 
+    /**
+     * Adds an event listener for the password input field.
+     */
     private void addPasswordListener() {
         passwordField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -124,10 +130,18 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         });
     }
 
+    /**
+     * Initializes the LoginController.
+     * @param loginController takes a LoginController as an input.
+     */
     public void setLoginController(LoginController loginController) {
         this.loginController = loginController;
     }
 
+    /**
+     * Getter for the LoginView viewname.
+     * @return a viewname string
+     */
     public String getViewName() {
         return viewName;
     }

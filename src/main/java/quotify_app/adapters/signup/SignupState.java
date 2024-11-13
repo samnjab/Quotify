@@ -4,11 +4,14 @@ package quotify_app.adapters.signup;
  * The state for the Signup View Model.
  */
 public class SignupState {
+    // user info fields
     private String username = "";
-    private String usernameError;
     private String password = "";
-    private String passwordError;
     private String email = "";
+
+    // error message fields
+    private String usernameError;
+    private String passwordError;
     private String signupError;
 
     public String getUsername() {
@@ -63,14 +66,21 @@ public class SignupState {
      * Resets the signup state.
      */
     public void clear() {
+        // reset user info fields
         this.username = "";
-        this.usernameError = "";
         this.password = "";
-        this.passwordError = "";
         this.email = "";
+
+        // reset error messages
+        this.usernameError = "";
+        this.passwordError = "";
         this.signupError = "";
+
     }
 
+    /**
+     * Debugging method to see the current state.
+     */
     @Override
     public String toString() {
         return "SignupState{"

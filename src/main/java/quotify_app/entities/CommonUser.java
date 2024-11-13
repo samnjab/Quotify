@@ -1,7 +1,9 @@
 package quotify_app.entities;
 
 /**
- * A simple implementation of the User interface.
+ * An implementation of the User interface for regular registered User.
+ * These are users of the application that have signed up.
+ * Guest users should be instantiated with the GuestUser Class (NOT YET IMPLEMENTED).
  */
 public class CommonUser implements User {
 

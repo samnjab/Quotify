@@ -14,8 +14,13 @@ public class LoginController {
         this.loginInteractor = loginInteractor;
     }
 
+    /**
+     * Executes the Login usecase.
+     * @param username the username to pass to the interactor.
+     * @param password the password to pass to the interactor
+     */
     public void execute(String username, String password) {
-        LoginInputData inputData = new LoginInputData(username, password);
+        final LoginInputData inputData = new LoginInputData(username, password);
         loginInteractor.execute(inputData);
     }
 

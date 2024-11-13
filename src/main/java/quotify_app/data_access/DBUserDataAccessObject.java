@@ -49,38 +49,56 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
      */
     public User get(String username) {
         final String query = "SELECT username, email, password FROM users WHERE username = ?";
+        User result = null;
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             final ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return userFactory.create(rs.getString("username"), rs.getString("password"), rs.getString("email"));
+                result = userFactory.create(
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email")
+                );
             }
         }
         catch (SQLException error) {
             error.printStackTrace();
         }
-        return null;
+        return result;
     }
 
+    /**
+     * Checks and returns whether a user exists by a given username.
+     * @param username the given string username for a given user.
+     * @return boolean value representing whether user exists or not.
+     */
     @Override
     public boolean existsByName(String username) {
         final String query = "SELECT username FROM users WHERE username = ?";
+        boolean flag = false;
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             final ResultSet rs = stmt.executeQuery();
-            return rs.next();
+            flag = rs.next();
         }
         catch (SQLException error) {
             error.printStackTrace();
         }
-        return false;
+        return flag;
     }
 
+    /**
+     * Checks and returns whether a user exists by a given email.
+     * @param email the given string username for a given user.
+     * @return boolean value representing whether user exists or not.
+     */
     @Override
     public boolean existsByEmail(String email) {
         final String query = "SELECT email FROM users WHERE email = ?";
+        boolean flag = false;
+        // Debug
         System.out.println("Checking email: " + email);
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -89,13 +107,13 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
             if (rs.next()) {
                 System.out.println("Found email in database: " + rs.getString("email"));
-                return true;
+                flag = true;
             }
         }
         catch (SQLException error) {
             error.printStackTrace();
         }
-        return false;
+        return flag;
     }
 
     /**

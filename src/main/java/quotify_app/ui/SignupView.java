@@ -72,6 +72,9 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         add(signupErrorLabel);
     }
 
+    /**
+     * Adds an event listener for the email input field.
+     */
     private void addEmailListener() {
         emailField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -98,6 +101,9 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         });
     }
 
+    /**
+     * Adds an event listener for the password input field.
+     */
     private void addPasswordListener() {
         passwordField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -124,6 +130,9 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         });
     }
 
+    /**
+     * Adds an event listener for the username input field.
+     */
     private void addUsernameListener() {
         usernameField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -150,6 +159,9 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         });
     }
 
+    /**
+     * Initializes the controller for the signupview.
+     */
     public void setSignupController(SignupController signupController) {
         this.signupController = signupController;
     }
@@ -163,6 +175,10 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         passwordField.setText(state.getPassword());
     }
 
+    /**
+     * Getter function for the signupview viewname.
+     * @return a string representing the viewname of the signup view.
+     */
     public String getViewName() {
         return signupViewModel.getViewName();
     }

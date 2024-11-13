@@ -2,7 +2,6 @@ package quotify_app.adapters.signup;
 
 import quotify_app.usecases.signup.SignupInputBoundary;
 import quotify_app.usecases.signup.SignupInputData;
-import quotify_app.usecases.signup.SignupInteractor;
 
 /**
  * The controller for the Signup Use Case.

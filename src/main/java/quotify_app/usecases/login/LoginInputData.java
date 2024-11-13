@@ -12,10 +12,18 @@ public class LoginInputData {
         this.password = password;
     }
 
+    /**
+     * Getter function for the username.
+     * @return a string representation of the input username.
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Getter function for the password.
+     * @return a string representation of the input password.
+     */
     public String getPassword() {
         return password;
     }
