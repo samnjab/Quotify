@@ -7,6 +7,9 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import quotify_app.adapters.ViewManagerModel;
+import quotify_app.adapters.currentprice.CurrentPriceController;
+import quotify_app.adapters.currentprice.CurrentPricePresenter;
+import quotify_app.adapters.currentprice.CurrentPriceViewModel;
 import quotify_app.adapters.login.LoginController;
 import quotify_app.adapters.login.LoginPresenter;
 import quotify_app.adapters.login.LoginViewModel;
@@ -16,9 +19,13 @@ import quotify_app.adapters.signup.SignupViewModel;
 import quotify_app.data_access.DBUserDataAccessObject;
 import quotify_app.entities.CommonUserFactory;
 import quotify_app.entities.UserFactory;
+import quotify_app.ui.CurrentPriceView;
 import quotify_app.ui.LoginView;
 import quotify_app.ui.SignupView;
 import quotify_app.ui.ViewManager;
+import quotify_app.usecases.currentprice.CurrentPriceInputBoundary;
+import quotify_app.usecases.currentprice.CurrentPriceInteractor;
+import quotify_app.usecases.currentprice.CurrentPriceOutputBoundary;
 import quotify_app.usecases.login.LoginInputBoundary;
 import quotify_app.usecases.login.LoginInteractor;
 import quotify_app.usecases.login.LoginOutputBoundary;
@@ -42,6 +49,9 @@ public class AppBuilder {
     private SignupViewModel signupViewModel;
     private LoginView loginView;
     private LoginViewModel loginViewModel;
+
+    private CurrentPriceView currentPriceView;
+    private CurrentPriceViewModel currentPriceViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -107,6 +117,34 @@ public class AppBuilder {
         final LoginInputBoundary loginInteractor = new LoginInteractor(userDataAccessObject, loginPresenter);
         final LoginController loginController = new LoginController(loginInteractor);
         loginView.setLoginController(loginController);
+
+        return this;
+    }
+
+    /**
+     * Adds the CurrentPriceView to the cardpanel.
+     * @return this builder
+     */
+    public AppBuilder addCurrentPriceView() {
+        currentPriceViewModel = new CurrentPriceViewModel();
+        currentPriceView = new CurrentPriceView(currentPriceViewModel);
+        cardPanel.add(currentPriceView, currentPriceView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the CurrentPrice Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addCurrentPriceUseCase() {
+        // Setup Presenter and Interactor for CurrentPrice with necessary dependencies
+        final CurrentPriceOutputBoundary currentPricePresenter = new CurrentPricePresenter(
+                viewManagerModel,
+                currentPriceViewModel
+        );
+        final CurrentPriceInputBoundary currentPriceInteractor = new CurrentPriceInteractor(currentPricePresenter);
+        final CurrentPriceController currentPriceController = new CurrentPriceController(currentPriceInteractor);
+        currentPriceView.setCurrentPriceController(currentPriceController);
 
         return this;
     }
