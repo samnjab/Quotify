@@ -5,7 +5,7 @@ import quotify_app.entities.User;
 /**
  * Data Access Interface for Signup Use Case.
  */
-public interface FunctionDataAccessInterface {
+public interface FunctionUserDataAccessInterface {
     /**
      * Checks if a user with the given username exists.
      * @param username the username to check

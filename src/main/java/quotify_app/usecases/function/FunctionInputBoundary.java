@@ -12,20 +12,11 @@ public interface FunctionInputBoundary {
     /**
      * Switches to the CurrentPrice view.
      */
-    void goToCurrentPriceGuest();
-
-    /**
-     * Switches to the CurrentPriceLoggedIn view.
-     */
-    void goToCurrentPriceUser();
+    void goToCurrentPrice();
 
     /**
      * Switches to the Comparator view.
      */
-    void goToComparatorGuest();
+    void goToComparator();
 
-    /**
-     * Switches to the ComparatorLoggedIn view.
-     */
-    void goToComparatorUser();
 }

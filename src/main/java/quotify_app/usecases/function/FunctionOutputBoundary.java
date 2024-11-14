@@ -7,20 +7,11 @@ public interface FunctionOutputBoundary {
     /**
      * Interface for the presenter to execute the switch to currentPrice usecase.
      */
-    void goToCurrentPriceGuest();
-
-    /**
-     * Interface for the presenter to execute the switch to currentPriceLoggedIn usecase.
-     */
-    void goToCurrentPriceUser();
-
+    void goToCurrentPrice();
+    
     /**
      * Interface for the presenter to execute the switch to comparator usecase.
      */
-    void goToComparatorGuest();
+    void goToComparator();
 
-    /**
-     * Interface for the presenter to execute the switch to comparatorLoggedIn usecase.
-     */
-    void goToComparatorUser();
 }

@@ -25,7 +25,7 @@ public class FunctionController {
      * Trigger view transition to currentPrice through the presenter.
      */
     public void goToCurrentPriceGuest() {
-        functionInteractor.goToCurrentPriceGuest();
+        functionInteractor.goToCurrentPrice();
     }
 
     /**
@@ -39,7 +39,7 @@ public class FunctionController {
      * Trigger view transition to comparator.
      */
     public void goToComparatorGuest() {
-        functionInteractor.goToComparatorGuest();
+        functionInteractor.goToComparator();
     }
 
     /**
