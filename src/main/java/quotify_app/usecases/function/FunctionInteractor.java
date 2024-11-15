@@ -10,11 +10,6 @@ public class FunctionInteractor implements FunctionInputBoundary {
         this.functionPresenter = functionPresenter;
     }
 
-    @Override
-    public void execute() {
-
-    }
-
     /**
      * Trigger view transition to currentPrice through the presenter.
      */
@@ -23,7 +18,7 @@ public class FunctionInteractor implements FunctionInputBoundary {
     }
 
     /**
-     * Trigger view transition to comparator.
+     * Trigger view transition to comparator through the presenter.
      */
     public void goToComparator() {
         functionPresenter.goToComparator();
