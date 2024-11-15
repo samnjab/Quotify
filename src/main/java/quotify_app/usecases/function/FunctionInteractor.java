@@ -4,12 +4,9 @@ package quotify_app.usecases.function;
  * Interactor for handling signup logic.
  */
 public class FunctionInteractor implements FunctionInputBoundary {
-    private final FunctionUserDataAccessInterface userDataAccessObject;
     private final FunctionOutputBoundary functionPresenter;
 
-    public FunctionInteractor(FunctionUserDataAccessInterface userDataAccessObject,
-                              FunctionOutputBoundary functionPresenter) {
-        this.userDataAccessObject = userDataAccessObject;
+    public FunctionInteractor(FunctionOutputBoundary functionPresenter) {
         this.functionPresenter = functionPresenter;
     }
 
