@@ -3,7 +3,7 @@ package quotify_app.usecases.landing;
 import quotify_app.entities.Region;
 
 /**
- * The Login Interactor.
+ * The Landing Interactor.
  */
 public class LandingInteractor implements LandingInputBoundary {
     private final RegionDataAccessInterface regionDataAccessObject;
