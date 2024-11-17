@@ -9,5 +9,6 @@
         <module name="user-management-app" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="23" />
   </component>
 </project>

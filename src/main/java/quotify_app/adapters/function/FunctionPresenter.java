@@ -1,17 +1,23 @@
+
 package quotify_app.adapters.function;
 
 import quotify_app.adapters.ViewManagerModel;
-import quotify_app.adapters.function.FunctionViewModel;
 import quotify_app.usecases.function.FunctionOutputBoundary;
 
 /**
- * The Presenter for the Login Use Case.
+ * The Presenter for the Function Use Case.
  */
 public class FunctionPresenter implements FunctionOutputBoundary {
 
-    private final FunctionViewModel functionViewModel;
     private final ViewManagerModel viewManagerModel;
+    private final FunctionViewModel functionViewModel;
 
+    /**
+     * Initializes the FunctionPresenter with the given ViewManagerModel and FunctionViewModel.
+     *
+     * @param viewManagerModel      the model managing view transitions.
+     * @param functionViewModel the ViewModel for the Function View.
+     */
     public FunctionPresenter(
             ViewManagerModel viewManagerModel,
             FunctionViewModel functionViewModel
@@ -21,26 +27,22 @@ public class FunctionPresenter implements FunctionOutputBoundary {
     }
 
     /**
-     * Navigates to the Current Price for guest.
+     * Navigates to the Function.
      */
     @Override
     public void goToCurrentPrice() {
         // Transition to current price view
-        viewManagerModel.setState(currentPriceViewModel.getViewName());
+        viewManagerModel.setState("current price");
         viewManagerModel.firePropertyChanged();
     }
 
     /**
-     * Navigates to the Comparator for guest.
+     * Navigates to the Comparator.
      */
     @Override
     public void goToComparator() {
         // Transition to comparator view
-        viewManagerModel.setState(comparatorViewModel.getViewName());
+        viewManagerModel.setState("comparator");
         viewManagerModel.firePropertyChanged();
     }
-
 }
-
-
-

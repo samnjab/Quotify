@@ -1,7 +1,5 @@
 package quotify_app.usecases.comparator;
 
-import quotify_app.entities.User;
-
 /**
  * The Comparator Interactor.
  */
@@ -28,5 +26,15 @@ public class ComparatorInteractor implements ComparatorInputBoundary {
     @Override
     public void goToInput() {
         comparatorPresenter.goToInput();
+    }
+
+    @Override
+    public void checkLoginStatus() {
+        comparatorPresenter.updateLoginStatus();
+    }
+
+    @Override
+    public void goToUserProfile() {
+        comparatorPresenter.goToUserProfile();
     }
 }

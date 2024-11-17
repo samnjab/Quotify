@@ -15,4 +15,14 @@ public interface ComparatorOutputBoundary {
      */
     void goToInput();
 
+    /**
+     * Prepares the response if the user is logged in or not.
+     */
+    void updateLoginStatus();
+
+    /**
+     * Interface for executing the switch to user profile screen usecase.
+     */
+    void goToUserProfile();
+
 }

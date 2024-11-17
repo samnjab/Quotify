@@ -1,13 +1,11 @@
 package quotify_app.adapters.comparator;
 
 import quotify_app.adapters.ViewManagerModel;
-import quotify_app.adapters.signup.SignupViewModel;
+import quotify_app.app.ApplicationState;
 import quotify_app.usecases.comparator.ComparatorOutputBoundary;
-import quotify_app.usecases.comparator.ComparatorOutputBoundary;
-import quotify_app.usecases.comparator.ComparatorInputBoundary;
 
 /**
- * The Presenter for the Login Use Case.
+ * The Presenter for the Comparator Use Case.
  */
 public class ComparatorPresenter implements ComparatorOutputBoundary {
 
@@ -25,15 +23,29 @@ public class ComparatorPresenter implements ComparatorOutputBoundary {
     @Override
     public void goToCurrentPrice() {
         // Transition to current price view
-        viewManagerModel.setState(comparatorViewModel.getViewName());
+        viewManagerModel.setState("currentPrice");
         viewManagerModel.firePropertyChanged();
     }
 
     @Override
     public void goToInput() {
         // Transition to input view
-        viewManagerModel.setState(comparatorViewModel.getViewName());
+        viewManagerModel.setState("input");
         viewManagerModel.firePropertyChanged();
 
     }
+
+    @Override
+    public void goToUserProfile() {
+        viewManagerModel.setState("user profile");
+        viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void updateLoginStatus() {
+        // Get the login status from the ApplicationState
+        final boolean isLoggedIn = ApplicationState.getInstance().isLoggedIn();
+        comparatorViewModel.getState().setLoggedIn(isLoggedIn);
+    }
+
 }

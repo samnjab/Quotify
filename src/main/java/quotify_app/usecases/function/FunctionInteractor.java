@@ -1,7 +1,7 @@
 package quotify_app.usecases.function;
 
 /**
- * Interactor for handling signup logic.
+ * Interactor for handling function logic.
  */
 public class FunctionInteractor implements FunctionInputBoundary {
     private final FunctionOutputBoundary functionPresenter;
@@ -11,8 +11,9 @@ public class FunctionInteractor implements FunctionInputBoundary {
     }
 
     /**
-     * Trigger view transition to currentPrice through the presenter.
+     * Trigger view transition to function through the presenter.
      */
+    @Override
     public void goToCurrentPrice() {
         functionPresenter.goToCurrentPrice();
     }
@@ -20,6 +21,7 @@ public class FunctionInteractor implements FunctionInputBoundary {
     /**
      * Trigger view transition to comparator through the presenter.
      */
+    @Override
     public void goToComparator() {
         functionPresenter.goToComparator();
     }

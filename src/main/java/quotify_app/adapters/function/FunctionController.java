@@ -3,7 +3,7 @@ package quotify_app.adapters.function;
 import quotify_app.usecases.function.FunctionInputBoundary;
 
 /**
- * The controller for the Login Use Case.
+ * The controller for the Function Use Case.
  */
 public class FunctionController {
 
@@ -15,37 +15,17 @@ public class FunctionController {
     }
 
     /**
-     * Executes the Function Case.
+     * Trigger view transition to currentPrice through functionInteractor.
      */
-    public void execute() {
-        functionInteractor.execute();
-    }
-
-    /**
-     * Trigger view transition to currentPrice through the presenter.
-     */
-    public void goToCurrentPriceGuest() {
+    public void goToCurrentPrice() {
         functionInteractor.goToCurrentPrice();
     }
 
     /**
-     * Trigger view transition to currentPriceLoggedIn.
+     * Trigger view transition to comparator through functionInteractor.
      */
-    public void goToCurrentPriceUser() {
-        functionInteractor.goToCurrentPriceUser();
-    }
-
-    /**
-     * Trigger view transition to comparator.
-     */
-    public void goToComparatorGuest() {
+    public void goToComparator() {
         functionInteractor.goToComparator();
     }
 
-    /**
-     * Trigger view transition to comparatorLoggedIn.
-     */
-    public void goToComparatorUser() {
-        functionInteractor.goToComparatorUser();
-    }
 }

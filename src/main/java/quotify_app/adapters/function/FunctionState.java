@@ -1,23 +1,26 @@
 package quotify_app.adapters.function;
 
 /**
- * The state for the Login View Model.
+ * The state for the Function View Model.
  */
 public class FunctionState {
-//    private String username = "";
+//    private boolean isLoggedIn;
 //
-//    public String getUsername() {
-//        return username;
+//    /**
+//     * Initializes the CurrentPriceState with default values.
+//     */
+//    public FunctionState() {
+//        // Default to not logged in
+//        this.isLoggedIn = false;
 //    }
 //
-//    public void setUsername(String username) {
-//        this.username = username;
+//    // Getter and setter for isLoggedIn
+//    public boolean isLoggedIn() {
+//        return isLoggedIn;
 //    }
 //
-//    public boolean userOrNot(String username) {
-//        if (this.username.equals(username)) {
-//            return false;
-//        }
+//    public void setLoggedIn(boolean loggedIn) {
+//        isLoggedIn = loggedIn;
 //    }
 
 }

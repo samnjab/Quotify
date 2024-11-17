@@ -1,34 +1,25 @@
 package quotify_app.adapters.comparator;
 
 /**
- * The state for the Login View Model.
+ * The state for the Comparator View Model.
  */
 public class ComparatorState {
-    private String username = "";
-    private String password = "";
-    private String loginError = "";
+    private boolean isLoggedIn;
 
-    public String getUsername() {
-        return username;
+    /**
+     * Initializes the ComparatorState with default values.
+     */
+    public ComparatorState() {
+        // Default to not logged in
+        this.isLoggedIn = false;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    // Getter and setter for isLoggedIn
+    public boolean isLoggedIn() {
+        return isLoggedIn;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getLoginError() {
-        return loginError;
-    }
-
-    public void setLoginError(String loginError) {
-        this.loginError = loginError;
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
     }
 }

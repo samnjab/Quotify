@@ -1,7 +1,7 @@
 package quotify_app.usecases.function;
 
 /**
- * Input Boundary for actions which are related to signing up.
+ * Input Boundary for actions which are related to choosing functionality.
  */
 public interface FunctionInputBoundary {
 
