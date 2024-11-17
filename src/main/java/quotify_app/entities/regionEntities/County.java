@@ -1,7 +1,7 @@
 package quotify_app.entities.regionEntities;
 
 /**
- * The abstract representation of a County in our program.
+ * The representation of a County in our program.
  */
 
 public class County extends AbstractRegion {

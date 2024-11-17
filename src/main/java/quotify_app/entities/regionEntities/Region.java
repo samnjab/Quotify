@@ -1,32 +1,63 @@
 package quotify_app.entities.regionEntities;
 
+import java.util.Objects;
+
 /**
- * The method collection blueprint of a region in our program.
+ * The representation of a region in our program.
  */
-public interface Region {
 
-    /**
-     * Returns the name of the region.
-     * @return the name of the region.
-     */
-    String getRegionName();
+public class Region {
+    private final String name;
+    private final String type;
+    private final String regionId;
+    private final String code;
 
-    /**
-     * Returns the id of the region.
-     * @return the id of the region.
-     */
-    String getRegionId();
 
-    /**
-     * Returns the type of the region.
-     * @return the type of the region.
-     */
-    String getType();
+    public Region(String name, String type, String regionId, String code) {
+        this.name = name;
+        this.type = type;
+        this.regionId = regionId;
+        this.code = code;
+    }
 
-    /**
-     * Returns the code of the region composed of letters.
-     * @return the code of the region.
-     */
-    String getCode();
+    public String getRegionName() {
+        return name;
+    }
 
+    public String getType() {
+        return type;
+    }
+
+    public String getRegionId() {
+        return regionId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    @Override
+    public String toString() {
+        return type + ": " + name + " (" + code + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final AbstractRegion that = (AbstractRegion) o;
+        return Objects.equals(name, that.name)
+                && Objects.equals(type, that.type)
+                && Objects.equals(regionId, that.regionId)
+                && Objects.equals(code, that.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, type, regionId, code);
+    }
 }

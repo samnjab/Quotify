@@ -1,10 +1,10 @@
-package quotify_app.entities.regionEntities.;
+package quotify_app.entities.regionEntities;
 
 /**
- * The abstract representation of a State in our program.
+ * The representation of a State in our program.
  */
 
-public class State extends AbstractRegion {
+public class State extends Region {
     private final Country country;
 
     public State(String name, String regionId, String code, Country country) {

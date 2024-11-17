@@ -1,10 +1,10 @@
-package quotify_app.entities.regionEntities.;
+package quotify_app.entities.regionEntities;
 
 /**
- * The abstract representation of a ZipCode region in our program.
+ * The representation of a ZipCode region in our program.
  */
 
-public class ZipCode extends AbstractRegion {
+public class ZipCode extends Region {
     private final Country country;
     private final State state;
     private final City city;

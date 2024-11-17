@@ -1,10 +1,10 @@
 package quotify_app.entities.regionEntities;
 
 /**
- * The abstract representation of a City in our program.
+ * The representation of a City in our program.
  */
 
-public class City extends AbstractRegion {
+public class City extends Region {
     private final Country country;
     private final State state;
 
