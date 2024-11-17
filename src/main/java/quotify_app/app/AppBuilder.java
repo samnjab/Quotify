@@ -108,8 +108,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addComparatorUseCase() {
-        comparatorFactory.getComparatorView()
-                .setComparatorController(comparatorFactory.getComparatorController());
+        comparatorFactory.getComparatorView().setComparatorController(comparatorFactory.getComparatorController());
         return this;
     }
 
@@ -127,7 +126,6 @@ public class AppBuilder {
         // Setting the initial view to SignupView
         viewManagerModel.setState(signupFactory.getSignupView().getViewName());
         viewManagerModel.firePropertyChanged();
-
         return application;
     }
 }

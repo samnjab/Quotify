@@ -1,63 +1,112 @@
 package quotify_app.ui;
 
-import quotify_app.adapters.function.FunctionController;
-import quotify_app.adapters.function.FunctionState;
-import quotify_app.adapters.login.LoginController;
-import quotify_app.adapters.function.FunctionViewModel;
-import quotify_app.adapters.login.LoginState;
-import quotify_app.adapters.login.LoginViewModel;
-import quotify_app.adapters.signup.SignupState;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import quotify_app.adapters.function.FunctionController;
+import quotify_app.adapters.function.FunctionViewModel;
 
 /**
- * The view for logging in.
+ * The view for user or guest to choose want function they want to proceed.
  */
 public class FunctionView extends JPanel {
-    private final String viewName = "function";
+    private static final int CENTER_PANEL_ROWS = 1;
+    private static final int CENTER_PANEL_COLUMNS = 2;
+    private static final int CENTER_PANEL_GAP = 20;
+    private static final float TITLE_FONT_SIZE = 20f;
+
+    private final String viewName;
     private FunctionController functionController;
     private final FunctionViewModel functionViewModel;
 
+    private final JButton goToCurrentPriceButton = new JButton(FunctionViewModel.ESTIMATE_PRICE_LABEL);
+    private final JButton goToComparatorButton = new JButton(FunctionViewModel.COMPARE_LABEL);
+
+    // Top panel to store title label
+    private final JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+    /**
+     * Initializes the FunctionView with the given ViewModel.
+     *
+     * @param functionViewModel the ViewModel for this View.
+     */
     public FunctionView(FunctionViewModel functionViewModel) {
         this.functionViewModel = functionViewModel;
-        this.functionViewModel.addPropertyChangeListener(this);
+        this.viewName = functionViewModel.getViewName();
 
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-        final JLabel titleLabel = new JLabel(FunctionViewModel.TITLE_LABEL);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(titleLabel);
-
-        // triggers the current price usecase upon button click
-        final JButton goToCurrentPriceButton = new JButton(FunctionViewModel.ESTIMATE_PRICE_LABEL);
-        goToCurrentPriceButton.addActionListener(evt -> functionController.goToCurrentPriceGuest());
-        add(goToCurrentPriceButton);
-
-        // triggers the comparator usecase upon button click
-        final JButton goToComaparatorButton = new JButton(FunctionViewModel.COMPARE_LABEL);
-        goToComaparatorButton.addActionListener(evt -> functionController.goToComparatorGuest());
-        add(goToComaparatorButton);
-
+        initializeUserInterface();
     }
 
+    /**
+     * Sets the FunctionController for this View.
+     *
+     * @param functionController the Controller to be set.
+     */
+    public void setFunctionController(FunctionController functionController) {
+        this.functionController = functionController;
+    }
+
+    /**
+     * Initializes the UI components and layout.
+     */
+    private void initializeUserInterface() {
+        // Set layout manager
+        setLayout(new BorderLayout());
+
+        // Top panel with title
+        final JLabel titleLabel = new JLabel("Choose!");
+        titleLabel.setFont(titleLabel.getFont().deriveFont(TITLE_FONT_SIZE));
+        topPanel.add(titleLabel);
+        add(topPanel, BorderLayout.NORTH);
+
+        // Center panel with buttons
+        final JPanel centerPanel = new JPanel(
+                new GridLayout(CENTER_PANEL_ROWS, CENTER_PANEL_COLUMNS, CENTER_PANEL_GAP, CENTER_PANEL_GAP));
+        centerPanel.add(goToCurrentPriceButton);
+        centerPanel.add(goToComparatorButton);
+        add(centerPanel, BorderLayout.CENTER);
+
+        // Register action listeners
+        addActionListeners();
+    }
+
+    /**
+     * Registers action listeners for the buttons.
+     */
+    private void addActionListeners() {
+        goToCurrentPriceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (functionController != null) {
+                    functionController.goToCurrentPrice();
+                }
+            }
+        });
+
+        goToComparatorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (functionController != null) {
+                    functionController.goToComparator();
+                }
+            }
+        });
+    }
+
+    /**
+     * Gets the name of this view.
+     *
+     * @return a String representing the name of the view.
+     */
     public String getViewName() {
         return viewName;
     }
 
-//    @Override
-//    public void actionPerformed(ActionEvent e) {
-//        if (e.getSource() == goToCurrentPriceButton) {
-//            functionController.goToCurrentPriceGuest();
-//        } else if (e.getSource() == goToComparatorButton) {
-//            functionController.goToComparatorGuest();
-//        }
-//    }
 }
