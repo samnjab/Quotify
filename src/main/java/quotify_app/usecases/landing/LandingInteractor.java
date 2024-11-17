@@ -23,14 +23,14 @@ public class LandingInteractor implements LandingInputBoundary {
         if (!regionDataAccessObject.existsById(regionId)) {
             throw new Exception("Region Id does not exist in the database");
             final RegionOutputData regionOutputData = new RegionOutputData(region, true);
-            landingPresenter.prepareFailView(regionOutputData);
+            landingPresenter.prepareFailView("Region Id does not exist in the database");
         }
         else {
             final Region region = regionDataAccessObject.get(regionId);
             if (!regionName.equals(region.getRegionName())) {
                 throw new Exception("Region Id and name do not match");
                 final RegionOutputData regionOutputData = new RegionOutputData(region, true);
-                landingPresenter.prepareFailView(regionOutputData);
+                landingPresenter.prepareFailView("Region Id and name do not match");
 
             }
             else {
