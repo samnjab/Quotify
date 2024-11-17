@@ -9,7 +9,7 @@ public interface LandingInputBoundary {
      * Executes the Select Region use case.
      * @param regionInputData the input data containing the selected region.
      */
-    void selectRegion(RegionInputData regionInputData);
+    void selectRegion(RegionInputData regionInputData) throws Exception;
 
     /**
      * Switches to the signup view.

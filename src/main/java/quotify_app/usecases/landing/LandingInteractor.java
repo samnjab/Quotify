@@ -1,10 +1,10 @@
 package quotify_app.usecases.landing;
 
-import quotify_app.entities.Region;
-
+import quotify_app.entities.regionEntities.Region;
 /**
  * The Landing Interactor.
  */
+
 public class LandingInteractor implements LandingInputBoundary {
     private final RegionDataAccessInterface regionDataAccessObject;
     private final LandingOutputBoundary landingPresenter;
@@ -21,15 +21,20 @@ public class LandingInteractor implements LandingInputBoundary {
         final String regionId = regionInputData.getRegionId();
 
         if (!regionDataAccessObject.existsById(regionId)) {
-            throw new Exception("Region Id does not exist in the database");;
+            throw new Exception("Region Id does not exist in the database");
+            final RegionOutputData regionOutputData = new RegionOutputData(region, true);
+            landingPresenter.prepareFailView(regionOutputData);
         }
         else {
             final Region region = regionDataAccessObject.get(regionId);
             if (!regionName.equals(region.getRegionName())) {
                 throw new Exception("Region Id and name do not match");
+                final RegionOutputData regionOutputData = new RegionOutputData(region, true);
+                landingPresenter.prepareFailView(regionOutputData);
+
             }
             else {
-                final RegionOutputData regionOutputData = new regionOutputData(region);
+                final RegionOutputData regionOutputData = new RegionOutputData(region, false);
                 landingPresenter.prepareSuccessView(regionOutputData);
             }
         }
