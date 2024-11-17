@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import quotify_app.adapters.ViewManagerModel;
+import quotify_app.app.factories.ComparatorFactory;
+import quotify_app.app.factories.FunctionFactory;
 import quotify_app.app.factories.LoginFactory;
 import quotify_app.app.factories.SignupFactory;
 import quotify_app.data_access.DBUserDataAccessObject;
@@ -24,12 +26,16 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
     private final SignupFactory signupFactory = new SignupFactory();
     private final LoginFactory loginFactory = new LoginFactory();
+    private final FunctionFactory functionFactory = new FunctionFactory();
+    private final ComparatorFactory comparatorFactory = new ComparatorFactory();
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
         final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(new CommonUserFactory());
         loginFactory.setUpController(signupFactory, viewManagerModel, userDataAccessObject);
         signupFactory.setUpController(loginFactory, viewManagerModel, userDataAccessObject);
+        functionFactory.setUpController(viewManagerModel);
+        comparatorFactory.setUpController(viewManagerModel);
     }
 
     /**
@@ -65,6 +71,45 @@ public class AppBuilder {
      */
     public AppBuilder addLoginUseCase() {
         loginFactory.getLoginView().setLoginController(loginFactory.getLoginController());
+        return this;
+    }
+
+    /**
+     * Adds the Signup View to the application.
+     * @return this builder
+     */
+    public AppBuilder addFunctionView() {
+        cardPanel.add(functionFactory.getFunctionView(),
+                        functionFactory.getFunctionView().getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Function Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addFunctionUseCase() {
+        functionFactory.getFunctionView().setFunctionController(functionFactory.getFunctionController());
+        return this;
+    }
+
+    /**
+     * Adds the Comparator View to the application.
+     * @return this builder
+     */
+    public AppBuilder addComparatorView() {
+        cardPanel.add(comparatorFactory.getComparatorView(),
+                        comparatorFactory.getComparatorView().getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Comparator Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addComparatorUseCase() {
+        comparatorFactory.getComparatorView()
+                .setComparatorController(comparatorFactory.getComparatorController());
         return this;
     }
 
