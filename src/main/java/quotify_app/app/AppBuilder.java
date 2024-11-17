@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import quotify_app.adapters.ViewManagerModel;
+import quotify_app.app.factories.CurrentPriceFactory;
 import quotify_app.app.factories.LoginFactory;
 import quotify_app.app.factories.SignupFactory;
 import quotify_app.data_access.DBUserDataAccessObject;
@@ -24,12 +25,14 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
     private final SignupFactory signupFactory = new SignupFactory();
     private final LoginFactory loginFactory = new LoginFactory();
+    private final CurrentPriceFactory currentPriceFactory = new CurrentPriceFactory();
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
         final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(new CommonUserFactory());
         loginFactory.setUpController(signupFactory, viewManagerModel, userDataAccessObject);
         signupFactory.setUpController(loginFactory, viewManagerModel, userDataAccessObject);
+        currentPriceFactory.setUpController(viewManagerModel);
     }
 
     /**
@@ -65,6 +68,27 @@ public class AppBuilder {
      */
     public AppBuilder addLoginUseCase() {
         loginFactory.getLoginView().setLoginController(loginFactory.getLoginController());
+        return this;
+    }
+
+    /**
+     * Adds the CurrentPrice View to the application.
+     * @return this builder
+     */
+    public AppBuilder addCurrentPriceView() {
+        cardPanel
+                .add(currentPriceFactory.getCurrentPriceView(),
+                        currentPriceFactory.getCurrentPriceView().getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the CurrentPrice Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addCurrentPriceUseCase() {
+        currentPriceFactory.getCurrentPriceView()
+                .setCurrentPriceController(currentPriceFactory.getCurrentPriceController());
         return this;
     }
 

@@ -31,7 +31,7 @@ public interface CurrentPriceOutputBoundary {
     void updateLoginStatus();
 
     /**
-     * Prepares the response if the user is logged in or not.
+     * Prepares the response to navigate to the UserProfileView.
      */
     void presentGoToUserProfile();
 }
