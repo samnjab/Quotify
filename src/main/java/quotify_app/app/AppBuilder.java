@@ -7,31 +7,11 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import quotify_app.adapters.ViewManagerModel;
-import quotify_app.adapters.currentprice.CurrentPriceController;
-import quotify_app.adapters.currentprice.CurrentPricePresenter;
-import quotify_app.adapters.currentprice.CurrentPriceViewModel;
-import quotify_app.adapters.login.LoginController;
-import quotify_app.adapters.login.LoginPresenter;
-import quotify_app.adapters.login.LoginViewModel;
-import quotify_app.adapters.signup.SignupController;
-import quotify_app.adapters.signup.SignupPresenter;
-import quotify_app.adapters.signup.SignupViewModel;
+import quotify_app.app.factories.LoginFactory;
+import quotify_app.app.factories.SignupFactory;
 import quotify_app.data_access.DBUserDataAccessObject;
 import quotify_app.entities.CommonUserFactory;
-import quotify_app.entities.UserFactory;
-import quotify_app.ui.CurrentPriceView;
-import quotify_app.ui.LoginView;
-import quotify_app.ui.SignupView;
 import quotify_app.ui.ViewManager;
-import quotify_app.usecases.currentprice.CurrentPriceInputBoundary;
-import quotify_app.usecases.currentprice.CurrentPriceInteractor;
-import quotify_app.usecases.currentprice.CurrentPriceOutputBoundary;
-import quotify_app.usecases.login.LoginInputBoundary;
-import quotify_app.usecases.login.LoginInteractor;
-import quotify_app.usecases.login.LoginOutputBoundary;
-import quotify_app.usecases.signup.SignupInputBoundary;
-import quotify_app.usecases.signup.SignupInteractor;
-import quotify_app.usecases.signup.SignupOutputBoundary;
 
 /**
  * The AppBuilder class is responsible for setting up and wiring together the components of the application.
@@ -40,21 +20,16 @@ import quotify_app.usecases.signup.SignupOutputBoundary;
 public class AppBuilder {
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
-    private final UserFactory userFactory = new CommonUserFactory();
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-    private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
-
-    private SignupView signupView;
-    private SignupViewModel signupViewModel;
-    private LoginView loginView;
-    private LoginViewModel loginViewModel;
-
-    private CurrentPriceView currentPriceView;
-    private CurrentPriceViewModel currentPriceViewModel;
+    private final SignupFactory signupFactory = new SignupFactory();
+    private final LoginFactory loginFactory = new LoginFactory();
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+        final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(new CommonUserFactory());
+        loginFactory.setUpController(signupFactory, viewManagerModel, userDataAccessObject);
+        signupFactory.setUpController(loginFactory, viewManagerModel, userDataAccessObject);
     }
 
     /**
@@ -62,20 +37,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addSignupView() {
-        signupViewModel = new SignupViewModel();
-        signupView = new SignupView(signupViewModel);
-        cardPanel.add(signupView, signupView.getViewName());
-        return this;
-    }
-
-    /**
-     * Adds the Login View to the application.
-     * @return this builder
-     */
-    public AppBuilder addLoginView() {
-        loginViewModel = new LoginViewModel();
-        loginView = new LoginView(loginViewModel);
-        cardPanel.add(loginView, loginView.getViewName());
+        cardPanel.add(signupFactory.getSignupView(), signupFactory.getSignupView().getViewName());
         return this;
     }
 
@@ -84,22 +46,16 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addSignupUseCase() {
-        // Setup presenter and interactor with necessary dependencies
-        final SignupOutputBoundary signupPresenter = new SignupPresenter(
-                viewManagerModel,
-                signupViewModel,
-                loginViewModel
-        );
-        final SignupInputBoundary signupInteractor = new SignupInteractor(
-                userDataAccessObject,
-                signupPresenter,
-                userFactory
-        );
+        signupFactory.getSignupView().setSignupController(signupFactory.getSignupController());
+        return this;
+    }
 
-        // Controller connects the view to the interactor
-        final SignupController signupController = new SignupController(signupInteractor);
-        signupView.setSignupController(signupController);
-
+    /**
+     * Adds the Login View to the application.
+     * @return this builder
+     */
+    public AppBuilder addLoginView() {
+        cardPanel.add(loginFactory.getLoginView(), loginFactory.getLoginView().getViewName());
         return this;
     }
 
@@ -108,44 +64,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLoginUseCase() {
-        // Setup Presenter and Interactor for Login with necessary dependencies
-        final LoginOutputBoundary loginPresenter = new LoginPresenter(
-                viewManagerModel,
-                loginViewModel,
-                signupViewModel
-        );
-        final LoginInputBoundary loginInteractor = new LoginInteractor(userDataAccessObject, loginPresenter);
-        final LoginController loginController = new LoginController(loginInteractor);
-        loginView.setLoginController(loginController);
-
-        return this;
-    }
-
-    /**
-     * Adds the CurrentPriceView to the cardpanel.
-     * @return this builder
-     */
-    public AppBuilder addCurrentPriceView() {
-        currentPriceViewModel = new CurrentPriceViewModel();
-        currentPriceView = new CurrentPriceView(currentPriceViewModel);
-        cardPanel.add(currentPriceView, currentPriceView.getViewName());
-        return this;
-    }
-
-    /**
-     * Adds the CurrentPrice Use Case to the application.
-     * @return this builder
-     */
-    public AppBuilder addCurrentPriceUseCase() {
-        // Setup Presenter and Interactor for CurrentPrice with necessary dependencies
-        final CurrentPriceOutputBoundary currentPricePresenter = new CurrentPricePresenter(
-                viewManagerModel,
-                currentPriceViewModel
-        );
-        final CurrentPriceInputBoundary currentPriceInteractor = new CurrentPriceInteractor(currentPricePresenter);
-        final CurrentPriceController currentPriceController = new CurrentPriceController(currentPriceInteractor);
-        currentPriceView.setCurrentPriceController(currentPriceController);
-
+        loginFactory.getLoginView().setLoginController(loginFactory.getLoginController());
         return this;
     }
 
@@ -161,7 +80,7 @@ public class AppBuilder {
         application.add(cardPanel);
 
         // Setting the initial view to SignupView
-        viewManagerModel.setState(signupView.getViewName());
+        viewManagerModel.setState(signupFactory.getSignupView().getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
