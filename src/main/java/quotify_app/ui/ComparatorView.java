@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import quotify_app.adapters.comparator.ComparatorController;
+import quotify_app.adapters.comparator.ComparatorState;
 import quotify_app.adapters.comparator.ComparatorViewModel;
 
 /**
@@ -146,16 +147,20 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        final String propertyName = evt.getPropertyName();
-        if ("house1".equals(propertyName)) {
-            house1Label.setText((String) evt.getNewValue());
+        final ComparatorState state = comparatorViewModel.getState();
+        house1Label.setText(state.getList1());
+        house2Label.setText(state.getList2());
+        house3Label.setText(state.getList3());
+
+        // Update topPanel based on login status
+        topPanel.removeAll();
+        topPanel.remove(userProfileButton);
+        if (state.isLoggedIn()) {
+            // Show User Profile button
+            topPanel.add(userProfileButton);
         }
-        else if ("house2".equals(propertyName)) {
-            house2Label.setText((String) evt.getNewValue());
-        }
-        else if ("house3".equals(propertyName)) {
-            house3Label.setText((String) evt.getNewValue());
-        }
+        topPanel.revalidate();
+        topPanel.repaint();
     }
 
 }
