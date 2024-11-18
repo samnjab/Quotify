@@ -5,7 +5,7 @@ import quotify_app.adapters.ViewModel;
 /**
  * The ViewModel for the Function View.
  */
-public class FunctionViewModel extends ViewModel<FunctionState> {
+public class FunctionViewModel extends ViewModel<String> {
 
     // Labels for UI elements in the login view
     public static final String TITLE_LABEL = "Choose!";
@@ -14,7 +14,6 @@ public class FunctionViewModel extends ViewModel<FunctionState> {
 
     public FunctionViewModel() {
         super("function");
-        setState(new FunctionState());
     }
 
 }
