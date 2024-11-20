@@ -12,6 +12,7 @@ public class CurrentPriceState {
      * Initializes the CurrentPriceState with default values.
      */
     public CurrentPriceState() {
+        // this placeholder will show the generated estimate price of the house.
         this.currentPrice = "(placeholder)";
         // Default to not logged in
         this.isLoggedIn = false;

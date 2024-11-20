@@ -18,12 +18,12 @@ public interface CurrentPriceOutputBoundary {
     /**
      * Prepares the response to navigate to the Future Pricing Guest View.
      */
-    void presentGoToFuturePricingGuest();
+    void presentGoToFuturePricing();
 
     /**
      * Prepares the response to navigate to the Comparator Guest View.
      */
-    void presentGoToComparatorGuest();
+    void presentGoToComparator();
 
     /**
      * Prepares the response if the user is logged in or not.
@@ -34,4 +34,9 @@ public interface CurrentPriceOutputBoundary {
      * Prepares the response to navigate to the UserProfileView.
      */
     void presentGoToUserProfile();
+
+    /**
+     * Prepares the response to navigate to the LandingPageView.
+     */
+    void presentGoToLandingPage();
 }

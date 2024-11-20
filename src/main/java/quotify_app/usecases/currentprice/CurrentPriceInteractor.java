@@ -30,15 +30,15 @@ public class CurrentPriceInteractor implements CurrentPriceInputBoundary {
     }
 
     @Override
-    public void goToFuturePricingGuest() {
+    public void goToFuturePricing() {
         // Perform any necessary business logic here
-        currentPricePresenter.presentGoToFuturePricingGuest();
+        currentPricePresenter.presentGoToFuturePricing();
     }
 
     @Override
-    public void goToComparatorGuest() {
+    public void goToComparator() {
         // Perform any necessary business logic here
-        currentPricePresenter.presentGoToComparatorGuest();
+        currentPricePresenter.presentGoToComparator();
     }
 
     @Override
@@ -51,6 +51,12 @@ public class CurrentPriceInteractor implements CurrentPriceInputBoundary {
     public void goToUserProfile() {
         // Perform any necessary business logic here
         currentPricePresenter.presentGoToUserProfile();
+    }
+
+    @Override
+    public void goToLandingPage() {
+        // Perform any necessary business logic here
+        currentPricePresenter.presentGoToLandingPage();
     }
 
 }

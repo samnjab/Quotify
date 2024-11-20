@@ -29,8 +29,7 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
     private final JLabel currentPriceLabel = new JLabel();
     private final JButton futureButton = new JButton(CurrentPriceViewModel.FUTURE_BUTTON_LABEL);
     private final JButton comparePropertyButton = new JButton(CurrentPriceViewModel.COMPARE_PROPERTY_BUTTON_LABEL);
-    private final JButton loginButton = new JButton(CurrentPriceViewModel.LOGIN_BUTTON_LABEL);
-    private final JButton signupButton = new JButton(CurrentPriceViewModel.SIGNUP_BUTTON_LABEL);
+    private final JButton landingPageButton = new JButton(CurrentPriceViewModel.LANDING_PAGE_BUTTOM_LABEL);
     private final JButton userProfileButton = new JButton(CurrentPriceViewModel.USER_PROFILE_BUTTON_LABEL);
 
     // Store reference to topPanel
@@ -103,20 +102,11 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
      * Each listener calls the appropriate method on the controller.
      */
     private void addActionListeners() {
-        loginButton.addActionListener(new ActionListener() {
+        landingPageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentPriceController != null) {
-                    currentPriceController.goToLogin();
-                }
-            }
-        });
-
-        signupButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (currentPriceController != null) {
-                    currentPriceController.goToSignup();
+                    currentPriceController.goToLandingPage();
                 }
             }
         });
@@ -125,7 +115,7 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentPriceController != null) {
-                    currentPriceController.goToFuturePricingGuest();
+                    currentPriceController.goToFuturePricing();
                 }
             }
         });
@@ -134,7 +124,7 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentPriceController != null) {
-                    currentPriceController.goToComparatorGuest();
+                    currentPriceController.goToComparator();
                 }
             }
         });
@@ -163,9 +153,8 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
             topPanel.add(userProfileButton);
         }
         else {
-            // Show Login and Signup buttons
-            topPanel.add(loginButton);
-            topPanel.add(signupButton);
+            // Show Landing Page button
+            topPanel.add(landingPageButton);
         }
         topPanel.revalidate();
         topPanel.repaint();
@@ -189,5 +178,9 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         updateView();
+    }
+
+    public JButton getLandingPageButton() {
+        return landingPageButton;
     }
 }

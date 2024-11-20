@@ -104,7 +104,7 @@ public class AppBuilder {
         application.add(cardPanel);
 
         // Setting the initial view to SignupView
-        viewManagerModel.setState(signupFactory.getSignupView().getViewName());
+        viewManagerModel.setState(currentPriceFactory.getCurrentPriceView().getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;

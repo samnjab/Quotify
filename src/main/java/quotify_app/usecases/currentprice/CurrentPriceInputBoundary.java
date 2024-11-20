@@ -18,12 +18,12 @@ public interface CurrentPriceInputBoundary {
     /**
      * Handles the action to navigate to the Future Pricing Guest View.
      */
-    void goToFuturePricingGuest();
+    void goToFuturePricing();
 
     /**
      * Handles the action to navigate to the Comparator Guest View.
      */
-    void goToComparatorGuest();
+    void goToComparator();
 
     /**
      * Prepares the response if the user is logged in or not.
@@ -34,4 +34,9 @@ public interface CurrentPriceInputBoundary {
      * Handles the action to navigate to the User Profile View.
      */
     void goToUserProfile();
+
+    /**
+     * Handles the action to navigate to the Landing Page View.
+     */
+    void goToLandingPage();
 }

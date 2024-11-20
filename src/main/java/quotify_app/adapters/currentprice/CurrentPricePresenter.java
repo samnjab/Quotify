@@ -37,14 +37,14 @@ public class CurrentPricePresenter implements CurrentPriceOutputBoundary {
     }
 
     @Override
-    public void presentGoToFuturePricingGuest() {
-        viewManagerModel.setState("FuturePricingGuestView");
+    public void presentGoToFuturePricing() {
+        viewManagerModel.setState("FuturePricingView");
         viewManagerModel.firePropertyChanged();
     }
 
     @Override
-    public void presentGoToComparatorGuest() {
-        viewManagerModel.setState("ComparatorGuestView");
+    public void presentGoToComparator() {
+        viewManagerModel.setState("ComparatorView");
         viewManagerModel.firePropertyChanged();
     }
 
@@ -60,5 +60,11 @@ public class CurrentPricePresenter implements CurrentPriceOutputBoundary {
         final boolean isLoggedIn = ApplicationState.getInstance().isLoggedIn();
         currentPriceViewModel.getState().setLoggedIn(isLoggedIn);
         currentPriceViewModel.firePropertyChanged();
+    }
+
+    @Override
+    public void presentGoToLandingPage() {
+        viewManagerModel.setState("LandingPageView");
+        viewManagerModel.firePropertyChanged();
     }
 }
