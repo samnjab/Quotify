@@ -16,12 +16,12 @@ public interface CurrentPriceInputBoundary {
     void goToSignup();
 
     /**
-     * Handles the action to navigate to the Future Pricing Guest View.
+     * Handles the action to navigate to the Future Pricing View.
      */
     void goToFuturePricing();
 
     /**
-     * Handles the action to navigate to the Comparator Guest View.
+     * Handles the action to navigate to the Comparator View.
      */
     void goToComparator();
 

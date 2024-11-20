@@ -16,12 +16,12 @@ public interface CurrentPriceOutputBoundary {
     void presentGoToSignup();
 
     /**
-     * Prepares the response to navigate to the Future Pricing Guest View.
+     * Prepares the response to navigate to the Future Pricing View.
      */
     void presentGoToFuturePricing();
 
     /**
-     * Prepares the response to navigate to the Comparator Guest View.
+     * Prepares the response to navigate to the Comparator View.
      */
     void presentGoToComparator();
 

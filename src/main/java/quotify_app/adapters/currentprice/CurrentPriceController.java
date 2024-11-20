@@ -34,15 +34,14 @@ public class CurrentPriceController {
     }
 
     /**
-     * Triggers navigation to the Future Pricing Guest View, i can change this to just Future Pricing View if Future
-     * Pricing and Future Pricing Logged In View logic is merged into one using the application status.
+     * Triggers navigation to the Future Pricing View.
      */
     public void goToFuturePricing() {
         currentPriceInteractor.goToFuturePricing();
     }
 
     /**
-     * Triggers navigation to the Comparator Guest View. Same case with this one i will replace the names if needed.
+     * Triggers navigation to the Comparator View. Same case with this one i will replace the names if needed.
      */
     public void goToComparator() {
         currentPriceInteractor.goToComparator();
