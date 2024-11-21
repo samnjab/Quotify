@@ -11,14 +11,15 @@ public class Area {
     private final String geoId;
     private final String geoKey;
     private final String name;
+    private final String nameCode;
 
-    // Constructor
-    public Area(String type, String geoIdV4, String geoId, String geoKey, String name) {
+    public Area(String type, String geoIdV4, String geoId, String geoKey, String name, String nameCode) {
         this.type = type;
         this.geoIdV4 = geoIdV4;
         this.geoId = geoId;
         this.geoKey = geoKey;
         this.name = name;
+        this.nameCode = nameCode;
     }
 
     // Getters
@@ -42,23 +43,20 @@ public class Area {
         return name;
     }
 
+    public String getNameCode() {
+        return nameCode;
+    }
+
     // Overridden Methods
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true; // Reference equality
-        if (o == null || getClass() != o.getClass()) return false; // Null or type mismatch
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Area area = (Area) o;
-        return Objects.equals(type, area.type) &&
-                Objects.equals(geoIdV4, area.geoIdV4) &&
-                Objects.equals(geoId, area.geoId) &&
-                Objects.equals(geoKey, area.geoKey) &&
-                Objects.equals(name, area.name);
+        return Objects.equals(geoIdV4, area.geoIdV4);
+
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, geoIdV4, geoId, geoKey, name);
-    }
 
     @Override
     public String toString() {
@@ -68,6 +66,7 @@ public class Area {
                 ", geoId='" + geoId + '\'' +
                 ", geoKey='" + geoKey + '\'' +
                 ", name='" + name + '\'' +
+                ", nameCode='" + nameCode + '\'' +
                 '}';
     }
 }
