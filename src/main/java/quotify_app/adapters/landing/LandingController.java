@@ -17,7 +17,7 @@ public class LandingController {
     }
 
     /**
-     * Executes the Select Region usecase.
+     * Executes the Select Address usecase.
      * @param country the name of the country to pass to the interactor.
      * @param state the name of the state to pass to the interactor.
      * @param city the name of the city to pass to the interactor.
@@ -27,7 +27,7 @@ public class LandingController {
      */
     public void selectRegion(Area country, Area state, Area city, String stAddress) throws Exception {
         final AddressInputData addressInputData = new AddressInputData(country, state, city, stAddress);
-        landingInteractor.selectRegion(addressInputData);
+        landingInteractor.selectAddress(addressInputData);
     }
 
     /**

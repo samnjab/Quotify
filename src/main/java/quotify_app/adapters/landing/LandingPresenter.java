@@ -4,11 +4,12 @@ import quotify_app.adapters.ViewManagerModel;
 import quotify_app.adapters.login.LoginViewModel;
 import quotify_app.adapters.signup.SignupViewModel;
 import quotify_app.usecases.landing.LandingOutputBoundary;
-import quotify_app.usecases.landing.RegionOutputData;
+import quotify_app.usecases.landing.AreaOutputData;
 
 /**
  * The Presenter for the Landing page.
  */
+
 public class LandingPresenter implements LandingOutputBoundary {
 
     private final SignupViewModel signupViewModel;
@@ -29,8 +30,7 @@ public class LandingPresenter implements LandingOutputBoundary {
     }
 
     @Override
-    public void prepareSuccessView(RegionOutputData regionOutputData) {
-        // Clear any login error and update state
+    public void prepareSuccessView(AreaOutputData areaOutputData) {
         loginViewModel.getState().setLoginError("");
         loginViewModel.firePropertyChanged();
 

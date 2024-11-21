@@ -20,12 +20,12 @@ public class LandingInteractor implements LandingInputBoundary {
     }
 
     @Override
-    public void selectRegion(AddressInputData addressInputData) throws Exception {
+    public void selectAddress(AddressInputData addressInputData) throws Exception {
         final Area country = addressInputData.getCountry();
         final Area state = addressInputData.getState();
         final Area city = addressInputData.getCity();
         final Address address = addressInputData.getAddress();
-//        make an API call to find the property at address.
+//        makes an API call to find the property at address.
 //        presenter moves to property confimation window if property is found.
 //        presenter prepares a fail window if the property can't be accessed via the API.
     }
@@ -52,7 +52,9 @@ public class LandingInteractor implements LandingInputBoundary {
      */
     @Override
     public List<String> selectCountry() throws Exception {
-        // Empty implementation
+//       locks in the country selected.
+//       makes an API call to /state/lookup  to retrieve a list of states
+//
         return null;
     }
 

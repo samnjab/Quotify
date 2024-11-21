@@ -8,10 +8,10 @@ import java.util.List;
 public interface LandingInputBoundary {
 
     /**
-     * Executes the Select Region use case.
+     * Executes the Select Address use case.
      * @param regionInputData the input data containing the selected region.
      */
-    void selectRegion(AddressInputData addressInputData) throws Exception;
+    void selectAddress(AddressInputData addressInputData) throws Exception;
 
     /**
      * Switches to the signup view.
