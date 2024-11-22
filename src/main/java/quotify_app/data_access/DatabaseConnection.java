@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * Class that initializes connection with the SQLite server.
  */
-public class DatabaseConnection {
+public class  DatabaseConnection {
     private static final String URL = "jdbc:sqlite:quotify.db";
 
     /**

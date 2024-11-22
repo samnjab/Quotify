@@ -3,8 +3,8 @@ package quotify_app.adapters.landing;
 import quotify_app.adapters.ViewManagerModel;
 import quotify_app.adapters.login.LoginViewModel;
 import quotify_app.adapters.signup.SignupViewModel;
-import quotify_app.usecases.landing.LandingOutputBoundary;
 import quotify_app.usecases.landing.AreaOutputData;
+import quotify_app.usecases.landing.LandingOutputBoundary;
 
 /**
  * The Presenter for the Landing page.
@@ -40,6 +40,16 @@ public class LandingPresenter implements LandingOutputBoundary {
         System.out.println("successfully logged in");
     }
 
+    /**
+     * Prepares the failure view for the Select Region Use Case.
+     *
+     * @param errorMessage the explanation of the failure
+     */
+    @Override
+    public void prepareFailView(String errorMessage) {
+
+    }
+
     @Override
     public void prepareFailView(String errorMessage) {
         // Set login error and notify view
@@ -55,6 +65,14 @@ public class LandingPresenter implements LandingOutputBoundary {
         // Transition to signup view
         viewManagerModel.setState(signupViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
+    }
+
+    /**
+     * Interface for executing the switch to Login screen usecase.
+     */
+    @Override
+    public void goToLogin() {
+
     }
 
     /**

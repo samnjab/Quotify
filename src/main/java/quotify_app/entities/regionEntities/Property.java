@@ -1,6 +1,6 @@
 package quotify_app.entities.regionEntities;
 
-import java.util.Objects;
+import java.util.Object;
 
 /**
  * The representation of a property in our program.
