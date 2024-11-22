@@ -35,7 +35,7 @@ public class FunctionFactory {
      * @param viewManagerModel the ViewManagerModel from the AppBuilder.
      */
     public void setUpController(ViewManagerModel viewManagerModel) {
-        // Setup Presenter and Interactor for CurrentPrice with necessary dependencies
+        // Setup Presenter and Interactor for Function with necessary dependencies
         final FunctionOutputBoundary currentPricePresenter = new FunctionPresenter(
                 viewManagerModel,
                 functionViewModel
