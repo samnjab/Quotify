@@ -28,6 +28,34 @@
             <version>5.9.3</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Google Vertex API -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-aiplatform</artifactId>
+            <version>3.35.0</version>
+        </dependency>
+
+        <!-- Jackson Databind: Provides data-binding and JSON serialization/deserialization -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+
+        <!-- Jackson Core: Core functionality required by Jackson Databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+
+        <!-- Jackson Annotations: Supports Jackson-specific annotations like @JsonProperty -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.15.2</version>
+        </dependency>
     </dependencies>
 
     <build>

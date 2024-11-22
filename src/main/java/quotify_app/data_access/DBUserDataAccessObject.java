@@ -16,7 +16,6 @@ import quotify_app.usecases.signup.SignupUserDataAccessInterface;
 public class DBUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
 
     private final UserFactory userFactory;
-    private String currentUsername;
 
     public DBUserDataAccessObject(UserFactory userFactory) {
         this.userFactory = userFactory;
@@ -141,11 +140,4 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
         return userFactory;
     }
 
-    public void setCurrentUsername(String username) {
-        this.currentUsername = username;
-    }
-
-    public String getCurrentUsername() {
-        return currentUsername;
-    }
 }
