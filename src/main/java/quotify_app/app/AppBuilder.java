@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import quotify_app.adapters.ViewManagerModel;
+import quotify_app.app.factories.CurrentPriceFactory;
 import quotify_app.app.factories.LoginFactory;
 import quotify_app.app.factories.SignupFactory;
 import quotify_app.data_access.DBUserDataAccessObject;
@@ -24,12 +25,14 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
     private final SignupFactory signupFactory = new SignupFactory();
     private final LoginFactory loginFactory = new LoginFactory();
+    private final CurrentPriceFactory currentPriceFactory = new CurrentPriceFactory();
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
         final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(new CommonUserFactory());
         loginFactory.setUpController(signupFactory, viewManagerModel, userDataAccessObject);
         signupFactory.setUpController(loginFactory, viewManagerModel, userDataAccessObject);
+        currentPriceFactory.setUpController(viewManagerModel);
     }
 
     /**
@@ -69,6 +72,27 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the CurrentPrice View to the application.
+     * @return this builder
+     */
+    public AppBuilder addCurrentPriceView() {
+        cardPanel
+                .add(currentPriceFactory.getCurrentPriceView(),
+                        currentPriceFactory.getCurrentPriceView().getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the CurrentPrice Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addCurrentPriceUseCase() {
+        currentPriceFactory.getCurrentPriceView()
+                .setCurrentPriceController(currentPriceFactory.getCurrentPriceController());
+        return this;
+    }
+
+    /**
      * Sets up the JFrame for the application and establishes the initial view state.
      * @return the application JFrame
      */
@@ -80,7 +104,7 @@ public class AppBuilder {
         application.add(cardPanel);
 
         // Setting the initial view to SignupView
-        viewManagerModel.setState(signupFactory.getSignupView().getViewName());
+        viewManagerModel.setState(currentPriceFactory.getCurrentPriceView().getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
