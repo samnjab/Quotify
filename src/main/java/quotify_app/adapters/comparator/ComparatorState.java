@@ -1,15 +1,17 @@
 package quotify_app.adapters.comparator;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import quotify_app.entities.Property;
 
 /**
  * The state for the Comparator View Model.
+ *  The private attribute properties stores the data for each property in separate maps.
  */
 public class ComparatorState {
     private boolean isLoggedIn;
-    private ArrayList<Object> list1;
-    private ArrayList<Object> list2;
-    private ArrayList<Object> list3;
+    private List<Property> properties;
 
     /**
      * Initializes the ComparatorState with default values.
@@ -17,9 +19,7 @@ public class ComparatorState {
     public ComparatorState() {
         // Default to not logged in
         this.isLoggedIn = false;
-        this.list1 = new ArrayList<>();
-        this.list2 = new ArrayList<>();
-        this.list3 = new ArrayList<>();
+        this.properties = new ArrayList<>();
     }
 
     // Getter and setter for isLoggedIn
@@ -31,49 +31,50 @@ public class ComparatorState {
         isLoggedIn = loggedIn;
     }
 
-    // Getter for lists
-    public String getList1() {
-        return String.valueOf(list1);
-    }
-
-    public String getList2() {
-        return String.valueOf(list2);
-    }
-
-    public String getList3() {
-        return String.valueOf(list3);
+    // Getter and setter for the lists
+    /**
+     * Retrieves the list of properties.
+     *
+     * @return the list of properties.
+     */
+    public List<Property> getProperties() {
+        return properties;
     }
 
     /**
-     * Sets list1 to the provided value.
+     * Updates the property list.
      *
-     * @param list1 the {@code ArrayList} to set as list1. If {@code null}, no changes are made.
+     * @param properties a list of properties to set. If null, no changes are made.
      */
-    public void setList1(ArrayList<Object> list1) {
-        if (list1 != null) {
-            this.list1 = new ArrayList<>(list1);
+    public void setProperties(List<Property> properties) {
+        if (properties != null) {
+            this.properties = new ArrayList<>(properties);
         }
     }
 
     /**
-     * Sets list2 to the provided value.
+     * Adds a property to the list.
      *
-     * @param list2 the {@code ArrayList} to set as list2. If {@code null}, no changes are made.
+     * @param property the property to add. If null, the method does nothing.
      */
-    public void setList2(ArrayList<Object> list2) {
-        if (list2 != null) {
-            this.list2 = new ArrayList<>(list2);
+    public void addProperty(Property property) {
+        if (property != null) {
+            this.properties.add(property);
         }
     }
 
     /**
-     * Sets list3 to the provided value.
+     * Retrieves a property based on its position in the list.
      *
-     * @param list3 the {@code ArrayList} to set as list3. If {@code null}, no changes are made.
+     * @param index the position of the property in the list.
+     * @return the property value as a string, or {@code null} if the index is invalid.
      */
-    public void setList3(ArrayList<Object> list3) {
-        if (list3 != null) {
-            this.list3 = new ArrayList<>(list3);
+    public String getProperty(int index) {
+        String result = null;
+        if (index >= 0 && index < properties.size()) {
+            result = properties.get(index).toString();
         }
+        return result;
     }
+
 }

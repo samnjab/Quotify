@@ -7,10 +7,10 @@ import quotify_app.adapters.ViewModel;
  */
 public class FunctionViewModel extends ViewModel<String> {
 
-    // Labels for UI elements in the login view
+    // Labels for UI elements in the function view
     public static final String TITLE_LABEL = "Choose!";
-    public static final String ESTIMATE_PRICE_LABEL = "Estimate Current";
-    public static final String COMPARE_LABEL = "Compare with similar property";
+    public static final String ESTIMATE_PRICE_LABEL = "Estimate Price";
+    public static final String COMPARE_LABEL = "Compare Similar Properties";
 
     public FunctionViewModel() {
         super("function");

@@ -30,9 +30,9 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
     private ComparatorController comparatorController;
     private final ComparatorViewModel comparatorViewModel;
 
-    private final JLabel house1Label = new JLabel(ComparatorViewModel.HOUSE1_LABEL);
-    private final JLabel house2Label = new JLabel(ComparatorViewModel.HOUSE2_LABEL);
-    private final JLabel house3Label = new JLabel(ComparatorViewModel.HOUSE3_LABEL);
+    private final JLabel property1Label = new JLabel(ComparatorViewModel.HOUSE1_LABEL);
+    private final JLabel property2Label = new JLabel(ComparatorViewModel.HOUSE2_LABEL);
+    private final JLabel property3Label = new JLabel(ComparatorViewModel.HOUSE3_LABEL);
     private final JButton generatePriceButton = new JButton(ComparatorViewModel.ESTIMATE_PRICE_BUTTON_LABEL);
     private final JButton newHouseButton = new JButton(ComparatorViewModel.NEW_HOUSE_BUTTON_LABEL);
     private final JButton userProfileButton = new JButton(ComparatorViewModel.USER_PROFILE_BUTTON_LABEL);
@@ -83,14 +83,14 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
         centerPanel.setLayout(new GridLayout(
                 CENTER_PANEL_ROWS, CENTER_PANEL_COLUMNS, CENTER_PANEL_GAP, CENTER_PANEL_GAP));
 
-        house1Label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.add(house1Label);
+        property1Label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(property1Label);
 
-        house2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.add(house2Label);
+        property2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(property2Label);
 
-        house3Label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.add(house3Label);
+        property3Label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(property3Label);
 
         add(centerPanel, BorderLayout.CENTER);
 
@@ -148,9 +148,9 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final ComparatorState state = comparatorViewModel.getState();
-        house1Label.setText(state.getList1());
-        house2Label.setText(state.getList2());
-        house3Label.setText(state.getList3());
+        property1Label.setText(state.getProperty(0));
+        property2Label.setText(state.getProperty(1));
+        property3Label.setText(state.getProperty(2));
 
         // Update topPanel based on login status
         topPanel.removeAll();
