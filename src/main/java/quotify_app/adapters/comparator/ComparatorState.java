@@ -7,7 +7,7 @@ import quotify_app.entities.Property;
 
 /**
  * The state for the Comparator View Model.
- *  The private attribute properties stores the data for each property in separate maps.
+ *  The private attribute properties stores the data for each property in its separate lists.
  */
 public class ComparatorState {
     private boolean isLoggedIn;

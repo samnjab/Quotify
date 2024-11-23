@@ -1,28 +1,31 @@
 package quotify_app.entities;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Represents a collection of properties as key-value pairs.
+ * Represents a collection of property data.
  */
 public class Property {
-    private final Map<String, String> propertyData;
+    private List<String> propertyData;
 
     /**
      * Constructs an empty Property object.
      */
     public Property() {
-        this.propertyData = new HashMap<>();
+        this.propertyData = new ArrayList<>();
     }
 
     /**
      * Adds or updates a property in the map.
      *
-     * @param key   the key of the property.
-     * @param value the value of the property.
+     * @param lists   the key of the property.
      */
-    public void setProperty(String key, String value) {
-        propertyData.put(key, value);
+    public void setPropertyData(List<String> lists) {
+        propertyData = lists;
+    }
+
+    public List<String> getPropertyData() {
+        return propertyData;
     }
 }
