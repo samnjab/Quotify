@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import quotify_app.adapters.ViewManagerModel;
+import quotify_app.app.factories.ComparatorFactory;
+import quotify_app.app.factories.FunctionFactory;
 import quotify_app.app.factories.CurrentPriceFactory;
 import quotify_app.app.factories.LoginFactory;
 import quotify_app.app.factories.SignupFactory;
@@ -25,6 +27,8 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
     private final SignupFactory signupFactory = new SignupFactory();
     private final LoginFactory loginFactory = new LoginFactory();
+    private final FunctionFactory functionFactory = new FunctionFactory();
+    private final ComparatorFactory comparatorFactory = new ComparatorFactory();
     private final CurrentPriceFactory currentPriceFactory = new CurrentPriceFactory();
 
     public AppBuilder() {
@@ -32,6 +36,8 @@ public class AppBuilder {
         final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(new CommonUserFactory());
         loginFactory.setUpController(signupFactory, viewManagerModel, userDataAccessObject);
         signupFactory.setUpController(loginFactory, viewManagerModel, userDataAccessObject);
+        functionFactory.setUpController(viewManagerModel);
+        comparatorFactory.setUpController(viewManagerModel);
         currentPriceFactory.setUpController(viewManagerModel);
     }
 
@@ -72,6 +78,13 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the Function View to the application.
+     * @return this builder
+     */
+    public AppBuilder addFunctionView() {
+        cardPanel.add(functionFactory.getFunctionView(),
+                        functionFactory.getFunctionView().getViewName());
+    /**
      * Adds the CurrentPrice View to the application.
      * @return this builder
      */
@@ -82,6 +95,32 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the Function Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addFunctionUseCase() {
+        functionFactory.getFunctionView().setFunctionController(functionFactory.getFunctionController());
+        return this;
+    }
+
+    /**
+     * Adds the Comparator View to the application.
+     * @return this builder
+     */
+    public AppBuilder addComparatorView() {
+        cardPanel.add(comparatorFactory.getComparatorView(),
+                        comparatorFactory.getComparatorView().getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Comparator Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addComparatorUseCase() {
+        comparatorFactory.getComparatorView().setComparatorController(comparatorFactory.getComparatorController());
+      
     /**
      * Adds the CurrentPrice Use Case to the application.
      * @return this builder
@@ -106,7 +145,6 @@ public class AppBuilder {
         // Setting the initial view to SignupView
         viewManagerModel.setState(signupFactory.getSignupView().getViewName());
         viewManagerModel.firePropertyChanged();
-
         return application;
     }
 }
