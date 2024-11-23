@@ -38,19 +38,19 @@ public class CurrentPricePresenter implements CurrentPriceOutputBoundary {
 
     @Override
     public void presentGoToFuturePricing() {
-        viewManagerModel.setState("FuturePricingView");
+        viewManagerModel.setState("future price");
         viewManagerModel.firePropertyChanged();
     }
 
     @Override
     public void presentGoToComparator() {
-        viewManagerModel.setState("ComparatorView");
+        viewManagerModel.setState("comparator");
         viewManagerModel.firePropertyChanged();
     }
 
     @Override
     public void presentGoToUserProfile() {
-        viewManagerModel.setState("UserProfileView");
+        viewManagerModel.setState("user profile");
         viewManagerModel.firePropertyChanged();
     }
 
@@ -64,7 +64,7 @@ public class CurrentPricePresenter implements CurrentPriceOutputBoundary {
 
     @Override
     public void presentGoToLandingPage() {
-        viewManagerModel.setState("LandingPageView");
+        viewManagerModel.setState("landing page");
         viewManagerModel.firePropertyChanged();
     }
 }

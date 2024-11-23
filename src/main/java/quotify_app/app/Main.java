@@ -18,9 +18,11 @@ public class Main {
                 .addSignupView()
                 .addLoginView()
                 .addCurrentPriceView()
+                .addFuturePriceView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addCurrentPriceUseCase()
+                .addFuturePriceUseCase()
                 .build();
 
         application.pack();
