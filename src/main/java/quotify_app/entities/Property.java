@@ -7,13 +7,13 @@ import java.util.Map;
  * Represents a collection of properties as key-value pairs.
  */
 public class Property {
-    private final Map<String, String> properties;
+    private final Map<String, String> propertyData;
 
     /**
      * Constructs an empty Property object.
      */
     public Property() {
-        this.properties = new HashMap<>();
+        this.propertyData = new HashMap<>();
     }
 
     /**
@@ -23,6 +23,6 @@ public class Property {
      * @param value the value of the property.
      */
     public void setProperty(String key, String value) {
-        properties.put(key, value);
+        propertyData.put(key, value);
     }
 }
