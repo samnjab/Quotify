@@ -1,87 +1,109 @@
 package quotify_app.adapters.landing;
 
+import java.util.List;
+
 import quotify_app.adapters.ViewManagerModel;
-import quotify_app.adapters.login.LoginViewModel;
-import quotify_app.adapters.signup.SignupViewModel;
+import quotify_app.entities.regionEntities.Area;
+import quotify_app.usecases.landing.AreaListOutputData;
 import quotify_app.usecases.landing.AreaOutputData;
 import quotify_app.usecases.landing.LandingOutputBoundary;
 
 /**
- * The Presenter for the Landing page.
+ * The Presenter for the Select Address Use Case.
  */
-
 public class LandingPresenter implements LandingOutputBoundary {
 
-    private final SignupViewModel signupViewModel;
-    private final LoginViewModel loginViewModel;
     private final ViewManagerModel viewManagerModel;
     private final LandingViewModel landingViewModel;
 
     public LandingPresenter(
             ViewManagerModel viewManagerModel,
-            LoginViewModel loginViewModel,
-            SignupViewModel signupViewModel,
             LandingViewModel landingViewModel
     ) {
         this.viewManagerModel = viewManagerModel;
-        this.loginViewModel = loginViewModel;
-        this.signupViewModel = signupViewModel;
         this.landingViewModel = landingViewModel;
     }
 
     @Override
-    public void prepareSuccessView(AreaOutputData areaOutputData) {
-        loginViewModel.getState().setLoginError("");
-        loginViewModel.firePropertyChanged();
+    public void prepareAreaSuccessView(AreaOutputData areaOutputData) {
+        if (!areaOutputData.isSelectionFailed()) {
+            switch (areaOutputData.getArea().getType()) {
+                case "country":
+                    landingViewModel.setAvailableStates(null);
+                    landingViewModel.setAvailableCities(null);
+                    landingViewModel.getState().setSelectedCountry(areaOutputData.getArea());
+                    break;
+                case "state":
+                    landingViewModel.setAvailableCities(null);
+                    landingViewModel.getState().setSelectedState(areaOutputData.getArea());
+                    break;
+                case "city":
+                    landingViewModel.getState().setSelectedCity(areaOutputData.getArea());
+                    break;
+                default:
+                    break;
+            }
+        }
+        else {
+            landingViewModel.getState().setErrorMessage("Failed to select region: "
+                    + areaOutputData.getArea().getName());
+        }
+    }
 
-        // Trigger view change if login is successful, assumes there's a "logged in" view state
-        viewManagerModel.setState("logged in");
-        viewManagerModel.firePropertyChanged();
-        System.out.println("successfully logged in");
+    @Override
+    public void prepareAreaFailView(String errorMessage) {
+        landingViewModel.getState().setErrorMessage(errorMessage);
+    }
+
+    @Override
+    public void prepareAreaListSuccessView(AreaListOutputData areaListOutputData) {
+        if (!areaListOutputData.isSelectionFailed()) {
+            final List<Area> areas = areaListOutputData.getAreas();
+            final String areaType = areaListOutputData.getAreaType();
+
+            switch (areaType) {
+                case "country":
+                    landingViewModel.setAvailableCountries(areas);
+                    break;
+                case "state":
+                    landingViewModel.setAvailableStates(areas);
+                    break;
+                case "city":
+                    landingViewModel.setAvailableCities(areas);
+                    break;
+                default:
+                    landingViewModel.getState().setErrorMessage("Unknown area type for list: " + areaType);
+                    break;
+            }
+        }
+        else {
+            landingViewModel.getState().setErrorMessage("Failed to fetch area list.");
+        }
     }
 
     /**
-     * Prepares the failure view for the Select Region Use Case.
-     *
+     * Prepares the failure view for the fetch list of area Use Case.
      * @param errorMessage the explanation of the failure
      */
     @Override
-    public void prepareFailView(String errorMessage) {
-
+    public void prepareAreaListFailView(String errorMessage) {
+        landingViewModel.getState().setErrorMessage("Failed to fetch areas: " + errorMessage);
     }
 
-    @Override
-    public void prepareFailView(String errorMessage) {
-        // Set login error and notify view
-        loginViewModel.getState().setLoginError(errorMessage);
-        loginViewModel.firePropertyChanged();
-    }
-
-    /**
-     * Navigates to the Signup View.
-     */
     @Override
     public void goToSignup() {
-        // Transition to signup view
-        viewManagerModel.setState(signupViewModel.getViewName());
+        // Reset the state when navigating
+        landingViewModel.getState().resetState();
+        viewManagerModel.setState("signup");
         viewManagerModel.firePropertyChanged();
     }
 
-    /**
-     * Interface for executing the switch to Login screen usecase.
-     */
     @Override
     public void goToLogin() {
-
-    }
-
-    /**
-     * Navigates to the Signup View.
-     */
-    @Override
-    public void goToLoginView() {
-        // Transition to Login view
-        viewManagerModel.setState(loginViewModel.getViewName());
+        // Reset the state when navigating
+        landingViewModel.getState().resetState();
+        viewManagerModel.setState("login");
         viewManagerModel.firePropertyChanged();
     }
+
 }
