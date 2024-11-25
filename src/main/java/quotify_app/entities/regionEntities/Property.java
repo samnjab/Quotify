@@ -1,19 +1,20 @@
 package quotify_app.entities.regionEntities;
 
-import java.util.Object;
+import java.util.Objects;
 
 /**
  * The representation of a property in our program.
  */
 public class Property {
+
     private final Identifier identifier;
     private final Address address;
     private final Summary summary;
 
     public Property(Identifier identifier, Address address, Summary summary) {
-        this.identifier = identifier;
-        this.address = address;
-        this.summary = summary;
+        this.identifier = Objects.requireNonNull(identifier, "Identifier cannot be null");
+        this.address = Objects.requireNonNull(address, "Address cannot be null");
+        this.summary = Objects.requireNonNull(summary, "Summary cannot be null");
     }
 
     public Identifier getIdentifier() {
@@ -26,25 +27,6 @@ public class Property {
 
     public Summary getSummary() {
         return summary;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final Property property = (Property) o;
-        return Objects.equals(identifier, property.identifier)
-                && Objects.equals(address, property.address)
-                && Objects.equals(summary, property.summary);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(identifier, address, summary);
     }
 
     @Override
