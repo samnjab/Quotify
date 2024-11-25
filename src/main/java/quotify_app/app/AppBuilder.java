@@ -83,7 +83,9 @@ public class AppBuilder {
      */
     public AppBuilder addFunctionView() {
         cardPanel.add(functionFactory.getFunctionView(),
-                        functionFactory.getFunctionView().getViewName());
+                functionFactory.getFunctionView().getViewName());
+        return this;
+    }
     /**
      * Adds the CurrentPrice View to the application.
      * @return this builder
@@ -120,7 +122,8 @@ public class AppBuilder {
      */
     public AppBuilder addComparatorUseCase() {
         comparatorFactory.getComparatorView().setComparatorController(comparatorFactory.getComparatorController());
-      
+        return this;
+    }
     /**
      * Adds the CurrentPrice Use Case to the application.
      * @return this builder
@@ -143,6 +146,7 @@ public class AppBuilder {
         application.add(cardPanel);
 
         // Setting the initial view to SignupView
+        // iewManagerModel.setState(functionFactory.getFunctionView().getViewName());
         viewManagerModel.setState(signupFactory.getSignupView().getViewName());
         viewManagerModel.firePropertyChanged();
         return application;
