@@ -1,22 +1,54 @@
 package quotify_app.usecases.landing;
 
-import quotify_app.entities.regionEntities.Area;
-import quotify_app.entities.regionEntities.Address;
-import quotify_app.usecases.landing.AddressInputData;
-
 import java.util.List;
+
+import quotify_app.entities.regionEntities.Address;
+import quotify_app.entities.regionEntities.Area;
 
 /**
  * The Landing Interactor.
  */
 public class LandingInteractor implements LandingInputBoundary {
-    private final RegionDataAccessInterface regionDataAccessObject;
+    private final AreaDataAccessInterface areaDataAccessObject;
     private final LandingOutputBoundary landingPresenter;
 
-    public LandingInteractor(RegionDataAccessInterface regionDataAccessInterface,
+    public LandingInteractor(AreaDataAccessInterface areaDataAccessInterface,
                              LandingOutputBoundary landingOutputBoundary) {
-        this.regionDataAccessObject = regionDataAccessInterface;
+        this.areaDataAccessObject = areaDataAccessInterface;
         this.landingPresenter = landingOutputBoundary;
+    }
+
+    /**
+     * Fetches and calls presenter with a list of available countries for the user to select.
+     * @param geoIdV4 the geoId of the selected country.
+     */
+    @Override
+    public void fetchAreas(String geoIdV4) {
+        try {
+            final List<Area> areaList = areaDataAccessObject.getSubAreas(geoIdV4);
+            final String areaType = areaList.get(0).getType();
+            final AreaListOutputData outputData = new AreaListOutputData(areaList, areaType, false);
+            landingPresenter.prepareAreaListSuccessView(outputData);
+        }
+        catch (Exception e) {
+            landingPresenter.prepareAreaListFailView("Failed to fetch countries: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Fetches and calls presenter with the selected Area.
+     * @param geoIdV4 the Area object of the selected area.
+     */
+    @Override
+    public void selectArea(String geoIdV4) {
+        try {
+            final Area area = areaDataAccessObject.getArea(geoIdV4);
+            final AreaOutputData outputData = new AreaOutputData(area, false);
+            landingPresenter.prepareAreaSuccessView(outputData);
+        }
+        catch (Exception e) {
+            landingPresenter.prepareAreaFailView("Failed to fetch countries: " + e.getMessage());
+        }
     }
 
     @Override
@@ -25,11 +57,12 @@ public class LandingInteractor implements LandingInputBoundary {
         final Area state = addressInputData.getState();
         final Area city = addressInputData.getCity();
         final Address address = addressInputData.getAddress();
-//        makes an API call to find the property at address.
-//        presenter moves to property confimation window if property is found.
-//        presenter prepares a fail window if the property can't be accessed via the API.
     }
 
+    @Override
+    public void autoCompleteAddress(String partialAddress) throws Exception {
+    // to be implemented.
+    }
     /**
      * Trigger view transition to Signup through the presenter.
      */
@@ -46,48 +79,4 @@ public class LandingInteractor implements LandingInputBoundary {
         landingPresenter.goToLogin();
     }
 
-    /**
-     * Fetches and displays a list of available countries for the user to select.
-     * @return a list of country names.
-     */
-    @Override
-    public List<String> selectCountry() throws Exception {
-//       locks in the country selected.
-//       makes an API call to /state/lookup  to retrieve a list of states
-//
-        return null;
-    }
-
-    /**
-     * Fetches and displays a list of states for the selected country.
-     * @param countryCode the code of the selected country.
-     * @return a list of state names.
-     */
-    @Override
-    public List<String> selectState(String countryCode) throws Exception {
-        // Empty implementation
-        return null;
-    }
-
-    /**
-     * Fetches and displays a list of cities for the selected state.
-     * @param stateCode the code of the selected state.
-     * @return a list of city names.
-     */
-    @Override
-    public List<String> selectCity(String stateCode) throws Exception {
-        // Empty implementation
-        return null;
-    }
-
-    /**
-     * Provides address suggestions based on a partial address input.
-     * @param partialAddress the partial address input by the user.
-     * @return a list of suggested address strings.
-     */
-    @Override
-    public List<String> autoCompleteAddress(String partialAddress) throws Exception {
-        // Empty implementation
-        return null;
-    }
 }
