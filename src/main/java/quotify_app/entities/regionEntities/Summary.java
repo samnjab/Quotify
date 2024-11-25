@@ -1,31 +1,52 @@
 package quotify_app.entities.regionEntities;
 
+import java.util.Map;
+
 /**
  * The representation of a property summary in our program.
  */
 
 public class Summary {
-    private final String propType;
+    public static final Map<String, Integer> PROPTYPE = Map.of(
+            "Condo", 0,
+            "SFR", 1
+    );
+    public static final Map<String, Integer> CONDITION = Map.of(
+            "Bad", 0,
+            "Good", 1
+    );
+    private final int propType;
+    private final int condition;
     private final int beds;
     private final int baths;
-    private final String condition;
     private final int levels;
     private final int size;
     private final int yearBuilt;
 
     // Constructor
     public Summary(String propType, int beds, int baths, String condition, int levels, int size, int yearBuilt) {
-        this.propType = propType;
+        final Integer propTypeValue = PROPTYPE.get(propType);
+        if (propTypeValue == null) {
+            throw new IllegalArgumentException("Invalid property type: " + propType);
+        }
+        this.propType = propTypeValue;
+
         this.beds = beds;
         this.baths = baths;
-        this.condition = condition;
+
+        final Integer conditionValue = CONDITION.get(condition);
+        if (conditionValue == null) {
+            throw new IllegalArgumentException("Invalid condition: " + condition);
+        }
+        this.condition = conditionValue;
+
         this.levels = levels;
         this.size = size;
         this.yearBuilt = yearBuilt;
     }
 
     // Getters
-    public String getPropType() {
+    public int getPropType() {
         return propType;
     }
 
@@ -37,7 +58,7 @@ public class Summary {
         return baths;
     }
 
-    public String getCondition() {
+    public int getCondition() {
         return condition;
     }
 

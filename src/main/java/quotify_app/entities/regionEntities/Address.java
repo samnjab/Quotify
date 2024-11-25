@@ -1,7 +1,5 @@
 package quotify_app.entities.regionEntities;
 
-import java.util.Objects;
-
 /**
  * The representation of an address in our program.
  */
@@ -61,24 +59,4 @@ public class Address {
         return fetchAddress1() + "\n" + fetchAddress2();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final Address address = (Address) obj;
-        return Objects.equals(countryCode, address.countryCode)
-                && Objects.equals(stateCode, address.stateCode)
-                && Objects.equals(city, address.city)
-                && Objects.equals(street, address.street)
-                && Objects.equals(streetNumber, address.streetNumber);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(countryCode, stateCode, city, street, streetNumber);
-    }
 }
