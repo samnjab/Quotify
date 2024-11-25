@@ -17,6 +17,12 @@ public class Main {
         final JFrame application = appBuilder
                 .addSignupView()
                 .addLoginView()
+                .addFunctionView()
+                .addComparatorView()
+                .addSignupUseCase()
+                .addLoginUseCase()
+                .addFunctionUseCase()
+                .addComparatorUseCase()
                 .addCurrentPriceView()
                 .addFuturePriceView()
                 .addSignupUseCase()
