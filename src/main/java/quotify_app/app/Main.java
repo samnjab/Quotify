@@ -24,9 +24,11 @@ public class Main {
                 .addFunctionUseCase()
                 .addComparatorUseCase()
                 .addCurrentPriceView()
+                .addFuturePriceView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addCurrentPriceUseCase()
+                .addFuturePriceUseCase()
                 .build();
 
         application.pack();
