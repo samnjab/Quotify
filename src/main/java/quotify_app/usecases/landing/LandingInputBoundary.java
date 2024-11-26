@@ -1,5 +1,9 @@
 package quotify_app.usecases.landing;
 
+import java.util.List;
+
+import quotify_app.entities.regionEntities.Area;
+
 /**
  * Input Boundary for actions related to the landing page.
  */
@@ -29,9 +33,10 @@ public interface LandingInputBoundary {
 
     /**
      * Fetches and calls presenter with the available areas for the user to select.
-     * @param partialAddress the geoId of the selected area
+     * @param partialName the partial name of the area.
+     * @param type  the type of the area.
      */
-    void autoCompleteAddress(String partialAddress) throws Exception;
+    List<Area> autoCompleteByName(String partialName, String type);
 
     /**
      * Executes the Select Address use case.
