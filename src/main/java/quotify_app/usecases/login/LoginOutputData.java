@@ -5,11 +5,9 @@ package quotify_app.usecases.login;
  */
 public class LoginOutputData {
     private final String username;
-    private final boolean loginFailed;
 
     public LoginOutputData(String username, boolean loginFailed) {
         this.username = username;
-        this.loginFailed = loginFailed;
     }
 
     /**
@@ -20,11 +18,4 @@ public class LoginOutputData {
         return username;
     }
 
-    /**
-     * Check function for login status. NOT IN USE yet.
-     * @return the login status.
-     */
-    public boolean isLoginFailed() {
-        return loginFailed;
-    }
 }
