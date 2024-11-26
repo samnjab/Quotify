@@ -31,14 +31,24 @@ public class LoginInteractor implements LoginInputBoundary {
             else {
                 final LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
                 loginPresenter.prepareSuccessView(loginOutputData);
+                goToFunction();
             }
         }
     }
 
     /**
-     * Trigger view transition to Signup through the presenter.
+     * Trigger view transition to Signup View through the presenter.
      */
+    @Override
     public void goToSignup() {
         loginPresenter.goToSignup();
+    }
+
+    /**
+     * Trigger view transition to Function View through the presenter.
+     */
+    @Override
+    public void goToFunction() {
+        loginPresenter.goToFunctionView();
     }
 }

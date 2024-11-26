@@ -15,4 +15,9 @@ public interface LoginInputBoundary {
      * Switches to the signup view.
      */
     void goToSignup();
+
+    /**
+     * Switches to the function view.
+     */
+    void goToFunction();
 }

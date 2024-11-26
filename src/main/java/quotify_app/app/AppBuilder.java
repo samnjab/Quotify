@@ -8,8 +8,8 @@ import javax.swing.WindowConstants;
 
 import quotify_app.adapters.ViewManagerModel;
 import quotify_app.app.factories.ComparatorFactory;
-import quotify_app.app.factories.FunctionFactory;
 import quotify_app.app.factories.CurrentPriceFactory;
+import quotify_app.app.factories.FunctionFactory;
 import quotify_app.app.factories.LoginFactory;
 import quotify_app.app.factories.SignupFactory;
 import quotify_app.data_access.DBUserDataAccessObject;
@@ -83,7 +83,10 @@ public class AppBuilder {
      */
     public AppBuilder addFunctionView() {
         cardPanel.add(functionFactory.getFunctionView(),
-                        functionFactory.getFunctionView().getViewName());
+                functionFactory.getFunctionView().getViewName());
+        return this;
+    }
+
     /**
      * Adds the CurrentPrice View to the application.
      * @return this builder
@@ -120,7 +123,9 @@ public class AppBuilder {
      */
     public AppBuilder addComparatorUseCase() {
         comparatorFactory.getComparatorView().setComparatorController(comparatorFactory.getComparatorController());
-      
+        return this;
+    }
+
     /**
      * Adds the CurrentPrice Use Case to the application.
      * @return this builder

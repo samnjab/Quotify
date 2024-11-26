@@ -1,6 +1,7 @@
 package quotify_app.adapters.login;
 
 import quotify_app.adapters.ViewManagerModel;
+import quotify_app.adapters.function.FunctionViewModel;
 import quotify_app.adapters.signup.SignupViewModel;
 import quotify_app.usecases.login.LoginOutputBoundary;
 import quotify_app.usecases.login.LoginOutputData;
@@ -13,6 +14,7 @@ public class LoginPresenter implements LoginOutputBoundary {
     private final SignupViewModel signupViewModel;
     private final ViewManagerModel viewManagerModel;
     private final LoginViewModel loginViewModel;
+    private final FunctionViewModel functionViewModel;
 
     public LoginPresenter(
             ViewManagerModel viewManagerModel,
@@ -22,6 +24,7 @@ public class LoginPresenter implements LoginOutputBoundary {
         this.viewManagerModel = viewManagerModel;
         this.loginViewModel = loginViewModel;
         this.signupViewModel = signupViewModel;
+        this.functionViewModel = new FunctionViewModel();
     }
 
     @Override
@@ -50,6 +53,12 @@ public class LoginPresenter implements LoginOutputBoundary {
     public void goToSignup() {
         // Transition to signup view
         viewManagerModel.setState(signupViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void goToFunctionView() {
+        viewManagerModel.setState(functionViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 }

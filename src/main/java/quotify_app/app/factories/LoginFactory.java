@@ -34,7 +34,8 @@ public class LoginFactory {
      * @param signupFactory pass the signupFactory object to retrieve it's viewModel
      * @param userDataAccessObject pass the DAO from the app builder holding the user data
      */
-    public void setUpController(SignupFactory signupFactory, ViewManagerModel viewManagerModel, DBUserDataAccessObject userDataAccessObject) {
+    public void setUpController(SignupFactory signupFactory, ViewManagerModel viewManagerModel,
+                                DBUserDataAccessObject userDataAccessObject) {
         // Setup Controller for Login with necessary dependencies
         loginController = new LoginController(
                 getLoginInputBoundary(viewManagerModel, signupFactory, userDataAccessObject));

@@ -5,7 +5,6 @@ import quotify_app.adapters.signup.SignupController;
 import quotify_app.adapters.signup.SignupPresenter;
 import quotify_app.adapters.signup.SignupViewModel;
 import quotify_app.data_access.DBUserDataAccessObject;
-import quotify_app.entities.CommonUserFactory;
 import quotify_app.ui.SignupView;
 import quotify_app.usecases.signup.SignupInputBoundary;
 import quotify_app.usecases.signup.SignupInteractor;
@@ -24,7 +23,7 @@ public class SignupFactory {
     private SignupController signupController;
 
     /**
-     * Instantiate a signup factory with it's view and view model.
+     * Instantiate a signup factory with its view and view model.
      */
     public SignupFactory() {
         signupViewModel = new SignupViewModel();
@@ -37,9 +36,11 @@ public class SignupFactory {
      * @param loginFactory pass the signupFactory object to retrieve it's viewModel
      * @param userDataAccessObject pass the DAO from the app builder holding the user data
      */
-    public void setUpController(LoginFactory loginFactory, ViewManagerModel viewManagerModel, DBUserDataAccessObject userDataAccessObject) {
+    public void setUpController(LoginFactory loginFactory, ViewManagerModel viewManagerModel,
+                                DBUserDataAccessObject userDataAccessObject) {
         // Setup Controller for Login with necessary dependencies
-        signupController = new SignupController(getSignupInputBoundary(viewManagerModel, loginFactory, userDataAccessObject));
+        signupController = new SignupController(getSignupInputBoundary(viewManagerModel, loginFactory,
+                userDataAccessObject));
     }
 
     /**
@@ -49,7 +50,8 @@ public class SignupFactory {
      * @param userDataAccessObject pass the DAO from the app builder holding the user data
      * @return the Signup interactor
      */
-    private SignupInputBoundary getSignupInputBoundary(ViewManagerModel viewManagerModel, LoginFactory loginFactory, DBUserDataAccessObject userDataAccessObject) {
+    private SignupInputBoundary getSignupInputBoundary(ViewManagerModel viewManagerModel, LoginFactory loginFactory,
+                                                       DBUserDataAccessObject userDataAccessObject) {
 
         return new SignupInteractor(
                 userDataAccessObject,

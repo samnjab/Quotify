@@ -21,4 +21,9 @@ public interface LoginOutputBoundary {
      *  Interface for executing the switch to sign up screen usecase.
      */
     void goToSignup();
+
+    /**
+     *  Interface for executing the switch to function screen usecase.
+     */
+    void goToFunctionView();
 }
