@@ -1,5 +1,6 @@
 package quotify_app.usecases.landing;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import quotify_app.entities.regionEntities.Address;
@@ -56,13 +57,38 @@ public class LandingInteractor implements LandingInputBoundary {
         final Area country = addressInputData.getCountry();
         final Area state = addressInputData.getState();
         final Area city = addressInputData.getCity();
-        final Address address = addressInputData.getAddress();
+        final Area zipCode = addressInputData.getZipCode();
+        final Address address = addressInputData.constructAddress();
     }
 
     @Override
-    public void autoCompleteAddress(String partialAddress) throws Exception {
-    // to be implemented.
+    public List<Area> autoCompleteByName(String partialName, String type) {
+        try {
+            if (partialName == null || partialName.isEmpty()) {
+                throw new IllegalArgumentException("Partial name cannot be null or empty");
+            }
+
+            if (type == null || type.isEmpty()) {
+                throw new IllegalArgumentException("Type cannot be null or empty");
+            }
+
+            final List<Area> matchedAreas = areaDataAccessObject.findAreasByNameAndType(partialName, type);
+
+            if (matchedAreas.isEmpty()) {
+                landingPresenter.prepareAreaListFailView("No matches found for: " + partialName);
+            } else {
+                final AreaListOutputData outputData = new AreaListOutputData(matchedAreas, type, false);
+                landingPresenter.prepareAreaListSuccessView(outputData);
+            }
+
+            return matchedAreas;
+        }
+        catch (Exception e) {
+            landingPresenter.prepareAreaListFailView("Failed to autocomplete areas: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
+
     /**
      * Trigger view transition to Signup through the presenter.
      */
