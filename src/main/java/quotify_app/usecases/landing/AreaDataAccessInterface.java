@@ -36,4 +36,12 @@ public interface AreaDataAccessInterface {
      * @return a List of countries available in the database.
      */
     List<Area> getCountries();
+
+    /**
+     * Retrieves a list of Areas matching the type and partial name.
+     * @param partialName the partial string of Area.name.
+     * @param type string matching Area.type.
+     * @return a List of Areas available in the database matching the criteria.
+     */
+    List<Area> findAreasByNameAndType(String partialName, String type);
 }
