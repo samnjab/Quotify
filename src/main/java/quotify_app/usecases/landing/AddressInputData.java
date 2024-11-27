@@ -22,29 +22,33 @@ public class AddressInputData {
     }
 
     /**
-     * Getter function for the selected region name.
-     * @return a string representation of the region's country.
+     * Getter function for the selected country.
+     * @return area object of the selected country.
      */
     public Area getCountry() {
         return country;
     }
 
     /**
-     * Getter function for the region id.
-     * @return a string representation of the selected region's state.
+     * Getter function for the selected state.
+     * @return area object of the selected state.
      */
     public Area getState() {
         return state;
     }
 
     /**
-     * Getter function for the region id.
-     * @return a string representation of the selected region's city.
+     * Getter function for the selected city.
+     * @return area object of the selected city.
      */
     public Area getCity() {
         return city;
     }
 
+    /**
+     * Getter function for zipCode.
+     * @return a string representation of the selected zipcode.
+     */
     public Area getZipCode() {
         return zipCode;
     }
@@ -80,7 +84,7 @@ public class AddressInputData {
      * Returns an Address object with the inputted information.
      * @return a Address object of the property address.
      */
-    public Address getAddress() {
+    public Address constructAddress() {
         final String countryCode = country.getNameCode();
         final String stateCode = state.getNameCode();
         final String cityName = city.getName();
