@@ -13,7 +13,7 @@ public class CurrentPriceViewModel extends ViewModel<CurrentPriceState> {
     public static final String FUTURE_PRICING_LABEL = "See future pricing";
     public static final String FUTURE_BUTTON_LABEL = "Future";
     public static final String COMPARE_PROPERTY_BUTTON_LABEL = "Compare Property";
-    public static final String LANDING_PAGE_BUTTOM_LABEL = "Home";
+    public static final String LANDING_PAGE_LABEL = "Home";
     public static final String USER_PROFILE_BUTTON_LABEL = "User Profile";
 
     /**

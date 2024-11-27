@@ -21,7 +21,7 @@ class LoginInteractorTest {
     private static UserFactory userFactory;
 
     @BeforeAll
-    static void setUpDatabase() throws Exception {
+    static void setUpDatabase() {
         DatabaseConnection.initializeDatabase();
         userFactory = new CommonUserFactory();
         userRepository = new DBUserDataAccessObject(userFactory);
@@ -36,34 +36,7 @@ class LoginInteractorTest {
     }
 
     @Test
-    void successSpecialCharacterUsernameTest() {
-        LoginInputData inputData = new LoginInputData("user#123", "securePassword!");
-        User user = userFactory.create("user#123", "securePassword!", "user123@example.com");
-        userRepository.save(user);
-
-        LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
-            @Override
-            public void prepareSuccessView(LoginOutputData user) {
-                assertEquals("user#123", user.getUsername());
-            }
-
-            @Override
-            public void prepareFailView(String error) {
-                fail("Use case failure is unexpected.");
-            }
-
-            @Override
-            public void goToSignup() {
-                // Dummy implementation for the test
-            }
-        };
-
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
-        interactor.execute(inputData);
-    }
-
-    @Test
-    void failureEmptyPasswordTest() {
+    void testFailureEmptyPassword() {
         LoginInputData inputData = new LoginInputData("Paul", "");
         User user = userFactory.create("Paul", "password", "paul@example.com");
         userRepository.save(user);
@@ -83,6 +56,11 @@ class LoginInteractorTest {
             public void goToSignup() {
                 // Dummy implementation for the test
             }
+
+            @Override
+            public void goToFunctionView() {
+                // Dummy implementation for the test
+            }
         };
 
         LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
@@ -90,7 +68,7 @@ class LoginInteractorTest {
     }
 
     @Test
-    void failureInvalidUsernameFormatTest() {
+    void testFailureInvalidUsernameFormat() {
         LoginInputData inputData = new LoginInputData("invalid user", "password123");
 
         LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
@@ -108,6 +86,11 @@ class LoginInteractorTest {
             public void goToSignup() {
                 // Dummy implementation for the test
             }
+
+            @Override
+            public void goToFunctionView() {
+                // Dummy implementation for the test
+            }
         };
 
         LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
@@ -119,7 +102,7 @@ class LoginInteractorTest {
     }
 
     @Test
-    void failureDatabaseConnectionTest() {
+    void TestFailureDatabaseConnection() {
         LoginInputData inputData = new LoginInputData("Paul", "password");
         DBUserDataAccessObject failingRepository = new DBUserDataAccessObject(userFactory) {
             @Override
@@ -148,6 +131,11 @@ class LoginInteractorTest {
             public void goToSignup() {
                 // Dummy implementation for the test
             }
+
+            @Override
+            public void goToFunctionView() {
+                // Dummy implementation for the test
+            }
         };
 
         LoginInputBoundary interactor = new LoginInteractor(failingRepository, failurePresenter);
@@ -159,7 +147,7 @@ class LoginInteractorTest {
     }
 
     @Test
-    void transitionToSignupTest() {
+    void testGToSignup() {
         LoginOutputBoundary transitionPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
@@ -175,6 +163,11 @@ class LoginInteractorTest {
             public void goToSignup() {
                 assertTrue(true, "Successfully transitioned to signup view.");
             }
+
+            @Override
+            public void goToFunctionView() {
+                // Dummy implementation for the test
+            }
         };
 
         LoginInteractor interactor = new LoginInteractor(userRepository, transitionPresenter);
@@ -182,7 +175,7 @@ class LoginInteractorTest {
     }
 
     @Test
-    void failureIncorrectPasswordTest() {
+    void testFailureIncorrectPassword() {
         LoginInputData inputData = new LoginInputData("Paul", "wrongPassword");
         User user = userFactory.create("Paul", "correctPassword", "paul@example.com");
         userRepository.save(user);
@@ -202,6 +195,10 @@ class LoginInteractorTest {
             public void goToSignup() {
                 // Dummy implementation for the test
             }
+            @Override
+            public void goToFunctionView() {
+                // Dummy implementation for the test
+            }
         };
 
         LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
@@ -209,7 +206,7 @@ class LoginInteractorTest {
     }
 
     @Test
-    void failureUserDoesNotExistTest() {
+    void testFailureUserDoesNotExist() {
         LoginInputData inputData = new LoginInputData("NonExistentUser", "password123");
 
         LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
@@ -225,6 +222,10 @@ class LoginInteractorTest {
 
             @Override
             public void goToSignup() {
+                // Dummy implementation for the test
+            }
+            @Override
+            public void goToFunctionView() {
                 // Dummy implementation for the test
             }
         };

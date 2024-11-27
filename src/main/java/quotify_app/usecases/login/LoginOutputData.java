@@ -6,7 +6,7 @@ package quotify_app.usecases.login;
 public class LoginOutputData {
     private final String username;
 
-    public LoginOutputData(String username, boolean loginFailed) {
+    public LoginOutputData(String username) {
         this.username = username;
     }
 

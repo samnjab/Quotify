@@ -10,6 +10,7 @@ public class SignupController {
     private final SignupInputBoundary signupInteractor;
 
     public SignupController(SignupInputBoundary signupInteractor) {
+
         this.signupInteractor = signupInteractor;
     }
 

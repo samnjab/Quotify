@@ -29,7 +29,7 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
     private final JLabel currentPriceLabel = new JLabel();
     private final JButton futureButton = new JButton(CurrentPriceViewModel.FUTURE_BUTTON_LABEL);
     private final JButton comparePropertyButton = new JButton(CurrentPriceViewModel.COMPARE_PROPERTY_BUTTON_LABEL);
-    private final JButton landingPageButton = new JButton(CurrentPriceViewModel.LANDING_PAGE_BUTTOM_LABEL);
+    private final JButton landingPageButton = new JButton(CurrentPriceViewModel.LANDING_PAGE_LABEL);
     private final JButton userProfileButton = new JButton(CurrentPriceViewModel.USER_PROFILE_BUTTON_LABEL);
 
     // Store reference to topPanel
