@@ -26,10 +26,11 @@ public interface AreaDataAccessInterface {
     /**
      * Retrieves all the sub-Areas of the Area with geoIdV4.
      * @param geoIdV4 the geoIdV4 of the super Area.
+     * @param type the type of subare to the fetched.
      * @return a List of the sub Area objects corresponding to the geoIdV4.
      * @throws IllegalAccessError if the geoIdV4 does not exist in the databas.
      */
-    List<Area> getSubAreas(String geoIdV4);
+    List<Area> getSubAreas(String geoIdV4, String type);
 
     /**
      * Retrieves all countries accessible by the app.
