@@ -20,7 +20,7 @@ public class AreaStore {
      * @param areaType The type of the areas (e.g., "ST" for state, "CS" for city).
      * @param areas The list of areas to store.
      */
-    public void storeAreas(String areaType, List<Area> areas) {
+    public void storeAreas(List<Area> areas, String areaType) {
         areaCache.removeIf(data -> data.getAreaType().equalsIgnoreCase(areaType));
         areaCache.add(new AreaListOutputData(areas, areaType, false));
     }
@@ -34,18 +34,6 @@ public class AreaStore {
         return areaCache.stream()
                 .filter(data -> data.getAreaType().equalsIgnoreCase(areaType))
                 .flatMap(data -> data.getAreas().stream())
-                .toList();
-    }
-
-    /**
-     * Finds areas by partial name and type.
-     * @param partialName The partial name to search for.
-     * @param areaType The type of area (e.g., "ST" for state, "CS" for city).
-     * @return List of matching areas.
-     */
-    public List<Area> findAreasByNameAndType(String partialName, String areaType) {
-        return fetchAllAreasByType(areaType).stream()
-                .filter(area -> area.getName().toLowerCase().contains(partialName.toLowerCase()))
                 .toList();
     }
 
