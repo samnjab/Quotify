@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import quotify_app.data_access.exceptions.ApiRequestException;
 
 /**
  * API client for interacting with the Attom API.
@@ -24,114 +25,15 @@ public class AttomClient {
 
     /**
      * Fetches property data by zipcode.
-     *
      * @param zipcode The zipcode to search for.
      * @return A JsonNode containing the API response.
      * @throws IOException If an I/O error occurs.
      * @throws InterruptedException If the request is interrupted.
+     * @throws ApiRequestException if the request is failed with status !=200.
      */
-    public static JsonNode fetchPropertiesByZipcode(String zipcode) throws IOException, InterruptedException {
+    public static JsonNode fetchPropertiesByZipcode(String zipcode) throws IOException, InterruptedException, ApiRequestException {
         // Construct the API URL
         final String url = BASE_URL + "address?postalcode=" + zipcode;
-
-        // Create the HTTP request
-        final HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Accept", "application/json")
-                .header("apikey", API_KEY)
-                .GET()
-                .build();
-
-        // Send the request and get the response
-        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // Check the HTTP response status
-        if (response.statusCode() != 200) {
-            throw new RuntimeException("Failed to fetch properties: HTTP " + response.statusCode());
-        }
-
-        // Parse and return the response body as JsonNode
-        return MAPPER.readTree(response.body());
-    }
-
-    /**
-     * Fetches property details by attomId.
-     * @param attomId The attomId of the property to search for.
-     * @return A JsonNode containing the API response.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
-    public static JsonNode fetchPropertyDetails(String attomId) throws IOException, InterruptedException {
-        // Construct the API URL
-        final String url = BASE_URL + "detail?attomid=" + attomId;
-
-        // Create the HTTP request
-        final HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Accept", "application/json")
-                .header("apikey", API_KEY)
-                .GET()
-                .build();
-
-        // Send the request and get the response
-        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // Check the HTTP response status
-        if (response.statusCode() != 200) {
-            throw new RuntimeException("Failed to fetch property details: HTTP " + response.statusCode());
-        }
-
-        // Parse and return the response body as JsonNode
-        return MAPPER.readTree(response.body());
-    }
-
-    /**
-     * Fetches properties within a size range in a zipcode location.
-     *
-     * @param zipCode The zipcode to search for.
-     * @param minSize The lower bound of size in square feet.
-     * @param maxSize The upper bound of size in square feet.
-     * @return A JsonNode containing the API response.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
-    public static JsonNode fetchSnapshot(String zipCode, String minSize, String maxSize)
-            throws IOException, InterruptedException {
-        // Construct the API URL
-        final String url = BASE_URL + "snapshot?postalcode=" + zipCode + "&minUniversalSize="
-                + minSize + "&maxUniversalSize=" + maxSize;
-
-        // Create the HTTP request
-        final HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Accept", "application/json")
-                .header("apikey", API_KEY)
-                .GET()
-                .build();
-
-        // Send the request and get the response
-        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // Check the HTTP response status
-        if (response.statusCode() != 200) {
-            throw new RuntimeException("Failed to fetch snapshot: HTTP " + response.statusCode());
-        }
-
-        // Parse and return the response body as JsonNode
-        return MAPPER.readTree(response.body());
-    }
-
-    /**
-     * Fetches subareas of Area identified by geoIdV4 of Type type.
-     * @param geoIdV4 The geoIdV4 of the area to search for.
-     * @param type The type of the area (e.g., "state", "city").
-     * @return A JsonNode containing the API response.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
-    public static JsonNode fetchSubAreas(String geoIdV4, String type) throws IOException, InterruptedException {
-        // Construct the API URL
-        final String url = AREA_BASE_URL + geoIdV4 + "&GeoType=" + type;
 
         // Create the HTTP request
         final HttpRequest request = HttpRequest.newBuilder()
@@ -146,11 +48,148 @@ public class AttomClient {
 
         // Check the HTTP response status
         if (response.statusCode() != 200) {
-            throw new RuntimeException("Failed to fetch subareas: HTTP " + response.statusCode());
+            throw new ApiRequestException("Failed to fetch properties: HTTP " + response.statusCode(), new RuntimeException());
         }
 
-        // Parse and return the response body as JsonNode
-        return MAPPER.readTree(response.body());
+        // Parse the response body as JsonNode
+        final JsonNode rootNode = MAPPER.readTree(response.body());
+
+        // Navigate to the `.property` array
+        final JsonNode propertyNode = rootNode.path("property");
+        if (!propertyNode.isArray()) {
+            throw new ApiRequestException("Response does not contain a valid `item` array", new RuntimeException());
+        }
+        return propertyNode;
+    }
+
+    /**
+     * Fetches property details by attomId.
+     * @param attomId The attomId of the property to search for.
+     * @return A JsonNode containing the API response.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the request is interrupted.
+     * @throws ApiRequestException if the request is failed with status !=200.
+     */
+    public static JsonNode fetchPropertyDetails(String attomId)
+            throws IOException, InterruptedException, ApiRequestException {
+        // Construct the API URL
+        final String url = BASE_URL + "detail?attomid=" + attomId;
+
+        // Create the HTTP request
+        final HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Accept", "application/json")
+                .header("apikey", API_KEY)
+                .GET()
+                .build();
+
+        // Send the request and get the response
+        final HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // Check the HTTP response status
+        if (response.statusCode() != 200) {
+            throw new ApiRequestException("Failed to fetch property details: HTTP " + response.statusCode(), new RuntimeException());
+        }
+
+        // Parse the response body as JsonNode
+        final JsonNode rootNode = MAPPER.readTree(response.body());
+
+        // Navigate to the `.property` array
+        final JsonNode propertyNode = rootNode.path("property");
+        if (!propertyNode.isArray()) {
+            throw new ApiRequestException("Response does not contain a valid `item` array", new RuntimeException());
+        }
+        return propertyNode;
+    }
+
+    /**
+     * Fetches properties within a size range in a zipcode location.
+     *
+     * @param zipCode The zipcode to search for.
+     * @param minSize The lower bound of size in square feet.
+     * @param maxSize The upper bound of size in square feet.
+     * @return A JsonNode containing the API response.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the request is interrupted.
+     * @throws ApiRequestException if the request is failed with status !=200.
+     */
+    public static JsonNode fetchSnapshot(String zipCode, String minSize, String maxSize)
+            throws IOException, InterruptedException, ApiRequestException {
+        // Construct the API URL
+        final String url = BASE_URL + "snapshot?postalcode=" + zipCode + "&minUniversalSize="
+                + minSize + "&maxUniversalSize=" + maxSize;
+
+        // Create the HTTP request
+        final HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Accept", "application/json")
+                .header("apikey", API_KEY)
+                .GET()
+                .build();
+
+        // Send the request and get the response
+        final HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // Check the HTTP response status
+        if (response.statusCode() != 200) {
+            throw new ApiRequestException("Failed to fetch snapshot: HTTP "
+                    + response.statusCode(), new RuntimeException());
+        }
+
+        // Parse the response body as JsonNode
+        final JsonNode rootNode = MAPPER.readTree(response.body());
+
+        // Navigate to the `.property` array
+        final JsonNode propertyNode = rootNode.path("property");
+        if (!propertyNode.isArray()) {
+            throw new ApiRequestException("Response does not contain a valid `item` array", new RuntimeException());
+        }
+        return propertyNode;
+    }
+
+    /**
+     * Fetches subareas of an area identified by geoIdV4 of a specified type.
+     * Extracts and returns the `item` array from the response body.
+     *
+     * @param geoIdV4 The geoIdV4 of the area to search for.
+     * @param type The type of the area (e.g., "state", "city").
+     * @return A JsonNode representing the array of items in the response.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the request is interrupted.
+     * @throws ApiRequestException if response.statusCode() != 200
+     */
+    public static JsonNode fetchSubAreas(String geoIdV4, String type)
+            throws IOException, InterruptedException, ApiRequestException {
+        // Construct the API URL
+        final String url = AREA_BASE_URL + "geoid/lookup/?geoIdV4=" + geoIdV4 + "&GeoType=" + type;
+
+        // Create the HTTP request
+        final HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Accept", "application/json")
+                .header("apikey", API_KEY)
+                .GET()
+                .build();
+
+        // Send the request and get the response
+        final HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // Check the HTTP response status
+        if (response.statusCode() != 200) {
+            throw new ApiRequestException("Failed to fetch subareas for geoIdV4: " + geoIdV4 + ", type: " + type + response.statusCode(), new RuntimeException());
+        }
+
+        // Parse the response body as JsonNode
+        final JsonNode rootNode = MAPPER.readTree(response.body());
+
+        // Navigate to the `result.item` array
+        final JsonNode itemsNode = rootNode.path("result").path("item");
+
+        // Check if the `item` node exists and is an array
+        if (!itemsNode.isArray()) {
+            throw new ApiRequestException("Response does not contain a valid `item` array", new RuntimeException());
+        }
+        return itemsNode;
     }
 
 }
