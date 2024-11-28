@@ -192,4 +192,38 @@ public class AttomClient {
         return itemsNode;
     }
 
+    public static JsonNode fetchStates()
+            throws IOException, InterruptedException, ApiRequestException {
+        // Construct the API URL
+        final String url = AREA_BASE_URL + "state/lookup";
+
+        // Create the HTTP request
+        final HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Accept", "application/json")
+                .header("apikey", API_KEY)
+                .GET()
+                .build();
+
+        // Send the request and get the response
+        final HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // Check the HTTP response status
+        if (response.statusCode() != 200) {
+            throw new ApiRequestException("Failed to fetch states " + response.statusCode(), new RuntimeException());
+        }
+
+        // Parse the response body as JsonNode
+        final JsonNode rootNode = MAPPER.readTree(response.body());
+
+        // Navigate to the `result.item` array
+        final JsonNode itemsNode = rootNode.path("result").path("item");
+
+        // Check if the `item` node exists and is an array
+        if (!itemsNode.isArray()) {
+            throw new ApiRequestException("Response does not contain a valid `item` array", new RuntimeException());
+        }
+        return itemsNode;
+    }
+
 }
