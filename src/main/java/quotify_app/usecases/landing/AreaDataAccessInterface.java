@@ -1,7 +1,9 @@
 package quotify_app.usecases.landing;
 
+import java.io.IOException;
 import java.util.List;
 
+import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.entities.regionEntities.Area;
 
 /**
@@ -10,27 +12,16 @@ import quotify_app.entities.regionEntities.Area;
 public interface AreaDataAccessInterface {
 
     /**
-     * Checks if an Area with the given geoIdV4 exists.
-     * @param geoIdV4 the geoIdv4 to check
-     * @return true if the Area exists, false otherwise.
-     */
-    boolean existsByGeoIdV4(String geoIdV4);
-
-    /**
-     * Retrieves an Area by its geoIdV4.
-     * @param geoIdV4 the geoIdV4 of the Area to retrieve.
-     * @return the Area object corresponding to the geoIdV4.
-     */
-    Area getArea(String geoIdV4);
-
-    /**
      * Retrieves all the sub-Areas of the Area with geoIdV4.
      * @param geoIdV4 the geoIdV4 of the super Area.
      * @param type the type of subare to the fetched.
      * @return a List of the sub Area objects corresponding to the geoIdV4.
-     * @throws IllegalAccessError if the geoIdV4 does not exist in the databas.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the request is interrupted.
+     * @throws ApiRequestException if the request is failed with status !=200.
      */
-    List<Area> getSubAreas(String geoIdV4, String type);
+    List<Area> getSubAreas(String geoIdV4, String type)
+            throws ApiRequestException, IOException, InterruptedException;
 
     /**
      * Retrieves all countries accessible by the app.

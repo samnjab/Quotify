@@ -1,9 +1,18 @@
 package quotify_app.data_access;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.usecases.landing.AreaDataAccessInterface;
+
+/**
+ * The Data Access Object providing all the data pertaining to the areas, interacting with
+ * AttomClient.
+ */
 
 public class AreaDataAccessObject implements AreaDataAccessInterface {
 
@@ -14,13 +23,56 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
     }
 
     /**
+     * Constructs a list of Area objects from JsonNode fetched from the API.
+     * @param areas the list of subareas returned from the API in the API information format.
+     * @return subAreas a list of Area objects in the format Area to be used by
+     * the rest of the program.
+     */
+
+    private List<Area> constructAreaList(JsonNode areas) {
+        final List<Area> subAreas = new ArrayList<>();
+        for (Object area : areas) {
+            final JsonNode areaNode = (JsonNode) area;
+            // Extract required fields, checking for existence
+            final String name = areaNode.has("name") ? areaNode.get("name").asText() : null;
+            final String abbreviation = areaNode.has("abbreviation") ? areaNode.get("abbreviation").asText() : null;
+            final Area areaObj = new Area(
+                    areaNode.get("type").asText(),
+                    areaNode.get("geoIdV4").asText(),
+                    areaNode.get("geoId").asText(),
+                    name,
+                    abbreviation
+            );
+            subAreas.add(areaObj);
+        }
+        return subAreas;
+    }
+
+    /**
+     * Retrieves all countries accessible by the app.
+     * @return a List of countries available in the database.
+     */
+    public List<Area> getCountries() {
+        final Area us = new Area("CN", "CN1", "CN1", "The United States of America", "US" );
+        final List<Area> countries = new ArrayList<>();
+        countries.add(us);
+        return countries;
+    }
+
+    /**
      * Fetches all subareas for a given parent geoIdV4.
      * @param geoIdV4 The parent geoIdV4.
-     * @param type the Type of the subarea to return.
+     * @param type    the Type of the subarea to return.
      * @return List of subareas.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the request is interrupted.
+     * @throws ApiRequestException if the request is failed with status !=200.
      */
-    public List<Area> getSubAreas(String geoIdV4, String type) {
-        AttomClient.fetchSubAreas(geoIdV4, type);
+    public List<Area> getSubAreas(String geoIdV4, String type)
+            throws IOException, InterruptedException, ApiRequestException {
+        final JsonNode areas = "CN1".equals(geoIdV4) && "ST".equals(type)
+                ? AttomClient.fetchStates() : AttomClient.fetchSubAreas(geoIdV4, type);
+        return constructAreaList(areas);
     }
 
     /**
