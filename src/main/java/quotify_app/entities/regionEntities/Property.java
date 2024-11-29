@@ -17,6 +17,12 @@ public class Property {
         this.summary = Objects.requireNonNull(summary, "Summary cannot be null");
     }
 
+    public Property(Address address) {
+        this.identifier = null;
+        this.address = address;
+        this.summary = null;
+    }
+
     public Identifier getIdentifier() {
         return identifier;
     }
