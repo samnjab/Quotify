@@ -14,8 +14,16 @@ public class Area {
         this.type = type;
         this.geoIdV4 = geoIdV4;
         this.geoId = geoId;
-        this.name = name;
-        this.nameCode = nameCode;
+        this.name = name != null ? name : "";
+        this.nameCode = nameCode != null ? nameCode : "";
+    }
+
+    public Area(String type) {
+        this.type = type;
+        this.geoIdV4 = "";
+        this.geoId = "";
+        this.name = "Select a" + type;
+        this.nameCode = "";
     }
 
     // Getters

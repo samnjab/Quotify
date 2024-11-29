@@ -12,6 +12,18 @@ import quotify_app.entities.regionEntities.Area;
 public interface AreaDataAccessInterface {
 
     /**
+     * Retrieves all countries accessible by the app.
+     * @return a List of countries available in the database.
+     */
+    List<Area> getCountries();
+
+    /**
+     * Stores the area selection.
+     * @param area the selected area to be stored.
+     */
+    void selectArea(Area area);
+
+    /**
      * Retrieves all the sub-Areas of the Area with geoIdV4.
      * @param geoIdV4 the geoIdV4 of the super Area.
      * @param type the type of subare to the fetched.
@@ -24,10 +36,12 @@ public interface AreaDataAccessInterface {
             throws ApiRequestException, IOException, InterruptedException;
 
     /**
-     * Retrieves all countries accessible by the app.
-     * @return a List of countries available in the database.
+     * Stores a list of areas of Type type into cache.
+     * @param areas the areas to be stored.
+     * @param type the type of areas to be stored.
      */
-    List<Area> getCountries();
+
+    void cacheAreas(List<Area> areas, String type);
 
     /**
      * Retrieves a list of Areas matching the type and partial name.

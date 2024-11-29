@@ -9,13 +9,15 @@ public class Address {
     private final String city;
     private final String street;
     private final String streetNumber;
+    private final String postalCode;
 
-    public Address(String countryCode, String stateCode, String city, String street, String streetNumber) {
+    public Address(String countryCode, String stateCode, String city, String street, String streetNumber, String postalCode) {
         this.countryCode = countryCode;
         this.stateCode = stateCode;
         this.city = city;
         this.street = street;
         this.streetNumber = streetNumber;
+        this.postalCode = postalCode;
     }
 
     public String getCountryCode() {
@@ -36,6 +38,10 @@ public class Address {
 
     public String getStreetNumber() {
         return streetNumber;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
     }
 
     /**

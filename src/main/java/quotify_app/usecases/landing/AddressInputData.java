@@ -90,6 +90,7 @@ public class AddressInputData {
         final String cityName = city.getName();
         final String streetNumber = addressSplitter(address)[0];
         final String streetName = addressSplitter(address)[1];
-        return new Address(countryCode, stateCode, cityName, streetName, streetNumber);
+        final String postalCode = zipCode.getName();
+        return new Address(countryCode, stateCode, cityName, streetName, streetNumber, postalCode);
     }
 }
