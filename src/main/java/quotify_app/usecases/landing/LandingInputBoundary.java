@@ -20,16 +20,18 @@ public interface LandingInputBoundary {
     void goToLogin();
 
     /**
-     * Fetches and calls presenter with the selected area.
-     * @param geoIdV4 the geoId of the selected area
+     * Selects area and calls presenter with the selected area.
+     * @param area the selected area
+     * @return Area the selected area
      */
-    void selectArea(String geoIdV4);
+    Area selectArea(Area area);
 
     /**
      * Fetches and calls presenter with the available areas for the user to select.
      * @param geoIdV4 the geoId of the selected area
+     * @param type the type of subarea to be fetched.
      */
-    void fetchAreas(String geoIdV4);
+    void fetchAreas(String geoIdV4, String type);
 
     /**
      * Fetches and calls presenter with the available areas for the user to select.
@@ -41,7 +43,6 @@ public interface LandingInputBoundary {
     /**
      * Executes the Select Address use case.
      * @param addressInputData the input data containing the selected region.
-     * @throws Exception when addressInputData cannot be found in the database.
      */
-    void selectAddress(AddressInputData addressInputData) throws Exception;
+    void selectAddress(AddressInputData addressInputData);
 }

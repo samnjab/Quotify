@@ -20,15 +20,16 @@ public class LandingInteractor implements LandingInputBoundary {
     }
 
     /**
-     * Fetches and calls presenter with a list of available countries for the user to select.
+     * Fetches, caches and calls presenter with a list of available countries for the user to select.
      * @param geoIdV4 the geoId of the selected country.
+     * @param type the type of subarea to be fetched.
      */
     @Override
-    public void fetchAreas(String geoIdV4) {
+    public void fetchAreas(String geoIdV4, String type) {
         try {
-            final List<Area> areaList = areaDataAccessObject.getSubAreas(geoIdV4);
-            final String areaType = areaList.get(0).getType();
-            final AreaListOutputData outputData = new AreaListOutputData(areaList, areaType, false);
+            final List<Area> areaList = areaDataAccessObject.getSubAreas(geoIdV4, type);
+            areaDataAccessObject.cacheAreas(areaList, type);
+            final AreaListOutputData outputData = new AreaListOutputData(areaList, type, false);
             landingPresenter.prepareAreaListSuccessView(outputData);
         }
         catch (Exception e) {
@@ -37,56 +38,42 @@ public class LandingInteractor implements LandingInputBoundary {
     }
 
     /**
-     * Fetches and calls presenter with the selected Area.
-     * @param geoIdV4 the Area object of the selected area.
+     * Selects the area and calls presenter with the selected area.
+     * @param area the Area object to be selected.
+     * @return Area the selected area.
      */
     @Override
-    public void selectArea(String geoIdV4) {
-        try {
-            final Area area = areaDataAccessObject.getArea(geoIdV4);
-            final AreaOutputData outputData = new AreaOutputData(area, false);
-            landingPresenter.prepareAreaSuccessView(outputData);
-        }
-        catch (Exception e) {
-            landingPresenter.prepareAreaFailView("Failed to fetch countries: " + e.getMessage());
-        }
+    public Area selectArea(Area area) {
+        areaDataAccessObject.selectArea(area);
+        final AreaOutputData outputData = new AreaOutputData(area, false);
+        landingPresenter.prepareAreaSuccessView(outputData);
+        return area;
     }
 
     @Override
-    public void selectAddress(AddressInputData addressInputData) throws Exception {
+    public List<Area> autoCompleteByName(String partialName, String type) {
+        if (partialName == null || partialName.isEmpty() || type == null || type.isEmpty()) {
+            landingPresenter.prepareAreaListFailView("No matches found for: " + partialName);
+            return new ArrayList<>();
+        }
+        final List<Area> matchedAreas = areaDataAccessObject.findAreasByNameAndType(partialName, type);
+        if (matchedAreas.isEmpty()) {
+            landingPresenter.prepareAreaListFailView("No matches found for: " + partialName);
+        } else {
+            final AreaListOutputData outputData = new AreaListOutputData(matchedAreas, type, false);
+            landingPresenter.prepareAreaListSuccessView(outputData);
+        }
+        return matchedAreas;
+    }
+
+    @Override
+    public Address selectAddress(AddressInputData addressInputData) {
         final Area country = addressInputData.getCountry();
         final Area state = addressInputData.getState();
         final Area city = addressInputData.getCity();
         final Area zipCode = addressInputData.getZipCode();
         final Address address = addressInputData.constructAddress();
-    }
-
-    @Override
-    public List<Area> autoCompleteByName(String partialName, String type) {
-        try {
-            if (partialName == null || partialName.isEmpty()) {
-                throw new IllegalArgumentException("Partial name cannot be null or empty");
-            }
-
-            if (type == null || type.isEmpty()) {
-                throw new IllegalArgumentException("Type cannot be null or empty");
-            }
-
-            final List<Area> matchedAreas = areaDataAccessObject.findAreasByNameAndType(partialName, type);
-
-            if (matchedAreas.isEmpty()) {
-                landingPresenter.prepareAreaListFailView("No matches found for: " + partialName);
-            } else {
-                final AreaListOutputData outputData = new AreaListOutputData(matchedAreas, type, false);
-                landingPresenter.prepareAreaListSuccessView(outputData);
-            }
-
-            return matchedAreas;
-        }
-        catch (Exception e) {
-            landingPresenter.prepareAreaListFailView("Failed to autocomplete areas: " + e.getMessage());
-            return new ArrayList<>();
-        }
+        return address;
     }
 
     /**
