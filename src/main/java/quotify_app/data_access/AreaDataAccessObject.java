@@ -27,13 +27,10 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
      * @param areas the list of subareas returned from the API in the API information format.
      * @return subAreas a list of Area objects in the format Area to be used by
      * the rest of the program.
-     */
-
+     * */
     private List<Area> constructAreaList(JsonNode areas) {
         final List<Area> subAreas = new ArrayList<>();
-        for (Object area : areas) {
-            final JsonNode areaNode = (JsonNode) area;
-            // Extract required fields, checking for existence
+        for (JsonNode areaNode : areas) {
             final String name = areaNode.has("name") ? areaNode.get("name").asText() : null;
             final String abbreviation = areaNode.has("abbreviation") ? areaNode.get("abbreviation").asText() : null;
             final Area areaObj = new Area(
@@ -47,16 +44,28 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
         }
         return subAreas;
     }
+    // Helper methods.
 
+    // Override methods:
     /**
      * Retrieves all countries accessible by the app.
      * @return a List of countries available in the database.
      */
+    @Override
     public List<Area> getCountries() {
-        final Area us = new Area("CN", "CN1", "CN1", "The United States of America", "US" );
+        final Area us = new Area("CN", "CN1", "CN1", "The United States of America", "US");
         final List<Area> countries = new ArrayList<>();
         countries.add(us);
         return countries;
+    }
+
+    /**
+     * Stores the area selection in cache.
+     * @param area the selected area to be stored.
+     */
+    @Override
+    public void selectArea(Area area) {
+        areaCache.storeArea(area, area.getType());
     }
 
     /**
@@ -73,6 +82,11 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
         final JsonNode areas = "CN1".equals(geoIdV4) && "ST".equals(type)
                 ? AttomClient.fetchStates() : AttomClient.fetchSubAreas(geoIdV4, type);
         return constructAreaList(areas);
+    }
+
+    @Override
+    public void cacheAreas(List<Area> areas, String type) {
+        areaCache.storeAreas(areas, type);
     }
 
     /**
