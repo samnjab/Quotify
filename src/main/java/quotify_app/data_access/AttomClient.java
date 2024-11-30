@@ -9,6 +9,7 @@ import java.net.http.HttpResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import quotify_app.data_access.exceptions.ApiRequestException;
+import quotify_app.data_access.exceptions.ClientRequestException;
 
 /**
  * API client for interacting with the Attom API.
@@ -23,259 +24,163 @@ public class AttomClient {
     private static final HttpClient CLIENT = HttpClient.newHttpClient();
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    // helper methods:
+
     /**
-     * Fetches property data by zipcode.
-     * @param zipcode The zipcode to search for.
-     * @return A JsonNode containing the API response.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     * @throws ApiRequestException if the request is failed with status !=200.
+     * Helper method to send an API request and parse the JSON response.
+     * @param url The API endpoint URL.
+     * @return A JsonNode containing the parsed response.
+     * @throws ApiRequestException for non-200 HTTP responses.
+     * @throws ClientRequestException for I/O and interruption errors.
      */
-    public static JsonNode fetchPropertiesByZipcode(String zipcode) throws IOException, InterruptedException, ApiRequestException {
-        // Construct the API URL
-        final String url = BASE_URL + "address?postalcode=" + zipcode;
+    private static JsonNode sendApiRequest(String url) throws ApiRequestException, ClientRequestException {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Accept", "application/json")
+                    .header("apikey", API_KEY)
+                    .GET()
+                    .build();
 
-        // Create the HTTP request
-        final HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Accept", "application/json")
-                .header("apikey", API_KEY)
-                .GET()
-                .build();
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
-        // Send the request and get the response
-        final HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                throw new ApiRequestException("API request failed with HTTP status: " + response.statusCode());
+            }
 
-        // Check the HTTP response status
-        if (response.statusCode() != 200) {
-            throw new ApiRequestException("Failed to fetch properties: HTTP " + response.statusCode(), new RuntimeException());
+            return MAPPER.readTree(response.body());
         }
-
-        // Parse the response body as JsonNode
-        final JsonNode rootNode = MAPPER.readTree(response.body());
-
-        // Navigate to the `.property` array
-        final JsonNode propertyNode = rootNode.path("property");
-        if (!propertyNode.isArray()) {
-            throw new ApiRequestException("Response does not contain a valid `item` array", new RuntimeException());
+        catch (IOException | InterruptedException exception) {
+            throw new ClientRequestException("Error occurred while sending the request", exception);
         }
-        return propertyNode;
     }
 
     /**
-     * Fetches property details by attomId.
-     * @param attomId The attomId of the property to search for.
-     * @return A JsonNode containing the API response.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     * @throws ApiRequestException if the request is failed with status !=200.
+     * Helper method to parse a response node.
+     * @param rootNode The root JSON node of the response.
+     * @param path Path to the desired array node.
+     * @return The array node as a JsonNode.
+     * @throws ApiRequestException if the node is not a valid array.
+     */
+    private static JsonNode parseResponseNode(JsonNode rootNode, String... path) throws ApiRequestException {
+        JsonNode node = rootNode;
+        for (String key : path) {
+            node = node.path(key);
+        }
+        if (!node.isArray()) {
+            throw new ApiRequestException("Response does not contain a valid array at " + String.join(".", path));
+        }
+        return node;
+    }
+
+    /**
+     * Fetches all available properties at zipcode.
+     * @param zipcode valid zipcode of the area.
+     * @return a JsonNode containing all the properties.
+     * @throws ApiRequestException if API response code != 200.
+     * @throws ClientRequestException if there are network failures, I/O problems,
+     * or interruptions that occur during the execution of an HTTP request.
+     */
+    public static JsonNode fetchPropertiesByZipcode(String zipcode)
+            throws ApiRequestException, ClientRequestException {
+        final String url = BASE_URL + "address?postalcode=" + zipcode;
+        final JsonNode rootNode = sendApiRequest(url);
+        return parseResponseNode(rootNode, "property");
+    }
+
+    /**
+     * Fetches all details of property with attomId.
+     * @param attomId valid attomId of the property.
+     * @return a JsonNode containing the API response.
+     * @throws ApiRequestException if API response code != 200.
+     * @throws ClientRequestException if there are network failures, I/O problems,
+     * or interruptions that occur during the execution of an HTTP request.
      */
     public static JsonNode fetchPropertyDetails(String attomId)
-            throws IOException, InterruptedException, ApiRequestException {
-        // Construct the API URL
+            throws ApiRequestException, ClientRequestException {
         final String url = BASE_URL + "detail?attomid=" + attomId;
-
-        // Create the HTTP request
-        final HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Accept", "application/json")
-                .header("apikey", API_KEY)
-                .GET()
-                .build();
-
-        // Send the request and get the response
-        final HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // Check the HTTP response status
-        if (response.statusCode() != 200) {
-            throw new ApiRequestException("Failed to fetch property details: HTTP " + response.statusCode(), new RuntimeException());
-        }
-
-        // Parse the response body as JsonNode
-        final JsonNode rootNode = MAPPER.readTree(response.body());
-
-        // Navigate to the `.property` array
-        final JsonNode propertyNode = rootNode.path("property");
-        if (!propertyNode.isArray()) {
-            throw new ApiRequestException("Response does not contain a valid `item` array", new RuntimeException());
-        }
-        return propertyNode;
+        final JsonNode rootNode = sendApiRequest(url);
+        return parseResponseNode(rootNode, "property");
     }
 
     /**
-     * Fetches properties within a size range in a zipcode location.
-     *
-     * @param zipCode The zipcode to search for.
-     * @param minSize The lower bound of size in square feet.
-     * @param maxSize The upper bound of size in square feet.
-     * @return A JsonNode containing the API response.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     * @throws ApiRequestException if the request is failed with status !=200.
+     * Fetches all available properties at zipcode with size in the minSize-maxSize range.
+     * @param zipCode valid zipcode of the area.
+     * @param minSize valid lower bound for the property size.
+     * @param maxSize valid upper bound for the property size.
+     * @return a JsonNode containing all the properties.
+     * @throws ApiRequestException if API response code != 200.
+     * @throws ClientRequestException if there are network failures, I/O problems,
+     * or interruptions that occur during the execution of an HTTP request.
      */
     public static JsonNode fetchSnapshot(String zipCode, String minSize, String maxSize)
-            throws IOException, InterruptedException, ApiRequestException {
-        // Construct the API URL
-        final String url = BASE_URL + "snapshot?postalcode=" + zipCode + "&minUniversalSize="
-                + minSize + "&maxUniversalSize=" + maxSize;
-
-        // Create the HTTP request
-        final HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Accept", "application/json")
-                .header("apikey", API_KEY)
-                .GET()
-                .build();
-
-        // Send the request and get the response
-        final HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // Check the HTTP response status
-        if (response.statusCode() != 200) {
-            throw new ApiRequestException("Failed to fetch snapshot: HTTP "
-                    + response.statusCode(), new RuntimeException());
-        }
-
-        // Parse the response body as JsonNode
-        final JsonNode rootNode = MAPPER.readTree(response.body());
-
-        // Navigate to the `.property` array
-        final JsonNode propertyNode = rootNode.path("property");
-        if (!propertyNode.isArray()) {
-            throw new ApiRequestException("Response does not contain a valid `item` array", new RuntimeException());
-        }
-        return propertyNode;
+            throws ApiRequestException, ClientRequestException {
+        String url = BASE_URL + "snapshot?postalcode=" + zipCode + "&minUniversalSize=" + minSize + "&maxUniversalSize=" + maxSize;
+        JsonNode rootNode = sendApiRequest(url);
+        return parseResponseNode(rootNode, "property");
     }
 
     /**
-     * Fetches subareas of an area identified by geoIdV4 of a specified type.
-     * Extracts and returns the `item` array from the response body.
-     *
-     * @param geoIdV4 The geoIdV4 of the area to search for.
-     * @param type The type of the area (e.g., "state", "city").
-     * @return A JsonNode representing the array of items in the response.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     * @throws ApiRequestException if response.statusCode() != 200
+     * Fetches all available subareas of Type type of a parent area specified by geoIdV4.
+     * @param geoIdV4 valid geoIdV4 of the parent area.
+     * @param type valid type of the subareas.
+     * @return a JsonNode containing all the subareas.
+     * @throws ApiRequestException if API response code != 200.
+     * @throws ClientRequestException if there are network failures, I/O problems,
+     * or interruptions that occur during the execution of an HTTP request.
      */
     public static JsonNode fetchSubAreas(String geoIdV4, String type)
-            throws IOException, InterruptedException, ApiRequestException {
-        // Construct the API URL
+            throws ApiRequestException, ClientRequestException {
         final String url = AREA_BASE_URL + "geoid/lookup/?geoIdV4=" + geoIdV4 + "&GeoType=" + type;
-
-        // Create the HTTP request
-        final HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Accept", "application/json")
-                .header("apikey", API_KEY)
-                .GET()
-                .build();
-
-        // Send the request and get the response
-        final HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // Check the HTTP response status
-        if (response.statusCode() != 200) {
-            throw new ApiRequestException("Failed to fetch subareas for geoIdV4: " + geoIdV4 + ", type: " + type + response.statusCode(), new RuntimeException());
-        }
-
-        // Parse the response body as JsonNode
-        final JsonNode rootNode = MAPPER.readTree(response.body());
-
-        // Navigate to the `result.item` array
-        final JsonNode itemsNode = rootNode.path("result").path("item");
-
-        // Check if the `item` node exists and is an array
-        if (!itemsNode.isArray()) {
-            throw new ApiRequestException("Response does not contain a valid `item` array", new RuntimeException());
-        }
-        return itemsNode;
-    }
-
-    public static JsonNode fetchStates()
-            throws IOException, InterruptedException, ApiRequestException {
-        // Construct the API URL
-        final String url = AREA_BASE_URL + "state/lookup";
-
-        // Create the HTTP request
-        final HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Accept", "application/json")
-                .header("apikey", API_KEY)
-                .GET()
-                .build();
-
-        // Send the request and get the response
-        final HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // Check the HTTP response status
-        if (response.statusCode() != 200) {
-            throw new ApiRequestException("Failed to fetch states " + response.statusCode(), new RuntimeException());
-        }
-
-        // Parse the response body as JsonNode
-        final JsonNode rootNode = MAPPER.readTree(response.body());
-
-        // Navigate to the `result.item` array
-        final JsonNode itemsNode = rootNode.path("result").path("item");
-
-        // Check if the `item` node exists and is an array
-        if (!itemsNode.isArray()) {
-            throw new ApiRequestException("Response does not contain a valid `item` array", new RuntimeException());
-        }
-        return itemsNode;
+        final JsonNode rootNode = sendApiRequest(url);
+        return parseResponseNode(rootNode, "result", "item");
     }
 
     /**
-     * Fetches sales comparables for a property identified by propertyId using either radius or zipcode search.
-     * @param propertyId The attomId of the property to fetch sales comparables for.
-     * @param searchType The type of search (either "Radius" or "Zipcode").
-     * @param miles The radius in miles for the search (applicable only if searchType is "Radius").
-     * @param bedroomsRange Range of bedrooms (e.g., "2").
-     * @param sqFeetRange Square feet range (e.g., "600").
-     * @param yearBuiltRange Range of years built (e.g., "10").
-     * @return A JsonNode containing the sales comparables response.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     * @throws ApiRequestException if the request fails with a non-200 status.
+     * Fetches all available states of the United States of America.
+     * @return a JsonNode containing all the states.
+     * @throws ApiRequestException if API response code != 200.
+     * @throws ClientRequestException if there are network failures, I/O problems,
+     * or interruptions that occur during the execution of an HTTP request.
+     */
+    public static JsonNode fetchStates()
+            throws ApiRequestException, ClientRequestException {
+        final String url = AREA_BASE_URL + "state/lookup";
+        final JsonNode rootNode = sendApiRequest(url);
+        return parseResponseNode(rootNode, "result", "item");
+    }
+
+    /**
+     * Fetches all comparable property sales to a reference property specified by a propertyId.
+     * @param propertyId valid attomId of the refrence property.
+     * @param searchType the method of search, can either be "Raduis" or "zipcode".
+     * @param miles the radius of search in miles.
+     * @param bedroomsRange the difference in the # of bedrooms of the reference vs the comparable property.
+     * @param sqFeetRange the difference in the size in sqFeet of reference vs the comparable property.
+     * @param yearBuiltRange the difference in the year-built of the reference vs the comparable property.
+     * @return a JsonNode containing all the comparable property sales.
+     * @throws ApiRequestException if API response code != 200.
+     * @throws ClientRequestException if there are network failures, I/O problems,
+     * or interruptions that occur during the execution of an HTTP request.
      */
     public static JsonNode fetchSalesComparables(String propertyId, String searchType, Integer miles,
                                                  String bedroomsRange, String sqFeetRange, String yearBuiltRange)
-            throws IOException, InterruptedException, ApiRequestException {
-
-        final String baseUrl = "https://api.gateway.attomdata.com/property/v2/salescomparables/propid/" + propertyId;
-
-        final StringBuilder queryParams = new StringBuilder("?searchType=").append(searchType);
+            throws ApiRequestException, ClientRequestException {
+        final StringBuilder urlBuilder = new StringBuilder(
+                "https://api.gateway.attomdata.com/property/v2/salescomparables/propid/")
+                .append(propertyId)
+                .append("?searchType=").append(searchType);
 
         if ("Radius".equalsIgnoreCase(searchType)) {
-            if (miles != null) {
-                queryParams.append("&miles=").append(miles);
-            }
-            else {
-                throw new IllegalArgumentException("Miles parameter is required for Radius search.");
-            }
+            urlBuilder.append("&miles=").append(miles);
         }
 
-        queryParams.append("&bedroomsRange=").append(bedroomsRange);
-        queryParams.append("&sqFeetRange=").append(sqFeetRange);
-        queryParams.append("&yearBuiltRange=").append(yearBuiltRange);
+        urlBuilder.append("&bedroomsRange=").append(bedroomsRange)
+                .append("&sqFeetRange=").append(sqFeetRange)
+                .append("&yearBuiltRange=").append(yearBuiltRange);
 
-        final String url = baseUrl + queryParams.toString();
-
-        final HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Accept", "application/json")
-                .header("apikey", API_KEY)
-                .GET()
-                .build();
-
-        final HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-
-        if (response.statusCode() != 200) {
-            throw new ApiRequestException("Failed to fetch sales comparables: HTTP " + response.statusCode(),
-                    new RuntimeException());
-        }
-        // returning the whole response.body() for now:
-        return MAPPER.readTree(response.body());
+        String url = urlBuilder.toString();
+        JsonNode rootNode = sendApiRequest(url);
+        return parseResponseNode(rootNode, "RESPONSE_DATA", "PROPERTY");
     }
 }
