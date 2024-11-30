@@ -1,9 +1,9 @@
 package quotify_app.usecases.landing;
 
-import java.io.IOException;
 import java.util.List;
 
 import quotify_app.data_access.exceptions.ApiRequestException;
+import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.Area;
 
 /**
@@ -28,19 +28,17 @@ public interface AreaDataAccessInterface {
      * @param geoIdV4 the geoIdV4 of the super Area.
      * @param type the type of subare to the fetched.
      * @return a List of the sub Area objects corresponding to the geoIdV4.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     * @throws ApiRequestException if the request is failed with status !=200.
+     * @throws ApiRequestException for non-200 HTTP responses.
+     * @throws ClientRequestException for I/O and interruption errors.
      */
     List<Area> getSubAreas(String geoIdV4, String type)
-            throws ApiRequestException, IOException, InterruptedException;
+            throws ApiRequestException, ClientRequestException;
 
     /**
      * Stores a list of areas of Type type into cache.
      * @param areas the areas to be stored.
      * @param type the type of areas to be stored.
      */
-
     void cacheAreas(List<Area> areas, String type);
 
     /**

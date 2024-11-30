@@ -1,11 +1,11 @@
 package quotify_app.data_access;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import quotify_app.data_access.exceptions.ApiRequestException;
+import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.usecases.landing.AreaDataAccessInterface;
 
@@ -54,6 +54,7 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
      */
     @Override
     public List<Area> getCountries() {
+        // replace with countries returned from ModelDataAccessObject, update the exceptions thrown accordingly.
         final Area us = new Area("CN", "CN1", "CN1", "The United States of America", "US");
         final List<Area> countries = new ArrayList<>();
         countries.add(us);
@@ -74,12 +75,11 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
      * @param geoIdV4 The parent geoIdV4.
      * @param type    the Type of the subarea to return.
      * @return List of subareas.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     * @throws ApiRequestException if the request is failed with status !=200.
+     * @throws ApiRequestException for non-200 HTTP responses.
+     * @throws ClientRequestException for I/O and interruption errors.
      */
     public List<Area> getSubAreas(String geoIdV4, String type)
-            throws IOException, InterruptedException, ApiRequestException {
+            throws ClientRequestException, ApiRequestException {
         final JsonNode areas = "CN1".equals(geoIdV4) && "ST".equals(type)
                 ? AttomClient.fetchStates() : AttomClient.fetchSubAreas(geoIdV4, type);
         return constructAreaList(areas);

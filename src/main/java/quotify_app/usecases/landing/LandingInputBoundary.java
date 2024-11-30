@@ -18,13 +18,13 @@ public interface LandingInputBoundary {
     void goToLogin();
 
     /**
-     * Selects area and calls presenter with the selected area.
-     * @param area the selected area
+     * Fetches and calls presenter with the available countries for the user to select.
      */
-    void selectArea(Area area);
+    void fetchCountries();
 
     /**
-     * Fetches and calls presenter with the available areas for the user to select.
+     * Fetches and calls presenter with the available subareas of parent area
+     * for the user to select.
      * @param geoIdV4 the geoId of the selected area
      * @param type the type of subarea to be fetched.
      */
@@ -36,6 +36,12 @@ public interface LandingInputBoundary {
      * @param type  the type of the area.
      */
     void autoCompleteByName(String partialName, String type);
+
+    /**
+     * Selects area and calls presenter with the selected area.
+     * @param area the selected area
+     */
+    void selectArea(Area area);
 
     /**
      * Executes the Select Address use case.

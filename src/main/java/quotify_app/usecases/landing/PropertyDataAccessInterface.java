@@ -13,6 +13,18 @@ import quotify_app.entities.regionEntities.Property;
  */
 public interface PropertyDataAccessInterface {
     /**
+     * Returns the cached property.
+     * @return Property current property.
+     */
+    Property getCurrentProperty();
+
+    /**
+     * Caches the passed property for access throughout a session.
+     * @param property the selected property.
+     */
+    void setCurrentProperty(Property property);
+
+    /**
      *  Fetches and returns a property by address.
      * @param address the Address object containing address of the property to be fetched.
      * @return property wrapped in Property.

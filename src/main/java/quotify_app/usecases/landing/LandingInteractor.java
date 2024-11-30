@@ -2,6 +2,8 @@ package quotify_app.usecases.landing;
 
 import java.util.List;
 
+import quotify_app.data_access.exceptions.ApiRequestException;
+import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.Address;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.entities.regionEntities.Property;
@@ -22,11 +24,24 @@ public class LandingInteractor implements LandingInputBoundary {
         this.landingPresenter = landingOutputBoundary;
     }
 
-    /**
-     * Fetches, caches and calls presenter with a list of available areas for the user to select.
-     * @param geoIdV4 the geoId of the selected parent area.
-     * @param type the type of subarea to be fetched.
-     */
+    @Override
+    public void fetchCountries() {
+        try {
+            final List<Area> countries = areaDataAccessObject.getCountries();
+            areaDataAccessObject.cacheAreas(countries, "CN");
+            final AreaListOutputData outputData = new AreaListOutputData(countries, "CN", false);
+            landingPresenter.prepareAreaListSuccessView(outputData);
+        }
+        // the following exceptions may or may not be thrown by the model based version of fetchCountries
+        catch (ClientRequestException exception) {
+            landingPresenter.prepareErrorView("A network error occurred while fetching countries. Please try again.");
+        }
+        catch (ApiRequestException exception) {
+            landingPresenter.prepareErrorView("Failed to fetch countries due to an API error: "
+                    + exception.getMessage());
+        }
+    }
+
     @Override
     public void fetchAreas(String geoIdV4, String type) {
         try {
@@ -35,16 +50,15 @@ public class LandingInteractor implements LandingInputBoundary {
             final AreaListOutputData outputData = new AreaListOutputData(areaList, type, false);
             landingPresenter.prepareAreaListSuccessView(outputData);
         }
-        catch (Exception e) {
-            landingPresenter.prepareAreaListFailView("Failed to fetch countries: " + e.getMessage());
+        catch (ClientRequestException exception) {
+            landingPresenter.prepareErrorView("A network error occurred while fetching countries. Please try again.");
+        }
+        catch (ApiRequestException exception) {
+            landingPresenter.prepareErrorView("Failed to fetch countries due to an API error: "
+                    + exception.getMessage());
         }
     }
 
-    /**
-     * Selects the area and calls presenter with the selected area.
-     * @param area the Area object to be selected.
-     * @return Area the selected area.
-     */
     @Override
     public void selectArea(Area area) {
         areaDataAccessObject.selectArea(area);
@@ -55,7 +69,7 @@ public class LandingInteractor implements LandingInputBoundary {
     @Override
     public void autoCompleteByName(String partialName, String type) {
         if (partialName == null || partialName.isEmpty() || type == null || type.isEmpty()) {
-            landingPresenter.prepareAreaListFailView("No matches found for: " + partialName);
+            landingPresenter.prepareAreaListFailView("Start Typing..." + partialName);
         }
         final List<Area> matchedAreas = areaDataAccessObject.findAreasByNameAndType(partialName, type);
         if (matchedAreas.isEmpty()) {
@@ -74,17 +88,11 @@ public class LandingInteractor implements LandingInputBoundary {
         propertyDataAccessObject.setCurrentProperty(property);
     }
 
-    /**
-     * Trigger view transition to Signup through the presenter.
-     */
     @Override
     public void goToSignup() {
         landingPresenter.goToSignup();
     }
 
-    /**
-     * Trigger view transition to Login through the presenter.
-     */
     @Override
     public void goToLogin() {
         landingPresenter.goToLogin();

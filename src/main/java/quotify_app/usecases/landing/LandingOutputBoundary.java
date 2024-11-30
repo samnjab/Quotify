@@ -39,4 +39,9 @@ public interface LandingOutputBoundary {
      */
     void goToLogin();
 
+    /**
+     *  Preppares an Error message view for a general error.
+     * @param errorMessage the message to be presented to the user.
+     */
+    void prepareErrorView(String errorMessage);
 }
