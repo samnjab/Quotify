@@ -20,6 +20,15 @@ public class Address {
         this.postalCode = postalCode;
     }
 
+    public Address() {
+        this.countryCode = "";
+        this.stateCode = "";
+        this.city = "";
+        this.street = "";
+        this.streetNumber = "";
+        this.postalCode = "";
+    }
+
     public String getCountryCode() {
         return countryCode;
     }

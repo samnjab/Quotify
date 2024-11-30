@@ -1,5 +1,6 @@
 package quotify_app.entities.regionEntities;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -17,6 +18,11 @@ public class Identifier {
     public Identifier(String attomId, Map<String, String> geoIdV4) {
         this.attomId = Objects.requireNonNull(attomId, "attomId cannot be null");
         this.geoIdV4 = validateGeoIdV4(geoIdV4);
+    }
+
+    public Identifier() {
+        this.attomId = "";
+        this.geoIdV4 = new HashMap<>();
     }
 
     private Map<String, String> validateGeoIdV4(Map<String, String> geoIdV4) {

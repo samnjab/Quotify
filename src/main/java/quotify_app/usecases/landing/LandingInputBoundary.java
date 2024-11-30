@@ -1,7 +1,5 @@
 package quotify_app.usecases.landing;
 
-import java.util.List;
-
 import quotify_app.entities.regionEntities.Area;
 
 /**
@@ -22,9 +20,8 @@ public interface LandingInputBoundary {
     /**
      * Selects area and calls presenter with the selected area.
      * @param area the selected area
-     * @return Area the selected area
      */
-    Area selectArea(Area area);
+    void selectArea(Area area);
 
     /**
      * Fetches and calls presenter with the available areas for the user to select.
@@ -38,7 +35,7 @@ public interface LandingInputBoundary {
      * @param partialName the partial name of the area.
      * @param type  the type of the area.
      */
-    List<Area> autoCompleteByName(String partialName, String type);
+    void autoCompleteByName(String partialName, String type);
 
     /**
      * Executes the Select Address use case.

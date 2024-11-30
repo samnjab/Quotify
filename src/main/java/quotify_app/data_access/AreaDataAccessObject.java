@@ -22,6 +22,8 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
         this.areaCache = areaCache;
     }
 
+    // Helper methods:
+
     /**
      * Constructs a list of Area objects from JsonNode fetched from the API.
      * @param areas the list of subareas returned from the API in the API information format.
@@ -44,7 +46,6 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
         }
         return subAreas;
     }
-    // Helper methods.
 
     // Override methods:
     /**

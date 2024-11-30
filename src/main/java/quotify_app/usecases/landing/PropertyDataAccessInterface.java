@@ -1,11 +1,11 @@
 package quotify_app.usecases.landing;
 
+import java.util.List;
+
 import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.entities.regionEntities.Address;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.entities.regionEntities.Property;
-
-import java.util.List;
 
 /**
  * Data Access Interface for retrieving Property data in the Select Property and
@@ -26,5 +26,5 @@ public interface PropertyDataAccessInterface {
      * @return properties a list of Properties at zipCode.
      * @throws ApiRequestException if the Properties at zipCode cannot be fetched.
      */
-    List<Property> getPropertyComparables(Area zipCode) throws ApiRequestException;
+    List<Property> getSaleComparables(Area zipCode) throws ApiRequestException;
 }

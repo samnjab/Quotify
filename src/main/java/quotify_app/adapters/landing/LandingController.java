@@ -1,7 +1,5 @@
 package quotify_app.adapters.landing;
 
-import java.util.List;
-
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.usecases.landing.AddressInputData;
 import quotify_app.usecases.landing.LandingInputBoundary;
@@ -37,11 +35,7 @@ public class LandingController {
      * @throws RuntimeException when interactor fails at fetching countries.
      */
     public void fetchCountries() {
-        landingInteractor.fetchCountries();
-    }
-
-    public List<String> fetchAddressSuggestions(String partialAddress) throws Exception {
-        return landingInteractor.autoCompleteAddress(partialAddress);
+        //   landingInteractor.getCountries();
     }
 
     /**

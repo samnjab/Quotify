@@ -226,4 +226,56 @@ public class AttomClient {
         return itemsNode;
     }
 
+    /**
+     * Fetches sales comparables for a property identified by propertyId using either radius or zipcode search.
+     * @param propertyId The attomId of the property to fetch sales comparables for.
+     * @param searchType The type of search (either "Radius" or "Zipcode").
+     * @param miles The radius in miles for the search (applicable only if searchType is "Radius").
+     * @param bedroomsRange Range of bedrooms (e.g., "2").
+     * @param sqFeetRange Square feet range (e.g., "600").
+     * @param yearBuiltRange Range of years built (e.g., "10").
+     * @return A JsonNode containing the sales comparables response.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the request is interrupted.
+     * @throws ApiRequestException if the request fails with a non-200 status.
+     */
+    public static JsonNode fetchSalesComparables(String propertyId, String searchType, Integer miles,
+                                                 String bedroomsRange, String sqFeetRange, String yearBuiltRange)
+            throws IOException, InterruptedException, ApiRequestException {
+
+        final String baseUrl = "https://api.gateway.attomdata.com/property/v2/salescomparables/propid/" + propertyId;
+
+        final StringBuilder queryParams = new StringBuilder("?searchType=").append(searchType);
+
+        if ("Radius".equalsIgnoreCase(searchType)) {
+            if (miles != null) {
+                queryParams.append("&miles=").append(miles);
+            }
+            else {
+                throw new IllegalArgumentException("Miles parameter is required for Radius search.");
+            }
+        }
+
+        queryParams.append("&bedroomsRange=").append(bedroomsRange);
+        queryParams.append("&sqFeetRange=").append(sqFeetRange);
+        queryParams.append("&yearBuiltRange=").append(yearBuiltRange);
+
+        final String url = baseUrl + queryParams.toString();
+
+        final HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Accept", "application/json")
+                .header("apikey", API_KEY)
+                .GET()
+                .build();
+
+        final HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            throw new ApiRequestException("Failed to fetch sales comparables: HTTP " + response.statusCode(),
+                    new RuntimeException());
+        }
+        // returning the whole response.body() for now:
+        return MAPPER.readTree(response.body());
+    }
 }

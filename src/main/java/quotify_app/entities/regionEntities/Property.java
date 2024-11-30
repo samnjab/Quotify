@@ -18,9 +18,15 @@ public class Property {
     }
 
     public Property(Address address) {
-        this.identifier = null;
+        this.identifier = new Identifier();
         this.address = address;
-        this.summary = null;
+        this.summary = new Summary();
+    }
+
+    public Property() {
+        this.identifier = new Identifier();
+        this.address = new Address();
+        this.summary = new Summary();
     }
 
     public Identifier getIdentifier() {

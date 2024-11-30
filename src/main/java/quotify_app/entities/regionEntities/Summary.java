@@ -45,6 +45,16 @@ public class Summary {
         this.yearBuilt = yearBuilt;
     }
 
+    public Summary() {
+        this.propType = -1;
+        this.beds = -1;
+        this.baths = -1;
+        this.condition = -1;
+        this.levels = -1;
+        this.size = -1;
+        this.yearBuilt = -1;
+    }
+
     // Getters
     public int getPropType() {
         return propType;

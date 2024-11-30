@@ -1,27 +1,30 @@
 package quotify_app.usecases.landing;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import quotify_app.entities.regionEntities.Address;
 import quotify_app.entities.regionEntities.Area;
+import quotify_app.entities.regionEntities.Property;
 
 /**
  * The Landing Interactor.
  */
 public class LandingInteractor implements LandingInputBoundary {
     private final AreaDataAccessInterface areaDataAccessObject;
+    private final PropertyDataAccessInterface propertyDataAccessObject;
     private final LandingOutputBoundary landingPresenter;
 
     public LandingInteractor(AreaDataAccessInterface areaDataAccessInterface,
+                             PropertyDataAccessInterface propertyDataAccessInterface,
                              LandingOutputBoundary landingOutputBoundary) {
         this.areaDataAccessObject = areaDataAccessInterface;
+        this.propertyDataAccessObject = propertyDataAccessInterface;
         this.landingPresenter = landingOutputBoundary;
     }
 
     /**
-     * Fetches, caches and calls presenter with a list of available countries for the user to select.
-     * @param geoIdV4 the geoId of the selected country.
+     * Fetches, caches and calls presenter with a list of available areas for the user to select.
+     * @param geoIdV4 the geoId of the selected parent area.
      * @param type the type of subarea to be fetched.
      */
     @Override
@@ -43,37 +46,32 @@ public class LandingInteractor implements LandingInputBoundary {
      * @return Area the selected area.
      */
     @Override
-    public Area selectArea(Area area) {
+    public void selectArea(Area area) {
         areaDataAccessObject.selectArea(area);
         final AreaOutputData outputData = new AreaOutputData(area, false);
         landingPresenter.prepareAreaSuccessView(outputData);
-        return area;
     }
 
     @Override
-    public List<Area> autoCompleteByName(String partialName, String type) {
+    public void autoCompleteByName(String partialName, String type) {
         if (partialName == null || partialName.isEmpty() || type == null || type.isEmpty()) {
             landingPresenter.prepareAreaListFailView("No matches found for: " + partialName);
-            return new ArrayList<>();
         }
         final List<Area> matchedAreas = areaDataAccessObject.findAreasByNameAndType(partialName, type);
         if (matchedAreas.isEmpty()) {
             landingPresenter.prepareAreaListFailView("No matches found for: " + partialName);
-        } else {
+        }
+        else {
             final AreaListOutputData outputData = new AreaListOutputData(matchedAreas, type, false);
             landingPresenter.prepareAreaListSuccessView(outputData);
         }
-        return matchedAreas;
     }
 
     @Override
-    public Address selectAddress(AddressInputData addressInputData) {
-        final Area country = addressInputData.getCountry();
-        final Area state = addressInputData.getState();
-        final Area city = addressInputData.getCity();
-        final Area zipCode = addressInputData.getZipCode();
+    public void selectAddress(AddressInputData addressInputData) {
         final Address address = addressInputData.constructAddress();
-        return address;
+        final Property property = propertyDataAccessObject.getPropertyAtAddress(address);
+        propertyDataAccessObject.setCurrentProperty(property);
     }
 
     /**

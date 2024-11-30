@@ -15,7 +15,6 @@ import quotify_app.usecases.landing.AreaListOutputData;
  */
 
 public class AreaStore {
-
     private final List<AreaListOutputData> areaCache;
     private final Map<String, Area> areaMap = new HashMap<>();
 
@@ -28,16 +27,17 @@ public class AreaStore {
     }
 
     /**
-     * Stores the passed area of type as the selected area in areaMap.
+     * Updates areMap, the selected areas map, wit the selected area in areaMap.
      * @param area the area to be stored.
      * @param areaType the type of the selected area to be stored.
      */
     public void storeArea(Area area, String areaType) {
+        areaMap.remove(areaType);
         areaMap.put(areaType, area);
     }
 
     /**
-     * Stores areas for a specific type.
+     * Stores areas of a specific type.
      * @param areaType The type of the areas (e.g., "ST" for state, "CS" for city).
      * @param areas The list of areas to store.
      */

@@ -1,40 +1,28 @@
 package quotify_app.data_access;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import quotify_app.data_access.exceptions.ApiRequestException;
-import quotify_app.entities.regionEntities.Address;
-import quotify_app.entities.regionEntities.Identifier;
-import quotify_app.entities.regionEntities.Property;
-import quotify_app.entities.regionEntities.Summary;
+import quotify_app.entities.regionEntities.*;
 import quotify_app.usecases.landing.PropertyDataAccessInterface;
-
-import java.util.Map;
+import quotify_app.usecases.landing.exceptions.AddressNotFound;
 
 public class PropertyDataAccessObject implements PropertyDataAccessInterface {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
+    private Property propertyCache;
 
-    // Helper methods:
-
-    /**
-     * Finds the attomId of the property that matches the given address.
-     *
-     * @param properties JSON list of properties.
-     * @param address    The address to search for.
-     * @return The attomId of the matching property, or an empty string if no match is found.
-     */
-    private String findPropertyAttomId(JsonNode properties, Address address) {
-        for (JsonNode propertyNode : properties) {
-            JsonNode addressNode = propertyNode.get("address");
-            if (addressNode != null && address.fetchAddress1().equals(addressNode.get("line1").asText())) {
-                JsonNode identifierNode = propertyNode.get("identifier");
-                return identifierNode.get("attomId").asText();
-            }
-        }
-        return "";
+    public PropertyDataAccessObject() {
+        this.propertyCache = new Property();
     }
 
+    public void setCurrentProperty(Property property) {
+        this.propertyCache = property;
+    }
+
+    // Helper methods:
     /**
      * Extracts a Summary object from the detailed property JSON node.
      * @param propertyNode The detailed property JSON node.
@@ -68,24 +56,45 @@ public class PropertyDataAccessObject implements PropertyDataAccessInterface {
         return new Identifier(attomId, geoIdV4);
     }
 
-    // Override medthods:
+    /**
+     * Finds the attomId of the property that matches the given address.
+     * @param properties JSON list of properties.
+     * @param address    The address to search for.
+     * @return The attomId of the matching property, or an empty string if no match is found.
+     * @throws AddressNotFound Exception if the entered address does not match the zipcode.
+     */
+    private String findPropertyAttomId(JsonNode properties, Address address) throws AddressNotFound {
+        for (JsonNode propertyNode : properties) {
+            final JsonNode addressNode = propertyNode.get("address");
+            if (addressNode != null && address.fetchAddress1().equals(addressNode.get("line1").asText())) {
+                final JsonNode identifierNode = propertyNode.get("identifier");
+                return identifierNode.get("attomId").asText();
+            }
+        }
+        throw new AddressNotFound("address not found in zipcode", new RuntimeException());
+    }
 
+    // Override medthods:
     /**
      * Fetches the property details for a given address.
      * @param address The address to fetch property details for.
      * @return A Property object containing property details.
-     * @throws ApiRequestException If the property details cannot be fetched.
+     * @throws ApiRequestException If 1) properties at zipcode cannot be fetched.
+     * 2) property details cannot be fetched.
+     * @throws AddressNotFound Exception if the entered address does not match the zipcode.
      */
     @Override
-    public Property getPropertyAtAddress(Address address) throws ApiRequestException {
+    public Property getPropertyAtAddress(Address address)
+            throws ApiRequestException, AddressNotFound {
         final JsonNode properties = AttomClient.fetchPropertiesByZipcode(address.getPostalCode());
         final String attomId = findPropertyAttomId(properties, address);
-        if (attomId.isEmpty()) {
-            throw new ApiRequestException("No property found for the given address", new RuntimeException());
-        }
         final JsonNode propertyNode = AttomClient.fetchPropertyDetails(attomId).get("property").get(0);
         final Summary summary = extractPropertySummary(propertyNode);
         final Identifier identifier = extractPropertyIdentifier(propertyNode);
         return new Property(identifier, address, summary);
+    }
+
+    public Property getCurrentProperty() {
+        return propertyCache;
     }
 }
