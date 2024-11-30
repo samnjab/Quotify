@@ -8,12 +8,14 @@ import javax.swing.WindowConstants;
 
 import quotify_app.adapters.ViewManagerModel;
 import quotify_app.app.factories.ComparatorFactory;
-import quotify_app.app.factories.FunctionFactory;
 import quotify_app.app.factories.CurrentPriceFactory;
+import quotify_app.app.factories.FunctionFactory;
 import quotify_app.app.factories.FuturePriceFactory;
 import quotify_app.app.factories.LoginFactory;
 import quotify_app.app.factories.SignupFactory;
 import quotify_app.data_access.DBUserDataAccessObject;
+import quotify_app.data_access.PredictionClient;
+import quotify_app.data_access.PredictionDataAccessObject;
 import quotify_app.entities.CommonUserFactory;
 import quotify_app.ui.ViewManager;
 
@@ -35,6 +37,8 @@ public class AppBuilder {
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+        final PredictionClient predictionClient = new PredictionClient();
+        final PredictionDataAccessObject predictionDataAccess = new PredictionDataAccessObject(predictionClient);
         final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(new CommonUserFactory());
         loginFactory.setUpController(signupFactory, viewManagerModel, userDataAccessObject);
         signupFactory.setUpController(loginFactory, viewManagerModel, userDataAccessObject);
@@ -89,6 +93,7 @@ public class AppBuilder {
                 functionFactory.getFunctionView().getViewName());
         return this;
     }
+
     /**
      * Adds the CurrentPrice View to the application.
      * @return this builder
@@ -127,6 +132,7 @@ public class AppBuilder {
         comparatorFactory.getComparatorView().setComparatorController(comparatorFactory.getComparatorController());
         return this;
     }
+
     /**
      * Adds the CurrentPrice Use Case to the application.
      * @return this builder
@@ -171,7 +177,7 @@ public class AppBuilder {
 
         // Setting the initial view to SignupView
 
-        viewManagerModel.setState(signupFactory.getSignupView().getViewName());
+        viewManagerModel.setState(functionFactory.getFunctionView().getViewName());
         viewManagerModel.firePropertyChanged();
         return application;
     }
