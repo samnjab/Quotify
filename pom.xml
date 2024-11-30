@@ -9,8 +9,10 @@
     <packaging>jar</packaging>
 
     <properties>
+        <!-- Use Java 23 -->
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
+        <maven.compiler.release>23</maven.compiler.release>
     </properties>
 
     <dependencies>
@@ -20,6 +22,7 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.42.0.0</version>
         </dependency>
+
 
         <!-- Jackson Databind: Provides data-binding and JSON serialization/deserialization -->
         <dependency>
@@ -48,6 +51,7 @@
             <artifactId>mockito-core</artifactId>
             <version>5.5.0</version> <!-- Update to the latest version -->
             <scope>compile</scope>
+
         </dependency>
 
         <dependency>
@@ -72,10 +76,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.11.0</version> <!-- Ensure this supports Java 23 -->
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
+                    <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>
         </plugins>
