@@ -33,7 +33,7 @@ public class ComparatorInteractorTest {
         comparatorInteractor.goToCurrentPrice();
 
         // Assert
-        assertTrue(viewManagerModel.getState().equals("currentPrice"));
+        assertTrue(viewManagerModel.getState().equals("current price"));
     }
 
     @Test

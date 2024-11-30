@@ -23,7 +23,7 @@ public class ComparatorPresenter implements ComparatorOutputBoundary {
     @Override
     public void goToCurrentPrice() {
         // Transition to current price view
-        viewManagerModel.setState("currentPrice");
+        viewManagerModel.setState("current price");
         viewManagerModel.firePropertyChanged();
     }
 
