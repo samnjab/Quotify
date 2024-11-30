@@ -1,12 +1,16 @@
 package quotify_app.ui;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -161,6 +165,7 @@ public class SignupView extends JPanel implements PropertyChangeListener {
 
     /**
      * Initializes the controller for the signupview.
+     * @param signupController pass the signupController
      */
     public void setSignupController(SignupController signupController) {
         this.signupController = signupController;

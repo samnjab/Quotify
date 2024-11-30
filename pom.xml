@@ -30,7 +30,6 @@
             <version>5.9.3</version>
             <scope>test</scope>
         </dependency>
-
         <!-- Jackson Databind: Provides data-binding and JSON serialization/deserialization -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
