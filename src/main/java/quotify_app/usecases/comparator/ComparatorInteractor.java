@@ -13,12 +13,13 @@ import java.util.List;
  */
 public class ComparatorInteractor implements ComparatorInputBoundary {
     private final ComparatorOutputBoundary comparatorPresenter;
-    private final ComparatorDataAccessObject comparatorDataAccessObject;
+    private final ComparatorDataAccessInterface comparatorDataAccessObject;
 
     public ComparatorInteractor(
-                                ComparatorOutputBoundary comparatorPresenter, ComparatorDataAccessObject comparatorDataAccessObjectdataAccess) {
+                                ComparatorOutputBoundary comparatorPresenter,
+                                ComparatorDataAccessInterface comparatorDataAccessInterface) {
         this.comparatorPresenter = comparatorPresenter;
-        this.comparatorDataAccessObject = comparatorDataAccessObjectdataAccess;
+        this.comparatorDataAccessObject = comparatorDataAccessInterface;
 
     }
 

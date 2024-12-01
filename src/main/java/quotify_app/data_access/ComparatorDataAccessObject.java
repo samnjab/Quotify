@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.*;
@@ -17,10 +18,11 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private Property propertyCache;
-
-    public void setCurrentProperty(Property property) {
-        this.propertyCache = property;
-    }
+    private final int ten = 10;
+    private final int five = 5;
+    private final int three = 3;
+    private final int hundred = 100;
+    private final int twenty = 20;
 
     // Helper Methods (Existing Ones from PropertyDataAccessObject)
     /**
@@ -52,7 +54,10 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
      */
     private Identifier extractPropertyIdentifier(JsonNode propertyNode) {
         final String attomId = propertyNode.get("identifier").get("attomId").asText();
-        final Map<String, String> geoIdV4 = MAPPER.convertValue(propertyNode.get("location").get("geoIdV4"), Map.class);
+        final Map<String, String> geoIdV4 = MAPPER.convertValue(
+                propertyNode.get("location").get("geoIdV4"),
+                new TypeReference<Map<String, String>>() { }
+        );
         return new Identifier(attomId, geoIdV4);
     }
 
@@ -60,6 +65,11 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
         return propertyCache;
     }
 
+    public void setCurrentProperty(Property property) {
+        this.propertyCache = property;
+    }
+
+    // main logic of getting the top 3 relevent properties.
     /**
      * Calculates a similarity score between the property in the cache and the given property.
      *
@@ -78,25 +88,25 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
     }
 
     private int calculateBedsScore(Summary cachedSummary, Summary summary) {
-        return calculateAttributeScore(cachedSummary.getBeds(), summary.getBeds(), 10);
+        return calculateAttributeScore(cachedSummary.getBeds(), summary.getBeds(), ten);
     }
 
     private int calculateBathsScore(Summary cachedSummary, Summary summary) {
-        return calculateAttributeScore(cachedSummary.getBaths(), summary.getBaths(), 10);
+        return calculateAttributeScore(cachedSummary.getBaths(), summary.getBaths(), ten);
     }
 
     private int calculateSizeScore(Summary cachedSummary, Summary summary) {
-        return calculateAttributeScore(cachedSummary.getSize(), summary.getSize(), 20, 100);
+        return calculateAttributeScore(cachedSummary.getSize(), summary.getSize(), twenty, hundred);
     }
 
     private int calculateYearBuiltScore(Summary cachedSummary, Summary summary) {
-        return calculateAttributeScore(cachedSummary.getYearBuilt(), summary.getYearBuilt(), 5, 10);
+        return calculateAttributeScore(cachedSummary.getYearBuilt(), summary.getYearBuilt(), five, ten);
     }
 
     private int calculateLevelsScore(Summary cachedSummary, Summary summary) {
         int result = 0;
         if (cachedSummary.getLevels() == summary.getLevels() && cachedSummary.getLevels() != -1) {
-            result = 5;
+            result = five;
         }
         return result;
     }
@@ -121,54 +131,53 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
     /**
      * Fetches comparable properties and returns the top 3 most similar properties to the cached property.
      *
+     * @param zipCode The area to search properties for.
      * @return A list of the top 3 most similar Property objects.
      * @throws ApiRequestException If properties cannot be fetched.
+     * @throws ClientRequestException If there is a client request error.
      */
     @Override
     public List<Property> getSaleComparables(Area zipCode) throws ApiRequestException, ClientRequestException {
+        if (propertyCache == null) {
+            throw new IllegalStateException("Current property is not set in the cache.");
+        }
+
         final JsonNode propertiesJson = AttomClient.fetchPropertiesByZipcode(zipCode.getName());
         final List<Property> comparedProperties = new ArrayList<>();
 
-        // Extract properties from JSON
         if (propertiesJson != null && propertiesJson.isArray()) {
             for (JsonNode propertyNode : propertiesJson) {
-                final Summary summary = extractPropertySummary(propertyNode);
-                final Identifier identifier = extractPropertyIdentifier(propertyNode);
+                try {
+                    final Summary summary = extractPropertySummary(propertyNode);
+                    final Identifier identifier = extractPropertyIdentifier(propertyNode);
 
-                final JsonNode addressNode = propertyNode.get("address");
-                if (addressNode != null) {
-                    String line1 = "";
-                    if (addressNode.has("line1")) {
-                        line1 = addressNode.get("line1").asText();
-                    }
+                    final JsonNode addressNode = propertyNode.get("address");
+                    if (addressNode != null) {
+                        final String line1 = addressNode.has("line1") ? addressNode.get("line1").asText() : "";
+                        final String city = addressNode.has("city") ? addressNode.get("city").asText() : "";
+                        final String state = addressNode.has("state") ? addressNode.get("state").asText() : "";
+                        final String postalCode = addressNode.has("postalCode") ? addressNode.get("postalCode").asText() : "";
 
-                    String city = "";
-                    if (addressNode.has("city")) {
-                        city = addressNode.get("city").asText();
+                        if (!line1.isEmpty() && !city.isEmpty() && !state.isEmpty() && !postalCode.isEmpty()) {
+                            final Address address = new Address("", state, city, line1, "", postalCode);
+                            comparedProperties.add(new Property(identifier, address, summary));
+                        }
+                        else {
+                            System.err.println("Skipped property with incomplete address: " + propertyNode);
+                        }
                     }
-
-                    String state = "";
-                    if (addressNode.has("state")) {
-                        state = addressNode.get("state").asText();
-                    }
-
-                    String fetchedPostalCode = "";
-                    if (addressNode.has("postalCode")) {
-                        fetchedPostalCode = addressNode.get("postalCode").asText();
-                    }
-
-                    if (!line1.isEmpty() && !city.isEmpty() && !state.isEmpty() && !fetchedPostalCode.isEmpty()) {
-                        final Address address = new Address("", state, city, line1, "", fetchedPostalCode);
-                        comparedProperties.add(new Property(identifier, address, summary));
-                    }
+                } catch (Exception exception) {
+                    System.err.println("Error processing propertyNode: " + propertyNode + " Error: "
+                            + exception.getMessage());
                 }
             }
         }
 
-        // Calculate similarity scores and sort properties by score in descending order
+        // Calculate similarity scores
         comparedProperties.sort(Comparator.comparingInt(this::calculateSimilarityScore).reversed());
-        // limit to top 3
-        return comparedProperties.stream().limit(3).collect(Collectors.toList());
-    }
-}
 
+        // Return top 3 results
+        return comparedProperties.stream().limit(three).collect(Collectors.toList());
+    }
+
+}
