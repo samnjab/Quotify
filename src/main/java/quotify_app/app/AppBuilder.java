@@ -88,7 +88,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLandingView() {
-        cardPanel.add(landingFactory.getLandingView(), "landing"); // Add Landing View
+        cardPanel.add(landingFactory.getLandingView(), "landing");
         return this;
     }
 
@@ -97,7 +97,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLandingUseCase() {
-        landingFactory.setUpController(viewManagerModel);
+        landingFactory.getLandingView().setLandingController(landingFactory.getLandingController());
         return this;
     }
 

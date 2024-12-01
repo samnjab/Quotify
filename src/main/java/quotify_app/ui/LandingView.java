@@ -8,7 +8,9 @@ import java.util.List;
 
 import javax.swing.*;
 
+import quotify_app.adapters.landing.LandingController;
 import quotify_app.adapters.landing.LandingViewModel;
+import quotify_app.adapters.login.LoginController;
 import quotify_app.entities.regionEntities.Area;
 
 /**
@@ -16,7 +18,8 @@ import quotify_app.entities.regionEntities.Area;
  * UI components based on the state in the LandingViewModel.
  */
 public class LandingView extends JPanel implements PropertyChangeListener {
-
+    private final String viewName = "landing";
+    private LandingController landingController;
     private final LandingViewModel landingViewModel;
 
     // UI Components
@@ -152,6 +155,14 @@ public class LandingView extends JPanel implements PropertyChangeListener {
                 dropdown.addItem(area);
             }
         }
+    }
+
+    /**
+     * Initializes the LoginController.
+     * @param landingController takes a LoginController as an input.
+     */
+    public void setLandingController(LandingController landingController) {
+        this.landingController = landingController;
     }
 
     /**
