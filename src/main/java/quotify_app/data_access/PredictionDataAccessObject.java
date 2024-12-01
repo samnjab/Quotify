@@ -87,7 +87,7 @@ public class PredictionDataAccessObject {
         final String geoidv4 = property.getIdentifier().getGeoIdV4().get("ZI");
         final Summary summary = property.getSummary();
 
-        final int propertyAge = 2022 - summary.getYearBuilt();
+        final int propertyAge = currYear - summary.getYearBuilt();
 
         return PredictionRequest.requestBuilder()
                 .beds(summary.getBeds())
@@ -103,10 +103,20 @@ public class PredictionDataAccessObject {
                 .build();
     }
 
+    /**
+     * Returns a value representing the predicted price for the property at the current time.
+     * @return the double value representing the prediction.
+     */
     public double getCurrentPricePredictionString() {
         return currentPricePrediction;
     }
 
+    /**
+     * Returns an array of 6 values representing the predicted price for the property from the present until
+     * 6 months from the present.
+     *
+     * @return the double array returned, where arr[0] is the current prediction, arr[1] is 1 month prediction, etc.
+     */
     public double[] getFuturePredictionsArray() {
         return futurePredictions;
     }

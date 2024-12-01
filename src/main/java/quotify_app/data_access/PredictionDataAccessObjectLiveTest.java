@@ -46,6 +46,7 @@ class PredictionDataAccessObjectLiveTest {
             1500,
             2000
     );
+    private final Property property = new Property(identifier, address, summary);
 
     @BeforeEach
     void setUp() {
@@ -58,8 +59,6 @@ class PredictionDataAccessObjectLiveTest {
     void testGetCurrentPricePredictionPass() throws PredictionClientException {
         // Mock property data
 
-        final Property property = new Property(identifier, address, summary);
-
         // Call the live API for current price prediction
         final double prediction = dataAccessObject.getCurrentPricePrediction(property);
 
@@ -71,8 +70,6 @@ class PredictionDataAccessObjectLiveTest {
 
     @Test
     void testGetFuturePricePredictionsPass() throws PredictionClientException {
-
-        final Property property = new Property(identifier, address, summary);
 
         // Call the live API for future price predictions
         final double[] futurePredictions = dataAccessObject.getFuturePricePredictions(property);
@@ -92,8 +89,6 @@ class PredictionDataAccessObjectLiveTest {
     @Test
     void testGetCurrentPricePredictionFail() {
         // Mock property data
-
-        final Property property = new Property(identifier, address, summary);
 
         try {
             // Simulate an exception by creating a mock PredictionClient
@@ -122,8 +117,6 @@ class PredictionDataAccessObjectLiveTest {
     void testGetFuturePricePredictionsFail() {
         // Mock property data
 
-        final Property property = new Property(identifier, address, summary);
-
         try {
             // Simulate an exception by creating a mock PredictionClient
             final PredictionClient mockClient = new PredictionClient() {
@@ -151,8 +144,6 @@ class PredictionDataAccessObjectLiveTest {
     void testGetCurrentPricePredictionString() {
         // Mock a successful current price prediction
 
-        final Property property = new Property(identifier, address, summary);
-
         try {
             // Call the live API to populate current price prediction
             dataAccessObject.getCurrentPricePrediction(property);
@@ -172,9 +163,6 @@ class PredictionDataAccessObjectLiveTest {
     @Test
     void testGetFuturePredictionsArray() {
         // Mock a successful future price prediction
-
-        final Property property = new Property(identifier, address, summary);
-
         try {
             // Call the live API to populate future price predictions
             dataAccessObject.getFuturePricePredictions(property);

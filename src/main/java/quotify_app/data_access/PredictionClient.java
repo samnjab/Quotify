@@ -2,7 +2,6 @@ package quotify_app.data_access;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
@@ -16,12 +15,12 @@ import quotify_app.entities.PredictionRequest;
  */
 public class PredictionClient {
     private static final String PREDICT_ENDPOINT = "https://housing-prediction-api-62e3f0c37c7d.herokuapp.com/predict";
-    private final HttpClient client;
+    private final HttpClientWrapper client;
     private final ObjectMapper objectMapper;
     private final int okCode = 200;
 
     public PredictionClient() {
-        this.client = HttpClient.newHttpClient();
+        this.client = new HttpClientWrapper();
         this.objectMapper = new ObjectMapper();
     }
 
@@ -45,7 +44,7 @@ public class PredictionClient {
                     .build();
 
             // Send HTTP request and get the response
-            final HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            final HttpResponse<String> response = client.send(httpRequest);
 
             // Check HTTP status code and handle errors
             if (response.statusCode() != okCode) {
