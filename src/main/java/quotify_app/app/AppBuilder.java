@@ -22,6 +22,8 @@ import quotify_app.data_access.PredictionDataAccessObject;
 import quotify_app.data_access.PropertyDataAccessObject;
 import quotify_app.entities.CommonUserFactory;
 import quotify_app.ui.ViewManager;
+import quotify_app.usecases.currentprice.CurrentPropertyDataAccessInterface;
+import quotify_app.usecases.currentprice.PredictionDataAccessInterface;
 
 /**
  * The AppBuilder class is responsible for setting up and wiring together the components of the application.
@@ -43,7 +45,9 @@ public class AppBuilder {
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
         final PredictionClient predictionClient = new PredictionClient();
-        final PredictionDataAccessObject predictionDataAccess = new PredictionDataAccessObject(predictionClient);
+        // final PredictionDataAccessObject predictionDataAccess = new PredictionDataAccessObject(predictionClient);
+        final PredictionDataAccessInterface currPredictionDataAccess = new PredictionDataAccessObject(predictionClient);
+        final CurrentPropertyDataAccessInterface currPropertyDataAccess = new PropertyDataAccessObject();
         final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(new CommonUserFactory());
         final AreaDataAccessObject areaDataAccessObject = new AreaDataAccessObject(new AreaStore());
         final PropertyDataAccessObject propertyDataAccessObject = new PropertyDataAccessObject();
@@ -51,7 +55,7 @@ public class AppBuilder {
         signupFactory.setUpController(loginFactory, viewManagerModel, userDataAccessObject);
         functionFactory.setUpController(viewManagerModel);
         comparatorFactory.setUpController(viewManagerModel);
-        currentPriceFactory.setUpController(viewManagerModel);
+        currentPriceFactory.setUpController(viewManagerModel, currPredictionDataAccess, currPropertyDataAccess);
         futurePriceFactory.setUpController(viewManagerModel);
         landingFactory.setUpController(viewManagerModel, areaDataAccessObject, propertyDataAccessObject);
     }

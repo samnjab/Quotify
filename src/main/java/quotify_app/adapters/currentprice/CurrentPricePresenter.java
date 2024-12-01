@@ -67,4 +67,19 @@ public class CurrentPricePresenter implements CurrentPriceOutputBoundary {
         viewManagerModel.setState("landing page");
         viewManagerModel.firePropertyChanged();
     }
+
+    @Override
+    public void presentCurrentPrice(double price) {
+        // Update the ViewModel's state with the predicted price
+        currentPriceViewModel.getState().setCurrentPrice(String.format("$%.2f", price));
+        currentPriceViewModel.firePropertyChanged();
+    }
+
+    @Override
+    public void presentPredictionError(String message) {
+        // Update the ViewModel's state with error message
+        currentPriceViewModel.getState().setCurrentPrice("Error: " + message);
+        currentPriceViewModel.firePropertyChanged();
+    }
+
 }

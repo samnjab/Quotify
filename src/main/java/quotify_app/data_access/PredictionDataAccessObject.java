@@ -8,11 +8,12 @@ import quotify_app.data_access.exceptions.PredictionClientException;
 import quotify_app.entities.PredictionRequest;
 import quotify_app.entities.regionEntities.Property;
 import quotify_app.entities.regionEntities.Summary;
+import quotify_app.usecases.currentprice.PredictionDataAccessInterface;
 
 /**
  * A Data Access Object for handling predictions via PredictionClient and managing prediction data.
  */
-public class PredictionDataAccessObject {
+public class PredictionDataAccessObject implements PredictionDataAccessInterface {
     private final int currYear = 2022;
     private final int currMonth = 12;
     private final int numFuturePredictions = 6;
@@ -20,6 +21,11 @@ public class PredictionDataAccessObject {
     private double currentPricePrediction;
     private final double[] futurePredictions = new double[numFuturePredictions];
 
+    /**
+     * Constructs a PredictionDataAccessObject with the given PredictionClient.
+     *
+     * @param predictionClient The client used to make prediction requests.
+     */
     public PredictionDataAccessObject(PredictionClient predictionClient) {
         this.predictionClient = predictionClient;
     }
@@ -31,6 +37,7 @@ public class PredictionDataAccessObject {
      * @return The predicted current price.
      * @throws PredictionClientException If there is an issue with the prediction request or response.
      */
+    @Override
     public double getCurrentPricePrediction(final Property property) throws PredictionClientException {
         final PredictionRequest request = buildPredictionRequest(property, 0);
         final String predictionResponse = predictionClient.predict(request);
@@ -40,7 +47,7 @@ public class PredictionDataAccessObject {
             final Map<String, Double> responseMap = new ObjectMapper().readValue(predictionResponse, Map.class);
             final double prediction = responseMap.get("prediction");
 
-            // Store the prediction as a string for logging
+            // Store the prediction for logging or future use
             this.currentPricePrediction = prediction;
 
             return prediction;

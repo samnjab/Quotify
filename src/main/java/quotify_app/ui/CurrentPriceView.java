@@ -57,6 +57,8 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
         this.currentPriceController = currentPriceController;
         // After setting the controller, check the login status
         currentPriceController.checkLoginStatus();
+        // Fetch the current price
+        currentPriceController.fetchCurrentPrice();
     }
 
     /**

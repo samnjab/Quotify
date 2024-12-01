@@ -39,4 +39,9 @@ public interface CurrentPriceInputBoundary {
      * Handles the action to navigate to the Landing Page View.
      */
     void goToLandingPage();
+
+    /**
+     * Fetches the current price prediction and passes it to the presenter.
+     */
+    void fetchCurrentPrice();
 }

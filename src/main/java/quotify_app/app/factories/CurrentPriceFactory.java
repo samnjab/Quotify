@@ -8,6 +8,8 @@ import quotify_app.ui.CurrentPriceView;
 import quotify_app.usecases.currentprice.CurrentPriceInputBoundary;
 import quotify_app.usecases.currentprice.CurrentPriceInteractor;
 import quotify_app.usecases.currentprice.CurrentPriceOutputBoundary;
+import quotify_app.usecases.currentprice.PredictionDataAccessInterface;
+import quotify_app.usecases.currentprice.CurrentPropertyDataAccessInterface;
 
 /**
  * The CurrentPriceFactory class is responsible for setting up and wiring together the CurrentPrice components
@@ -31,16 +33,21 @@ public class CurrentPriceFactory {
     /**
      * Sets up the CurrentPriceController.
      *
-     * @param viewManagerModel the ViewManagerModel from the AppBuilder.
+     * @param viewManagerModel     the ViewManagerModel from the AppBuilder.
+     * @param predictionDataAccess the PredictionDataAccessInterface for predictions.
+     * @param propertyDataAccess   the PropertyDataAccessInterface for property data.
      */
-    public void setUpController(ViewManagerModel viewManagerModel) {
+    public void setUpController(ViewManagerModel viewManagerModel,
+                                PredictionDataAccessInterface predictionDataAccess,
+                                CurrentPropertyDataAccessInterface propertyDataAccess) {
         // Setup Presenter and Interactor for CurrentPrice with necessary dependencies
         final CurrentPriceOutputBoundary currentPricePresenter = new CurrentPricePresenter(
                 viewManagerModel,
                 currentPriceViewModel
         );
 
-        final CurrentPriceInputBoundary currentPriceInteractor = new CurrentPriceInteractor(currentPricePresenter);
+        final CurrentPriceInputBoundary currentPriceInteractor = new CurrentPriceInteractor(
+                currentPricePresenter, predictionDataAccess, propertyDataAccess);
 
         currentPriceController = new CurrentPriceController(currentPriceInteractor);
     }
