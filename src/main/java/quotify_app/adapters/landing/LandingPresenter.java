@@ -3,107 +3,167 @@ package quotify_app.adapters.landing;
 import java.util.List;
 
 import quotify_app.adapters.ViewManagerModel;
+import quotify_app.entities.regionEntities.Address;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.usecases.landing.AreaListOutputData;
 import quotify_app.usecases.landing.AreaOutputData;
 import quotify_app.usecases.landing.LandingOutputBoundary;
+import quotify_app.usecases.landing.PropertyOutputData;
 
 /**
- * The Presenter for the Select Address Use Case.
+ * The presenter for the Landing Page use case. Prepares the data for display in the view
+ * and updates the LandingViewModel accordingly.
  */
 public class LandingPresenter implements LandingOutputBoundary {
 
-    private final ViewManagerModel viewManagerModel;
     private final LandingViewModel landingViewModel;
+    private final ViewManagerModel viewManagerModel;
 
-    public LandingPresenter(
-            ViewManagerModel viewManagerModel,
-            LandingViewModel landingViewModel
-    ) {
-        this.viewManagerModel = viewManagerModel;
+    /**
+     * Constructs a new LandingPresenter with the specified view models.
+     *
+     * @param landingViewModel  The view model for managing Landing Page state.
+     * @param viewManagerModel  The view model for managing view transitions.
+     */
+    public LandingPresenter(LandingViewModel landingViewModel, ViewManagerModel viewManagerModel) {
         this.landingViewModel = landingViewModel;
+        this.viewManagerModel = viewManagerModel;
     }
 
-    @Override
-    public void prepareAreaSuccessView(AreaOutputData areaOutputData) {
-        if (!areaOutputData.isSelectionFailed()) {
-            switch (areaOutputData.getArea().getType()) {
-                case "country":
-                    landingViewModel.setAvailableStates(null);
-                    landingViewModel.setAvailableCities(null);
-                    landingViewModel.getState().setSelectedCountry(areaOutputData.getArea());
-                    break;
-                case "state":
-                    landingViewModel.setAvailableCities(null);
-                    landingViewModel.getState().setSelectedState(areaOutputData.getArea());
-                    break;
-                case "city":
-                    landingViewModel.getState().setSelectedCity(areaOutputData.getArea());
-                    break;
-                default:
-                    break;
-            }
-        }
-        else {
-            landingViewModel.getState().setErrorMessage("Failed to select region: "
-                    + areaOutputData.getArea().getName());
-        }
-    }
-
-    @Override
-    public void prepareErrorView(String errorMessage) {
-        landingViewModel.getState().setErrorMessage(errorMessage);
-    }
-
+    /**
+     * Prepares the view for successful area data retrieval.
+     * @param areaListOutputData The output data containing the list of areas and their type.
+     */
     @Override
     public void prepareAreaListSuccessView(AreaListOutputData areaListOutputData) {
         if (!areaListOutputData.isSelectionFailed()) {
             final List<Area> areas = areaListOutputData.getAreas();
-            final String areaType = areaListOutputData.getAreaType();
+            final String type = areaListOutputData.getAreaType();
 
-            switch (areaType) {
-                case "country":
+            switch (type) {
+                case "CN":
+                    landingViewModel.setAvailableStates(null);
+                    landingViewModel.setAvailableCities(null);
+                    landingViewModel.setAvailableZipCodes(null);
                     landingViewModel.setAvailableCountries(areas);
                     break;
-                case "state":
+                case "ST":
+                    landingViewModel.setAvailableCities(null);
+                    landingViewModel.setAvailableZipCodes(null);
                     landingViewModel.setAvailableStates(areas);
                     break;
-                case "city":
+                case "CS":
+                    landingViewModel.setAvailableZipCodes(null);
                     landingViewModel.setAvailableCities(areas);
                     break;
+                case "ZI":
+                    landingViewModel.setAvailableZipCodes(areas);
+                    break;
                 default:
-                    landingViewModel.getState().setErrorMessage("Unknown area type for list: " + areaType);
+                    landingViewModel.setErrorMessage("Unknown area type: " + type);
                     break;
             }
         }
         else {
-            landingViewModel.getState().setErrorMessage("Failed to fetch area list.");
+            landingViewModel.setErrorMessage("Failed to fetch areas.");
         }
     }
 
     /**
-     * Prepares the failure view for the fetch list of area Use Case.
-     * @param errorMessage the explanation of the failure
+     * Prepares the view for an error in area data retrieval.
+     * @param errorMessage The error message to display.
      */
     @Override
     public void prepareAreaListFailView(String errorMessage) {
-        landingViewModel.getState().setErrorMessage("Failed to fetch areas: " + errorMessage);
+        landingViewModel.setErrorMessage(errorMessage);
     }
 
+    /**
+     * Prepares the view for a successful area selection.
+     * @param areaOutputData The output data containing the selected area result.
+     */
+    @Override
+    public void prepareAreaSuccessView(AreaOutputData areaOutputData) {
+        if (!areaOutputData.isSelectionFailed()) {
+            final Area selectedArea = areaOutputData.getArea();
+            final String type = selectedArea.getType();
+
+            switch (type) {
+                case "CN":
+                    landingViewModel.setAvailableStates(null);
+                    landingViewModel.setAvailableCities(null);
+                    landingViewModel.setAvailableZipCodes(null);
+                    landingViewModel.setSelectedCountry(selectedArea);
+                    break;
+                case "ST":
+                    landingViewModel.setAvailableCities(null);
+                    landingViewModel.setAvailableZipCodes(null);
+                    landingViewModel.setSelectedState(selectedArea);
+                    break;
+                case "CS":
+                    landingViewModel.setAvailableZipCodes(null);
+                    landingViewModel.setSelectedCity(selectedArea);
+                    break;
+                case "ZI":
+                    landingViewModel.setSelectedZipCode(selectedArea.getName());
+                    break;
+                default:
+                    landingViewModel.setErrorMessage("Unknown area type: " + type);
+                    break;
+            }
+        }
+        else {
+            landingViewModel.setErrorMessage("Failed to select area: " + areaOutputData.getArea().getName());
+        }
+    }
+
+    /**
+     * Prepares the view for successful property retrieval.
+     * @param propertyOutputData The output data containing property details.
+     */
+    @Override
+    public void preparePropertySuccessView(PropertyOutputData propertyOutputData) {
+        final Address propertyAddress = propertyOutputData.getPropertyAddress();
+        landingViewModel.setPropertyAddress(propertyAddress);
+        landingViewModel.getState().setPropertyDetails(propertyOutputData.getPropertyDetails());
+        landingViewModel.setPropertyFound(true);
+
+        // Transition to the property confirmation view
+        viewManagerModel.setState("propertyConfirmation");
+    }
+
+    /**
+     * Prepares the view for an error in property retrieval.
+     * @param errorMessage The error message to display.
+     */
+    @Override
+    public void preparePropertyFailView(String errorMessage) {
+        landingViewModel.setErrorMessage(errorMessage);
+        landingViewModel.setPropertyFound(false);
+    }
+
+    /**
+     * Prepares an error message view for a general error.
+     * @param errorMessage The message to be presented to the user.
+     */
+    @Override
+    public void prepareErrorView(String errorMessage) {
+        landingViewModel.setErrorMessage(errorMessage);
+    }
+
+    /**
+     * Switches the view to the sign-up screen.
+     */
     @Override
     public void goToSignup() {
-        // Reset the state when navigating
-        landingViewModel.getState().resetState();
         viewManagerModel.setState("signup");
-        viewManagerModel.firePropertyChanged();
     }
 
+    /**
+     * Switches the view to the login screen.
+     */
     @Override
     public void goToLogin() {
-        // Reset the state when navigating
-        landingViewModel.getState().resetState();
         viewManagerModel.setState("login");
-        viewManagerModel.firePropertyChanged();
     }
-
 }
