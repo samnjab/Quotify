@@ -19,6 +19,7 @@ public class LandingController {
      * Triggers a fetch of available countries from the Interactor.
      */
     public void fetchCountries() {
+        System.out.println("controller: fetching countries");
         landingInteractor.fetchCountries();
     }
 
@@ -27,6 +28,7 @@ public class LandingController {
      * @param area the area selected by the user.
      */
     public void selectArea(Area area) {
+        System.out.println("controller: selecting area" + area);
         landingInteractor.selectArea(area);
     }
 
@@ -35,6 +37,7 @@ public class LandingController {
      * @param parentArea the selected parent area for which to fetch subareas.
      */
     public void fetchAvailableSubAreas(Area parentArea) {
+        System.out.println("controller: fetching available areas for parent area" + parentArea);
         landingInteractor.fetchAreas(parentArea.getGeoIdV4(), parentArea.getType());
     }
 
@@ -49,6 +52,7 @@ public class LandingController {
      */
     public void selectAddress(Area country, Area state, Area city, Area zipCode, String address) {
         final AddressInputData addressInputData = new AddressInputData(country, state, city, zipCode, address);
+        System.out.println("controller: selecting address" + addressInputData);
         landingInteractor.selectAddress(addressInputData);
     }
 
@@ -56,6 +60,7 @@ public class LandingController {
      * Triggers navigation to the signup view.
      */
     public void goToSignup() {
+        System.out.println("controller: to signup");
         landingInteractor.goToSignup();
     }
 
@@ -63,6 +68,7 @@ public class LandingController {
      * Triggers navigation to the login view.
      */
     public void goToLogin() {
+        System.out.println("controller: to signup");
         landingInteractor.goToLogin();
     }
 }

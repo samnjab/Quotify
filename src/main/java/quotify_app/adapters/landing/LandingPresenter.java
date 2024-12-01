@@ -36,24 +36,19 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void prepareAreaListSuccessView(AreaListOutputData areaListOutputData) {
+        System.out.println("presenter: preparing area list success view: " + areaListOutputData);
         if (!areaListOutputData.isSelectionFailed()) {
             final List<Area> areas = areaListOutputData.getAreas();
             final String type = areaListOutputData.getAreaType();
 
             switch (type) {
                 case "CN":
-                    landingViewModel.setAvailableStates(null);
-                    landingViewModel.setAvailableCities(null);
-                    landingViewModel.setAvailableZipCodes(null);
                     landingViewModel.setAvailableCountries(areas);
                     break;
                 case "ST":
-                    landingViewModel.setAvailableCities(null);
-                    landingViewModel.setAvailableZipCodes(null);
                     landingViewModel.setAvailableStates(areas);
                     break;
                 case "CS":
-                    landingViewModel.setAvailableZipCodes(null);
                     landingViewModel.setAvailableCities(areas);
                     break;
                 case "ZI":
@@ -75,6 +70,7 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void prepareAreaListFailView(String errorMessage) {
+        System.out.println("presenter: preparing area list fail view: ");
         landingViewModel.setErrorMessage(errorMessage);
     }
 
@@ -84,6 +80,7 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void prepareAreaSuccessView(AreaOutputData areaOutputData) {
+        System.out.println("presenter: preparing area success view: " + areaOutputData);
         if (!areaOutputData.isSelectionFailed()) {
             final Area selectedArea = areaOutputData.getArea();
             final String type = selectedArea.getType();
@@ -123,6 +120,7 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void preparePropertySuccessView(PropertyOutputData propertyOutputData) {
+        System.out.println("presenter: preparing property success view: " + propertyOutputData);
         final Address propertyAddress = propertyOutputData.getPropertyAddress();
         landingViewModel.setPropertyAddress(propertyAddress);
         landingViewModel.getState().setPropertyDetails(propertyOutputData.getPropertyDetails());
@@ -138,6 +136,7 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void preparePropertyFailView(String errorMessage) {
+        System.out.println("presenter: preparing property fail view: ");
         landingViewModel.setErrorMessage(errorMessage);
         landingViewModel.setPropertyFound(false);
     }
@@ -148,6 +147,7 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void prepareErrorView(String errorMessage) {
+        System.out.println("presenter: preparing error view: ");
         landingViewModel.setErrorMessage(errorMessage);
     }
 
@@ -156,6 +156,7 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void goToSignup() {
+        System.out.println("presenter: switching to signup: ");
         viewManagerModel.setState("signup");
     }
 
@@ -164,6 +165,7 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void goToLogin() {
+        System.out.println("presenter: switching to login: ");
         viewManagerModel.setState("login");
     }
 }

@@ -53,6 +53,7 @@ public class LandingViewModel {
      * @param availableCountries The updated list of available countries.
      */
     public void setAvailableCountries(List<Area> availableCountries) {
+        System.out.println("LandingViewModel: setting available states: " + availableCountries);
         final List<Area> oldValue = state.getAvailableCountries();
         state.setAvailableCountries(availableCountries);
         support.firePropertyChange("availableCountries", oldValue, availableCountries);
@@ -63,6 +64,7 @@ public class LandingViewModel {
      * @param availableStates The updated list of available states.
      */
     public void setAvailableStates(List<Area> availableStates) {
+        System.out.println("LandingViewModel: setting available states: " + availableStates);
         final List<Area> oldValue = state.getAvailableStates();
         state.setAvailableStates(availableStates);
         support.firePropertyChange("availableStates", oldValue, availableStates);
@@ -73,6 +75,7 @@ public class LandingViewModel {
      * @param availableCities The updated list of available cities.
      */
     public void setAvailableCities(List<Area> availableCities) {
+        System.out.println("LandingViewModel: setting available states: " + availableCities);
         final List<Area> oldValue = state.getAvailableCities();
         state.setAvailableCities(availableCities);
         support.firePropertyChange("availableCities", oldValue, availableCities);
@@ -83,6 +86,7 @@ public class LandingViewModel {
      * @param availableZipCodes The updated list of available zip codes.
      */
     public void setAvailableZipCodes(List<Area> availableZipCodes) {
+        System.out.println("LandingViewModel: setting available states: " + availableZipCodes);
         final List<Area> oldValue = state.getAvailableZipCodes();
         state.setAvailableZipCodes(availableZipCodes);
         support.firePropertyChange("availableZipCodes", oldValue, availableZipCodes);
@@ -93,6 +97,7 @@ public class LandingViewModel {
      * @param selectedCountry The updated selected country.
      */
     public void setSelectedCountry(Area selectedCountry) {
+        System.out.println("LandingViewModel: setting selected country: " + selectedCountry);
         final Area oldValue = state.getSelectedCountry();
         state.setSelectedCountry(selectedCountry);
         support.firePropertyChange("selectedCountry", oldValue, selectedCountry);
@@ -104,6 +109,7 @@ public class LandingViewModel {
      * @param selectedState The updated selected state.
      */
     public void setSelectedState(Area selectedState) {
+        System.out.println("LandingViewModel: setting selected state: " + selectedState);
         final Area oldValue = state.getSelectedState();
         state.setSelectedState(selectedState);
         support.firePropertyChange("selectedState", oldValue, selectedState);
@@ -114,6 +120,7 @@ public class LandingViewModel {
      * @param selectedCity The updated selected city.
      */
     public void setSelectedCity(Area selectedCity) {
+        System.out.println("LandingViewModel: setting selected city: " + selectedCity);
         final Area oldValue = state.getSelectedCity();
         state.setSelectedCity(selectedCity);
         support.firePropertyChange("selectedCity", oldValue, selectedCity);
@@ -124,6 +131,7 @@ public class LandingViewModel {
      * @param selectedZipCode The updated selected zip code.
      */
     public void setSelectedZipCode(String selectedZipCode) {
+        System.out.println("LandingViewModel: setting selected zip code: " + selectedZipCode);
         final String oldValue = state.getSelectedZipCode();
         state.setSelectedZipCode(selectedZipCode);
         support.firePropertyChange("selectedZipCode", oldValue, selectedZipCode);
@@ -134,6 +142,7 @@ public class LandingViewModel {
      * @param streetAddress The updated street address.
      */
     public void setStreetAddress(String streetAddress) {
+        System.out.println("LandingViewModel: setting street address: " + streetAddress);
         final String oldValue = state.getStreetAddress();
         state.setStreetAddress(streetAddress);
         support.firePropertyChange("streetAddress", oldValue, streetAddress);
@@ -144,6 +153,7 @@ public class LandingViewModel {
      * @param propertyAddress The updated property address.
      */
     public void setPropertyAddress(Address propertyAddress) {
+        System.out.println("LandingViewModel: setting property address: " + propertyAddress);
         final Address oldValue = state.getPropertyAddress();
         state.setPropertyAddress(propertyAddress);
         support.firePropertyChange("propertyAddress", oldValue, propertyAddress);
@@ -154,6 +164,7 @@ public class LandingViewModel {
      * @param errorMessage The updated error message.
      */
     public void setErrorMessage(String errorMessage) {
+        System.out.println("LandingViewModel: setting error message: " + errorMessage);
         final String oldValue = state.getErrorMessage();
         state.setErrorMessage(errorMessage);
         support.firePropertyChange("errorMessage", oldValue, errorMessage);
@@ -164,6 +175,7 @@ public class LandingViewModel {
      * @param propertyFound The updated property found status.
      */
     public void setPropertyFound(boolean propertyFound) {
+        System.out.println("LandingViewModel: setting property found: " + propertyFound);
         final boolean oldValue = state.isPropertyFound();
         state.setPropertyFound(propertyFound);
         support.firePropertyChange("propertyFound", oldValue, propertyFound);

@@ -35,6 +35,7 @@ public class LandingInteractor implements LandingInputBoundary {
     public void fetchCountries() {
         try {
             final List<Area> countries = areaDataAccessObject.getCountries();
+            System.out.println("in landing interactor, fetched countries are " + countries);
             areaDataAccessObject.cacheAreas(countries, "CN");
             final AreaListOutputData outputData = areaDataAccessObject.getCache().getSubAreaList("CN");
             landingPresenter.prepareAreaListSuccessView(outputData);

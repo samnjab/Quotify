@@ -25,11 +25,11 @@ public class Main {
                 .addComparatorUseCase()
                 .addCurrentPriceView()
                 .addFuturePriceView()
+                .addLandingView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addCurrentPriceUseCase()
                 .addFuturePriceUseCase()
-                .addLandingView()
                 .addLandingUseCase()
                 .build();
 

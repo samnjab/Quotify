@@ -39,6 +39,7 @@ public class LandingFactory {
     public void setUpController(ViewManagerModel viewManagerModel,
                                 AreaDataAccessObject areaDataAccessObject,
                                 PropertyDataAccessObject propertyDataAccessObject) {
+        System.out.println("Setting up controlling");
 
         // Setup Presenter and Interactor for Landing with necessary dependencies
         final LandingOutputBoundary landingPresenter = new LandingPresenter(

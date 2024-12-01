@@ -93,7 +93,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLandingView() {
-        cardPanel.add(landingFactory.getLandingView(), "landing");
+        cardPanel.add(landingFactory.getLandingView(), landingFactory.getLandingView().getViewName());
         return this;
     }
 
