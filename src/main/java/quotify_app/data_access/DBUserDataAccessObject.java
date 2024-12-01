@@ -137,6 +137,10 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
         }
     }
 
+    public UserFactory getUserFactory() {
+        return userFactory;
+    }
+
     public void setCurrentUsername(String username) {
         this.currentUsername = username;
     }

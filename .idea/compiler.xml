@@ -9,5 +9,11 @@
         <module name="user-management-app" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="23" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="user-management-app" options="" />
+    </option>
   </component>
 </project>
