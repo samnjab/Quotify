@@ -1,27 +1,27 @@
-package quotify_app.adapters.currentprice;
+package quotify_app.adapters.future_price;
 
 import quotify_app.adapters.ViewManagerModel;
 import quotify_app.app.ApplicationState;
-import quotify_app.usecases.currentprice.CurrentPriceOutputBoundary;
+import quotify_app.usecases.future_pricing.FuturePriceOutputBoundary;
 
 /**
- * The Presenter for the Current Price use case.
+ * The Presenter for the Future Price use case.
  * Processes the output from the Interactor and updates the ViewModel or handles navigation.
  */
-public class CurrentPricePresenter implements CurrentPriceOutputBoundary {
+public class FuturePricePresenter implements FuturePriceOutputBoundary {
 
     private final ViewManagerModel viewManagerModel;
-    private final CurrentPriceViewModel currentPriceViewModel;
+    private final FuturePriceViewModel futurePriceViewModel;
 
     /**
-     * Initializes the CurrentPricePresenter with the given ViewManagerModel and CurrentPriceViewModel.
+     * Initializes the FuturePriceViewModel with the given ViewManagerModel and FuturePriceViewModel.
      *
      * @param viewManagerModel      the model managing view transitions.
-     * @param currentPriceViewModel the ViewModel for the Current Price View.
+     * @param futurePriceViewModel the ViewModel for the Future Price View.
      */
-    public CurrentPricePresenter(ViewManagerModel viewManagerModel, CurrentPriceViewModel currentPriceViewModel) {
+    public FuturePricePresenter(ViewManagerModel viewManagerModel, FuturePriceViewModel futurePriceViewModel) {
         this.viewManagerModel = viewManagerModel;
-        this.currentPriceViewModel = currentPriceViewModel;
+        this.futurePriceViewModel = futurePriceViewModel;
     }
 
     @Override
@@ -37,8 +37,8 @@ public class CurrentPricePresenter implements CurrentPriceOutputBoundary {
     }
 
     @Override
-    public void presentGoToFuturePricing() {
-        viewManagerModel.setState("future price");
+    public void presentGoToCurrentPricing() {
+        viewManagerModel.setState("current price");
         viewManagerModel.firePropertyChanged();
     }
 
@@ -58,8 +58,8 @@ public class CurrentPricePresenter implements CurrentPriceOutputBoundary {
     public void updateLoginStatus() {
         // Get the login status from the ApplicationState
         final boolean isLoggedIn = ApplicationState.getInstance().isLoggedIn();
-        currentPriceViewModel.getState().setLoggedIn(isLoggedIn);
-        currentPriceViewModel.firePropertyChanged();
+        futurePriceViewModel.getState().setLoggedIn(isLoggedIn);
+        futurePriceViewModel.firePropertyChanged();
     }
 
     @Override

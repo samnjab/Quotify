@@ -24,25 +24,26 @@ public class SignupInteractor implements SignupInputBoundary {
         if (inputData.getEmail() == null || inputData.getEmail().trim().isEmpty()) {
             signupPresenter.prepareFailView("Email cannot be empty.");
             System.out.println("Empty email provided");
-            return;
-        }
-
-        if (userDataAccessObject.existsByName(inputData.getUsername())) {
-            signupPresenter.prepareFailView("Username already exists.");
-        }
-        else if (userDataAccessObject.existsByEmail(inputData.getEmail())) {
-            signupPresenter.prepareFailView("Email already in use.");
         }
         else {
-            final User newUser = userFactory.create(
-                    inputData.getUsername(),
-                    inputData.getPassword(),
-                    inputData.getEmail()
-            );
-            userDataAccessObject.save(newUser);
-            signupPresenter.prepareSuccessView(new SignupOutputData(newUser.getName()));
-            System.out.println("successful registration");
+            if (userDataAccessObject.existsByName(inputData.getUsername())) {
+                signupPresenter.prepareFailView("Username already exists.");
+            }
+            else if (userDataAccessObject.existsByEmail(inputData.getEmail())) {
+                signupPresenter.prepareFailView("Email already in use.");
+            }
+            else {
+                final User newUser = userFactory.create(
+                        inputData.getUsername(),
+                        inputData.getPassword(),
+                        inputData.getEmail()
+                );
+                userDataAccessObject.save(newUser);
+                signupPresenter.prepareSuccessView(new SignupOutputData(newUser.getName()));
+                System.out.println("successful registration");
+            }
         }
+
     }
 
     @Override
