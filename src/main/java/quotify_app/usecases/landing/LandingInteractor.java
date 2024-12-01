@@ -39,10 +39,6 @@ public class LandingInteractor implements LandingInputBoundary {
             final AreaListOutputData outputData = areaDataAccessObject.getCache().getSubAreaList("CN");
             landingPresenter.prepareAreaListSuccessView(outputData);
         }
-        // the following exceptions may or may not be thrown by the model based version of fetchCountries
-        catch (ClientRequestException exception) {
-            landingPresenter.prepareErrorView("A network error occurred while fetching countries. Please try again.");
-        }
         catch (ApiRequestException exception) {
             landingPresenter.prepareErrorView("Failed to fetch countries due to an API error: "
                     + exception.getMessage());
@@ -97,9 +93,18 @@ public class LandingInteractor implements LandingInputBoundary {
 
     @Override
     public void selectAddress(AddressInputData addressInputData) {
-        final Address address = addressInputData.constructAddress();
-        final Property property = propertyDataAccessObject.getPropertyAtAddress(address);
-        propertyDataAccessObject.setCurrentProperty(property);
+        try {
+            final Address address = addressInputData.constructAddress();
+            final Property property = propertyDataAccessObject.getPropertyAtAddress(address);
+            propertyDataAccessObject.setCurrentProperty(property);
+        }
+        catch (ClientRequestException exception) {
+            landingPresenter.prepareErrorView("A network error occurred while fetching address. Please try again.");
+        }
+        catch (ApiRequestException exception) {
+            landingPresenter.prepareErrorView("Failed to fetch address due to an API error: "
+                    + exception.getMessage());
+        }
     }
 
     @Override

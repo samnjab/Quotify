@@ -5,6 +5,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import quotify_app.data_access.exceptions.ApiRequestException;
+import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.*;
 import quotify_app.usecases.landing.PropertyDataAccessInterface;
 import quotify_app.usecases.landing.exceptions.AddressNotFound;
@@ -79,13 +80,13 @@ public class PropertyDataAccessObject implements PropertyDataAccessInterface {
      * Fetches the property details for a given address.
      * @param address The address to fetch property details for.
      * @return A Property object containing property details.
-     * @throws ApiRequestException If 1) properties at zipcode cannot be fetched.
-     * 2) property details cannot be fetched.
+     * @throws ApiRequestException If 1) properties at zipcode cannot be fetched. 2) property details cannot be fetched.
+     * @throws ClientRequestException I/O or Interrupted exception thrown by AttomClient.
      * @throws AddressNotFound Exception if the entered address does not match the zipcode.
      */
     @Override
     public Property getPropertyAtAddress(Address address)
-            throws ApiRequestException, AddressNotFound {
+            throws ApiRequestException, AddressNotFound, ClientRequestException {
         final JsonNode properties = AttomClient.fetchPropertiesByZipcode(address.getPostalCode());
         final String attomId = findPropertyAttomId(properties, address);
         final JsonNode propertyNode = AttomClient.fetchPropertyDetails(attomId).get("property").get(0);
