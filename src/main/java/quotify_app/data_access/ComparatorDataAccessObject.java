@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import quotify_app.data_access.exceptions.ApiRequestException;
+import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.*;
 import quotify_app.usecases.comparator.ComparatorDataAccessInterface;
-import quotify_app.usecases.landing.exceptions.AddressNotFound;
 
 /**
  * The ComparatorDataAccessObject is responsible for providing data access operation related to property comparison.
@@ -23,6 +23,11 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
     }
 
     // Helper Methods (Existing Ones from PropertyDataAccessObject)
+    /**
+     * Extracts a Summary object from the detailed property JSON node.
+     * @param propertyNode The detailed property JSON node.
+     * @return A Summary object containing property details.
+     */
     private Summary extractPropertySummary(JsonNode propertyNode) {
         final JsonNode summaryNode = propertyNode.get("summary");
         final JsonNode buildingSummaryNode = propertyNode.get("building").get("summary");
@@ -40,21 +45,15 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
         );
     }
 
+    /**
+     * Extracts an Identifier object from the detailed property JSON node.
+     * @param propertyNode The detailed property JSON node.
+     * @return an Identifier object containing property ids.
+     */
     private Identifier extractPropertyIdentifier(JsonNode propertyNode) {
         final String attomId = propertyNode.get("identifier").get("attomId").asText();
         final Map<String, String> geoIdV4 = MAPPER.convertValue(propertyNode.get("location").get("geoIdV4"), Map.class);
         return new Identifier(attomId, geoIdV4);
-    }
-
-    private String findPropertyAttomId(JsonNode properties, Address address) throws AddressNotFound {
-        for (JsonNode propertyNode : properties) {
-            final JsonNode addressNode = propertyNode.get("address");
-            if (addressNode != null && address.fetchAddress1().equals(addressNode.get("line1").asText())) {
-                final JsonNode identifierNode = propertyNode.get("identifier");
-                return identifierNode.get("attomId").asText();
-            }
-        }
-        throw new AddressNotFound("Address not found in zipcode", new RuntimeException());
     }
 
     public Property getCurrentProperty() {
@@ -126,42 +125,50 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
      * @throws ApiRequestException If properties cannot be fetched.
      */
     @Override
-    public List<Property> getSaleComparables(Area zipCode) throws ApiRequestException {
+    public List<Property> getSaleComparables(Area zipCode) throws ApiRequestException, ClientRequestException {
         final JsonNode propertiesJson = AttomClient.fetchPropertiesByZipcode(zipCode.getName());
         final List<Property> comparedProperties = new ArrayList<>();
 
         // Extract properties from JSON
         if (propertiesJson != null && propertiesJson.isArray()) {
             for (JsonNode propertyNode : propertiesJson) {
-                try {
-                    final Summary summary = extractPropertySummary(propertyNode);
-                    final Identifier identifier = extractPropertyIdentifier(propertyNode);
+                final Summary summary = extractPropertySummary(propertyNode);
+                final Identifier identifier = extractPropertyIdentifier(propertyNode);
 
-                    final JsonNode addressNode = propertyNode.get("address");
-                    if (addressNode != null) {
-                        final String line1 = addressNode.has("line1") ? addressNode.get("line1").asText() : "";
-                        final String city = addressNode.has("city") ? addressNode.get("city").asText() : "";
-                        final String state = addressNode.has("state") ? addressNode.get("state").asText() : "";
-                        final String fetchedPostalCode = addressNode.has("postalCode") ? addressNode.get("postalCode").asText() : "";
-
-                        if (!line1.isEmpty() && !city.isEmpty() && !state.isEmpty() && !fetchedPostalCode.isEmpty()) {
-                            final Address address = new Address("", state, city, line1, "", fetchedPostalCode);
-                            comparedProperties.add(new Property(identifier, address, summary));
-                        }
+                final JsonNode addressNode = propertyNode.get("address");
+                if (addressNode != null) {
+                    String line1 = "";
+                    if (addressNode.has("line1")) {
+                        line1 = addressNode.get("line1").asText();
                     }
-                } catch (Exception e) {
-                    // Log the exception for debugging but continue processing other nodes
-                    System.err.println("Error parsing propertyNode: " + e.getMessage());
+
+                    String city = "";
+                    if (addressNode.has("city")) {
+                        city = addressNode.get("city").asText();
+                    }
+
+                    String state = "";
+                    if (addressNode.has("state")) {
+                        state = addressNode.get("state").asText();
+                    }
+
+                    String fetchedPostalCode = "";
+                    if (addressNode.has("postalCode")) {
+                        fetchedPostalCode = addressNode.get("postalCode").asText();
+                    }
+
+                    if (!line1.isEmpty() && !city.isEmpty() && !state.isEmpty() && !fetchedPostalCode.isEmpty()) {
+                        final Address address = new Address("", state, city, line1, "", fetchedPostalCode);
+                        comparedProperties.add(new Property(identifier, address, summary));
+                    }
                 }
             }
         }
 
         // Calculate similarity scores and sort properties by score in descending order
         comparedProperties.sort(Comparator.comparingInt(this::calculateSimilarityScore).reversed());
-
-        return comparedProperties;
+        // limit to top 3
+        return comparedProperties.stream().limit(3).collect(Collectors.toList());
     }
-}
-
 }
 

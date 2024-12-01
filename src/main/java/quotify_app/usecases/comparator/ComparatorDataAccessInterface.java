@@ -1,6 +1,7 @@
 package quotify_app.usecases.comparator;
 
 import quotify_app.data_access.exceptions.ApiRequestException;
+import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.Address;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.entities.regionEntities.Property;
@@ -30,5 +31,6 @@ public interface ComparatorDataAccessInterface {
      * @return properties a list of Properties at zipCode.
      * @throws ApiRequestException if the Properties at zipCode cannot be fetched.
      */
-    List<Property> getSaleComparables(Area zipCode) throws ApiRequestException;
+    List<Property> getSaleComparables(Area zipCode) throws ApiRequestException, ClientRequestException;
+
 }

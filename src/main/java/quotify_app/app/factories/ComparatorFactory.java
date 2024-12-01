@@ -4,6 +4,7 @@ import quotify_app.adapters.ViewManagerModel;
 import quotify_app.adapters.comparator.ComparatorController;
 import quotify_app.adapters.comparator.ComparatorPresenter;
 import quotify_app.adapters.comparator.ComparatorViewModel;
+import quotify_app.data_access.ComparatorDataAccessObject;
 import quotify_app.ui.ComparatorView;
 import quotify_app.usecases.comparator.ComparatorInputBoundary;
 import quotify_app.usecases.comparator.ComparatorInteractor;
@@ -19,6 +20,7 @@ public class ComparatorFactory {
     private final ComparatorViewModel comparatorViewModel;
     private final ComparatorView comparatorView;
     private ComparatorController comparatorController;
+    private ComparatorDataAccessObject comparatorDataAccessObject;
 
     /**
      * Initializes the ComparatorFactory with its View and ViewModel.
@@ -26,6 +28,7 @@ public class ComparatorFactory {
     public ComparatorFactory() {
         this.comparatorViewModel = new ComparatorViewModel();
         this.comparatorView = new ComparatorView(comparatorViewModel);
+        this.comparatorDataAccessObject = new ComparatorDataAccessObject();
     }
 
     /**
@@ -40,7 +43,8 @@ public class ComparatorFactory {
                 comparatorViewModel
         );
 
-        final ComparatorInputBoundary comparatorInteractor = new ComparatorInteractor(comparatorPresenter);
+        final ComparatorInputBoundary comparatorInteractor = new
+                ComparatorInteractor(comparatorPresenter, comparatorDataAccessObject);
 
         comparatorController = new ComparatorController(comparatorInteractor);
     }

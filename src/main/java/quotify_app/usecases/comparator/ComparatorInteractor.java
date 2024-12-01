@@ -1,15 +1,37 @@
 package quotify_app.usecases.comparator;
 
+import quotify_app.data_access.ComparatorDataAccessObject;
+import quotify_app.data_access.exceptions.ApiRequestException;
+import quotify_app.data_access.exceptions.ClientRequestException;
+import quotify_app.entities.regionEntities.Area;
+import quotify_app.entities.regionEntities.Property;
+
+import java.util.List;
+
 /**
  * The Comparator Interactor.
  */
 public class ComparatorInteractor implements ComparatorInputBoundary {
     private final ComparatorOutputBoundary comparatorPresenter;
+    private final ComparatorDataAccessObject comparatorDataAccessObject;
 
     public ComparatorInteractor(
-                                ComparatorOutputBoundary comparatorPresenter) {
+                                ComparatorOutputBoundary comparatorPresenter, ComparatorDataAccessObject comparatorDataAccessObjectdataAccess) {
         this.comparatorPresenter = comparatorPresenter;
+        this.comparatorDataAccessObject = comparatorDataAccessObjectdataAccess;
 
+    }
+
+    /**
+     * Fetches a list of properties that are similar to the current property based on certain criteria.
+     *
+     * @param area The area to search for comparable properties.
+     * @return A list of `Property` objects that are most similar to the cached property.
+     * @throws ApiRequestException If there is an issue with the external API request while fetching properties.
+     * @throws ClientRequestException If there is an issue with the client request when fetching properties.
+     */
+    public List<Property> getComparables(Area area) throws ApiRequestException, ClientRequestException {
+        return comparatorDataAccessObject.getSaleComparables(area);
     }
 
     /**
