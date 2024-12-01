@@ -8,9 +8,10 @@ import javax.swing.WindowConstants;
 
 import quotify_app.adapters.ViewManagerModel;
 import quotify_app.app.factories.ComparatorFactory;
-import quotify_app.app.factories.FunctionFactory;
 import quotify_app.app.factories.CurrentPriceFactory;
+import quotify_app.app.factories.FunctionFactory;
 import quotify_app.app.factories.FuturePriceFactory;
+import quotify_app.app.factories.LandingFactory;
 import quotify_app.app.factories.LoginFactory;
 import quotify_app.app.factories.SignupFactory;
 import quotify_app.data_access.DBUserDataAccessObject;
@@ -32,6 +33,7 @@ public class AppBuilder {
     private final ComparatorFactory comparatorFactory = new ComparatorFactory();
     private final CurrentPriceFactory currentPriceFactory = new CurrentPriceFactory();
     private final FuturePriceFactory futurePriceFactory = new FuturePriceFactory();
+    private final LandingFactory landingFactory = new LandingFactory();
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -42,6 +44,7 @@ public class AppBuilder {
         comparatorFactory.setUpController(viewManagerModel);
         currentPriceFactory.setUpController(viewManagerModel);
         futurePriceFactory.setUpController(viewManagerModel);
+        landingFactory.setUpController(viewManagerModel);
     }
 
     /**
@@ -81,6 +84,24 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the Landing View to the application.
+     * @return this builder
+     */
+    public AppBuilder addLandingView() {
+        cardPanel.add(landingFactory.getLandingView(), "landing"); // Add Landing View
+        return this;
+    }
+
+    /**
+     * Adds the Landing Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addLandingUseCase() {
+        landingFactory.setUpController(viewManagerModel);
+        return this;
+    }
+
+    /**
      * Adds the Function View to the application.
      * @return this builder
      */
@@ -89,6 +110,7 @@ public class AppBuilder {
                 functionFactory.getFunctionView().getViewName());
         return this;
     }
+
     /**
      * Adds the CurrentPrice View to the application.
      * @return this builder
@@ -115,7 +137,7 @@ public class AppBuilder {
      */
     public AppBuilder addComparatorView() {
         cardPanel.add(comparatorFactory.getComparatorView(),
-                        comparatorFactory.getComparatorView().getViewName());
+                comparatorFactory.getComparatorView().getViewName());
         return this;
     }
 
@@ -169,9 +191,8 @@ public class AppBuilder {
         // Adding the card panel which holds all views
         application.add(cardPanel);
 
-        // Setting the initial view to SignupView
-
-        viewManagerModel.setState(signupFactory.getSignupView().getViewName());
+        // Setting the initial view to LandingView
+        viewManagerModel.setState("landing");
         viewManagerModel.firePropertyChanged();
         return application;
     }

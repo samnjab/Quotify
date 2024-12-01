@@ -29,6 +29,8 @@ public class Main {
                 .addLoginUseCase()
                 .addCurrentPriceUseCase()
                 .addFuturePriceUseCase()
+                .addLandingView()
+                .addLandingUseCase()
                 .build();
 
         application.pack();
