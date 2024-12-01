@@ -17,6 +17,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
     private final UserFactory userFactory;
     private String currentUsername;
+    private final int three = 3;
 
     public DBUserDataAccessObject(UserFactory userFactory) {
         this.userFactory = userFactory;
@@ -128,7 +129,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
             stmt.setString(1, user.getName());
             // Assumes User has an getEmail() method.
             stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getPassword());
+            stmt.setString(three, user.getPassword());
             stmt.executeUpdate();
             System.out.println("User " + user.getName() + " saved successfully.");
         }
