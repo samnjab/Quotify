@@ -17,6 +17,8 @@ import quotify_app.app.factories.SignupFactory;
 import quotify_app.data_access.AreaDataAccessObject;
 import quotify_app.data_access.AreaStore;
 import quotify_app.data_access.DBUserDataAccessObject;
+import quotify_app.data_access.PredictionClient;
+import quotify_app.data_access.PredictionDataAccessObject;
 import quotify_app.data_access.PropertyDataAccessObject;
 import quotify_app.entities.CommonUserFactory;
 import quotify_app.ui.ViewManager;
@@ -40,6 +42,8 @@ public class AppBuilder {
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+        final PredictionClient predictionClient = new PredictionClient();
+        final PredictionDataAccessObject predictionDataAccess = new PredictionDataAccessObject(predictionClient);
         final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(new CommonUserFactory());
         final AreaDataAccessObject areaDataAccessObject = new AreaDataAccessObject(new AreaStore());
         final PropertyDataAccessObject propertyDataAccessObject = new PropertyDataAccessObject();
@@ -154,6 +158,8 @@ public class AppBuilder {
         comparatorFactory.getComparatorView().setComparatorController(comparatorFactory.getComparatorController());
         return this;
     }
+
+
     /**
      * Adds the CurrentPrice Use Case to the application.
      * @return this builder
