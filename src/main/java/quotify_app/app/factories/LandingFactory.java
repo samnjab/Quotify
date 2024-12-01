@@ -5,7 +5,6 @@ import quotify_app.adapters.landing.LandingController;
 import quotify_app.adapters.landing.LandingPresenter;
 import quotify_app.adapters.landing.LandingViewModel;
 import quotify_app.data_access.AreaDataAccessObject;
-import quotify_app.data_access.AreaStore;
 import quotify_app.data_access.PropertyDataAccessObject;
 import quotify_app.ui.LandingView;
 import quotify_app.usecases.landing.LandingInputBoundary;
@@ -34,13 +33,12 @@ public class LandingFactory {
     /**
      * Sets up the LandingController.
      * @param viewManagerModel The ViewManagerModel from the AppBuilder.
+     * @param areaDataAccessObject the data access object for the area data.
+     * @param propertyDataAccessObject the data access object for the property data.
      */
-    public void setUpController(ViewManagerModel viewManagerModel) {
-        // Instantiate AreaStore for managing cached areas
-        final AreaStore areaStore = new AreaStore();
-
-        // Instantiate AreaDataAccessObject with the AreaStore
-        final AreaDataAccessObject areaDataAccessObject = new AreaDataAccessObject(areaStore);
+    public void setUpController(ViewManagerModel viewManagerModel,
+                                AreaDataAccessObject areaDataAccessObject,
+                                PropertyDataAccessObject propertyDataAccessObject) {
 
         // Setup Presenter and Interactor for Landing with necessary dependencies
         final LandingOutputBoundary landingPresenter = new LandingPresenter(
@@ -49,7 +47,7 @@ public class LandingFactory {
         );
 
         final LandingInputBoundary landingInteractor = new LandingInteractor(
-                areaDataAccessObject, new PropertyDataAccessObject(), landingPresenter);
+                areaDataAccessObject, propertyDataAccessObject, landingPresenter);
 
         this.landingController = new LandingController(landingInteractor);
     }

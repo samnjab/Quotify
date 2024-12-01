@@ -14,7 +14,10 @@ import quotify_app.app.factories.FuturePriceFactory;
 import quotify_app.app.factories.LandingFactory;
 import quotify_app.app.factories.LoginFactory;
 import quotify_app.app.factories.SignupFactory;
+import quotify_app.data_access.AreaDataAccessObject;
+import quotify_app.data_access.AreaStore;
 import quotify_app.data_access.DBUserDataAccessObject;
+import quotify_app.data_access.PropertyDataAccessObject;
 import quotify_app.entities.CommonUserFactory;
 import quotify_app.ui.ViewManager;
 
@@ -38,13 +41,15 @@ public class AppBuilder {
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
         final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(new CommonUserFactory());
+        final AreaDataAccessObject areaDataAccessObject = new AreaDataAccessObject(new AreaStore());
+        final PropertyDataAccessObject propertyDataAccessObject = new PropertyDataAccessObject();
         loginFactory.setUpController(signupFactory, viewManagerModel, userDataAccessObject);
         signupFactory.setUpController(loginFactory, viewManagerModel, userDataAccessObject);
         functionFactory.setUpController(viewManagerModel);
         comparatorFactory.setUpController(viewManagerModel);
         currentPriceFactory.setUpController(viewManagerModel);
         futurePriceFactory.setUpController(viewManagerModel);
-        landingFactory.setUpController(viewManagerModel);
+        landingFactory.setUpController(viewManagerModel, areaDataAccessObject, propertyDataAccessObject);
     }
 
     /**
