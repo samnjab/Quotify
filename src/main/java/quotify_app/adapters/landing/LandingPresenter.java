@@ -51,7 +51,7 @@ public class LandingPresenter implements LandingOutputBoundary {
     }
 
     @Override
-    public void prepareAreaFailView(String errorMessage) {
+    public void prepareErrorView(String errorMessage) {
         landingViewModel.getState().setErrorMessage(errorMessage);
     }
 

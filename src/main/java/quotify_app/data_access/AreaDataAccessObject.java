@@ -11,7 +11,7 @@ import quotify_app.usecases.landing.AreaDataAccessInterface;
 
 /**
  * The Data Access Object providing all the data pertaining to the areas, interacting with
- * AttomClient.
+ * 1) AttomClient and 2) area cache.
  */
 
 public class AreaDataAccessObject implements AreaDataAccessInterface {
@@ -27,8 +27,7 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
     /**
      * Constructs a list of Area objects from JsonNode fetched from the API.
      * @param areas the list of subareas returned from the API in the API information format.
-     * @return subAreas a list of Area objects in the format Area to be used by
-     * the rest of the program.
+     * @return subAreas a list of Area objects in the format Area to be used by the rest of the program.
      * */
     private List<Area> constructAreaList(JsonNode areas) {
         final List<Area> subAreas = new ArrayList<>();
@@ -48,6 +47,8 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
     }
 
     // Override methods:
+
+    // API side methods:
     /**
      * Retrieves all countries accessible by the app.
      * @return a List of countries available in the database.
@@ -61,23 +62,7 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
         return countries;
     }
 
-    /**
-     * Stores the area selection in cache.
-     * @param area the selected area to be stored.
-     */
     @Override
-    public void selectArea(Area area) {
-        areaCache.storeArea(area, area.getType());
-    }
-
-    /**
-     * Fetches all subareas for a given parent geoIdV4.
-     * @param geoIdV4 The parent geoIdV4.
-     * @param type    the Type of the subarea to return.
-     * @return List of subareas.
-     * @throws ApiRequestException for non-200 HTTP responses.
-     * @throws ClientRequestException for I/O and interruption errors.
-     */
     public List<Area> getSubAreas(String geoIdV4, String type)
             throws ClientRequestException, ApiRequestException {
         final JsonNode areas = "CN1".equals(geoIdV4) && "ST".equals(type)
@@ -85,17 +70,23 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
         return constructAreaList(areas);
     }
 
+    // Cache side methods:
+
+    @Override
+    public AreaStore getCache() {
+        return areaCache;
+    }
+
+    @Override
+    public void selectArea(Area area) {
+        areaCache.storeArea(area, area.getType());
+    }
+
     @Override
     public void cacheAreas(List<Area> areas, String type) {
         areaCache.storeAreas(areas, type);
     }
 
-    /**
-     * Finds areas by partial name and type.
-     * @param partialName The partial name to search for.
-     * @param type The type of area (e.g., "ST" for state, "CS" for city).
-     * @return List of matching areas.
-     */
     @Override
     public List<Area> findAreasByNameAndType(String partialName, String type) {
         final List<Area> allAreas = areaCache.fetchAllAreasByType(type);

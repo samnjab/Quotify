@@ -1,9 +1,12 @@
 package quotify_app.usecases.landing;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.data_access.exceptions.ClientRequestException;
+import quotify_app.data_access.exceptions.IllegalTypeException;
 import quotify_app.entities.regionEntities.Address;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.entities.regionEntities.Property;
@@ -15,6 +18,7 @@ public class LandingInteractor implements LandingInputBoundary {
     private final AreaDataAccessInterface areaDataAccessObject;
     private final PropertyDataAccessInterface propertyDataAccessObject;
     private final LandingOutputBoundary landingPresenter;
+    private final Map<String, String> areaTypeHierarchy = new HashMap<>();
 
     public LandingInteractor(AreaDataAccessInterface areaDataAccessInterface,
                              PropertyDataAccessInterface propertyDataAccessInterface,
@@ -22,6 +26,9 @@ public class LandingInteractor implements LandingInputBoundary {
         this.areaDataAccessObject = areaDataAccessInterface;
         this.propertyDataAccessObject = propertyDataAccessInterface;
         this.landingPresenter = landingOutputBoundary;
+        this.areaTypeHierarchy.put("CN", "ST");
+        this.areaTypeHierarchy.put("ST", "CS");
+        this.areaTypeHierarchy.put("CS", "ZI");
     }
 
     @Override
@@ -29,7 +36,7 @@ public class LandingInteractor implements LandingInputBoundary {
         try {
             final List<Area> countries = areaDataAccessObject.getCountries();
             areaDataAccessObject.cacheAreas(countries, "CN");
-            final AreaListOutputData outputData = new AreaListOutputData(countries, "CN", false);
+            final AreaListOutputData outputData = areaDataAccessObject.getCache().getSubAreaList("CN");
             landingPresenter.prepareAreaListSuccessView(outputData);
         }
         // the following exceptions may or may not be thrown by the model based version of fetchCountries
@@ -40,14 +47,18 @@ public class LandingInteractor implements LandingInputBoundary {
             landingPresenter.prepareErrorView("Failed to fetch countries due to an API error: "
                     + exception.getMessage());
         }
+        catch (IllegalTypeException exception) {
+            landingPresenter.prepareErrorView("Illegal type specified:" + exception.getMessage());
+        }
     }
 
     @Override
-    public void fetchAreas(String geoIdV4, String type) {
+    public void fetchAreas(String geoIdV4, String parentType) {
+        final String type = areaTypeHierarchy.get(parentType);
         try {
             final List<Area> areaList = areaDataAccessObject.getSubAreas(geoIdV4, type);
             areaDataAccessObject.cacheAreas(areaList, type);
-            final AreaListOutputData outputData = new AreaListOutputData(areaList, type, false);
+            final AreaListOutputData outputData = areaDataAccessObject.getCache().getSubAreaList(type);
             landingPresenter.prepareAreaListSuccessView(outputData);
         }
         catch (ClientRequestException exception) {
@@ -57,12 +68,15 @@ public class LandingInteractor implements LandingInputBoundary {
             landingPresenter.prepareErrorView("Failed to fetch countries due to an API error: "
                     + exception.getMessage());
         }
+        catch (IllegalTypeException exception) {
+            landingPresenter.prepareErrorView("Illegal type specified:" + type + exception.getMessage());
+        }
     }
 
     @Override
     public void selectArea(Area area) {
         areaDataAccessObject.selectArea(area);
-        final AreaOutputData outputData = new AreaOutputData(area, false);
+        final AreaOutputData outputData = areaDataAccessObject.getCache().getSelectedArea(area.getType());
         landingPresenter.prepareAreaSuccessView(outputData);
     }
 
