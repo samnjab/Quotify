@@ -49,18 +49,7 @@ public class ComparatorState {
      */
     public void setProperties(List<Property> properties) {
         if (properties != null) {
-            this.properties = new ArrayList<>(properties);
-        }
-    }
-
-    /**
-     * Adds a property to the list.
-     *
-     * @param property the property to add. If null, the method does nothing.
-     */
-    public void addProperty(Property property) {
-        if (property != null) {
-            this.properties.add(property);
+            this.properties = properties;
         }
     }
 

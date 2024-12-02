@@ -1,5 +1,9 @@
 package quotify_app.usecases.comparator;
 
+import quotify_app.entities.regionEntities.Property;
+
+import java.util.List;
+
 /**
  * Output Boundary for presenting the result of the Comparator Use Case.
  */
@@ -25,4 +29,5 @@ public interface ComparatorOutputBoundary {
      */
     void goToUserProfile();
 
+    void updateProperties(List<Property> comparables);
 }

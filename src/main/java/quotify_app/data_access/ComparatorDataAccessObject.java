@@ -54,10 +54,10 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
      */
     private Identifier extractPropertyIdentifier(JsonNode propertyNode) {
         final String attomId = propertyNode.get("identifier").get("attomId").asText();
-        final Map<String, String> geoIdV4 = MAPPER.convertValue(
-                propertyNode.get("location").get("geoIdV4"),
-                new TypeReference<Map<String, String>>() { }
+        final Map<String, String> geoIdV4 = MAPPER.convertValue(propertyNode.get("location")
+                .get("geoIdV4"), new TypeReference<Map<String, String>>() { }
         );
+
         return new Identifier(attomId, geoIdV4);
     }
 
