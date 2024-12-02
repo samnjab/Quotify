@@ -9,11 +9,12 @@ import quotify_app.entities.PredictionRequest;
 import quotify_app.entities.regionEntities.Property;
 import quotify_app.entities.regionEntities.Summary;
 import quotify_app.usecases.currentprice.PredictionDataAccessInterface;
+import quotify_app.usecases.future_pricing.FuturePredictionDataAccessInterface;
 
 /**
  * A Data Access Object for handling predictions via PredictionClient and managing prediction data.
  */
-public class PredictionDataAccessObject implements PredictionDataAccessInterface {
+public class PredictionDataAccessObject implements PredictionDataAccessInterface, FuturePredictionDataAccessInterface {
     private final int currYear = 2022;
     private final int currMonth = 12;
     private final int numFuturePredictions = 6;
@@ -116,15 +117,5 @@ public class PredictionDataAccessObject implements PredictionDataAccessInterface
      */
     public double getCurrentPricePredictionString() {
         return currentPricePrediction;
-    }
-
-    /**
-     * Returns an array of 6 values representing the predicted price for the property from the present until
-     * 6 months from the present.
-     *
-     * @return the double array returned, where arr[0] is the current prediction, arr[1] is 1 month prediction, etc.
-     */
-    public double[] getFuturePredictionsArray() {
-        return futurePredictions;
     }
 }

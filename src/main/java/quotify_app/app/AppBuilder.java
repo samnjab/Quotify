@@ -24,6 +24,8 @@ import quotify_app.entities.CommonUserFactory;
 import quotify_app.ui.ViewManager;
 import quotify_app.usecases.currentprice.CurrentPropertyDataAccessInterface;
 import quotify_app.usecases.currentprice.PredictionDataAccessInterface;
+import quotify_app.usecases.future_pricing.FuturePredictionDataAccessInterface;
+import quotify_app.usecases.future_pricing.FuturePropertyDataAccessInterface;
 
 /**
  * The AppBuilder class is responsible for setting up and wiring together the components of the application.
@@ -48,6 +50,9 @@ public class AppBuilder {
         // final PredictionDataAccessObject predictionDataAccess = new PredictionDataAccessObject(predictionClient);
         final PredictionDataAccessInterface currPredictionDataAccess = new PredictionDataAccessObject(predictionClient);
         final CurrentPropertyDataAccessInterface currPropertyDataAccess = new PropertyDataAccessObject();
+        final PredictionDataAccessObject predictionDataAccess = new PredictionDataAccessObject(predictionClient);
+        final FuturePredictionDataAccessInterface futurePredictionDataAccessObject = new PredictionDataAccessObject(predictionClient);
+        final FuturePropertyDataAccessInterface futurePropertyDataAccess = new PropertyDataAccessObject();
         final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(new CommonUserFactory());
         final AreaDataAccessObject areaDataAccessObject = new AreaDataAccessObject(new AreaStore());
         final PropertyDataAccessObject propertyDataAccessObject = new PropertyDataAccessObject();
@@ -56,7 +61,7 @@ public class AppBuilder {
         functionFactory.setUpController(viewManagerModel);
         comparatorFactory.setUpController(viewManagerModel);
         currentPriceFactory.setUpController(viewManagerModel, currPredictionDataAccess, currPropertyDataAccess);
-        futurePriceFactory.setUpController(viewManagerModel);
+        futurePriceFactory.setUpController(viewManagerModel, futurePropertyDataAccess, futurePredictionDataAccessObject);
         landingFactory.setUpController(viewManagerModel, areaDataAccessObject, propertyDataAccessObject);
     }
 
@@ -207,7 +212,7 @@ public class AppBuilder {
         application.add(cardPanel);
 
         // Setting the initial view to LandingView
-        viewManagerModel.setState("current price");
+        viewManagerModel.setState("landing");
         viewManagerModel.firePropertyChanged();
         return application;
     }

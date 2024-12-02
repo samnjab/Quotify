@@ -67,4 +67,11 @@ public class FuturePriceController {
     public void goToLandingPage() {
         futurePriceInteractor.goToLandingPage();
     }
+
+    /**
+     * Triggers fetching of the current price prediction.
+     */
+    public void fetchFuturePrices() {
+        futurePriceInteractor.fetchFuturePrices();
+    }
 }

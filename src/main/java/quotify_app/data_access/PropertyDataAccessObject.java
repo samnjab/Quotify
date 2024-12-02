@@ -8,10 +8,12 @@ import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.*;
 import quotify_app.usecases.currentprice.CurrentPropertyDataAccessInterface;
+import quotify_app.usecases.future_pricing.FuturePropertyDataAccessInterface;
 import quotify_app.usecases.landing.PropertyDataAccessInterface;
 import quotify_app.usecases.landing.exceptions.AddressNotFound;
 
-public class PropertyDataAccessObject implements PropertyDataAccessInterface, CurrentPropertyDataAccessInterface {
+public class PropertyDataAccessObject implements PropertyDataAccessInterface, CurrentPropertyDataAccessInterface,
+        FuturePropertyDataAccessInterface {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private Property propertyCache;
