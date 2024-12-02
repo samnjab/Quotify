@@ -8,7 +8,8 @@ public class ComparatorFetchTest {
         ComparatorClient client = new ComparatorClient();
         try {
             // Replace with a valid property ID
-            String propId = "20823815";
+            String propId = "14477880";
+//            20823815
             String response = client.fetchComparablesByPropertyId(propId);
             System.out.println("API Response: " + response);
         } catch (ComparatorClientException e) {

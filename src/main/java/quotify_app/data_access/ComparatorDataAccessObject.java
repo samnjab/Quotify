@@ -1,15 +1,19 @@
 package quotify_app.data_access;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.data_access.exceptions.ClientRequestException;
+import quotify_app.data_access.exceptions.ComparatorClientException;
 import quotify_app.entities.regionEntities.*;
 import quotify_app.usecases.comparator.ComparatorDataAccessInterface;
+
 
 /**
  * The ComparatorDataAccessObject is responsible for providing data access operation related to property comparison.
@@ -54,10 +58,7 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
      */
     private Identifier extractPropertyIdentifier(JsonNode propertyNode) {
         final String attomId = propertyNode.get("identifier").get("attomId").asText();
-        final Map<String, String> geoIdV4 = MAPPER.convertValue(propertyNode.get("location")
-                .get("geoIdV4"), new TypeReference<Map<String, String>>() { }
-        );
-
+        final Map<String, String> geoIdV4 = MAPPER.convertValue(propertyNode.get("location").get("geoIdV4"), Map.class);
         return new Identifier(attomId, geoIdV4);
     }
 
@@ -137,61 +138,54 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
      * @throws ClientRequestException If there is a client request error.
      */
     @Override
-    public List<Property> getSaleComparables(Area zipCode) throws ApiRequestException, ClientRequestException {
-        final JsonNode propertiesJson = AttomClient.fetchPropertiesByZipcode(zipCode.getName());
+    public List<Property> getSaleComparables(Area zipCode) throws ApiRequestException {
         final List<Property> comparedProperties = new ArrayList<>();
 
-        // Extract properties from JSON
-        if (propertiesJson != null && propertiesJson.isArray()) {
-            for (JsonNode propertyNode : propertiesJson) {
-                final Summary summary = extractPropertySummary(propertyNode);
-                final Identifier identifier = extractPropertyIdentifier(propertyNode);
+        try {
+            // Fetch JSON response from API
+            final ComparatorClient client = new ComparatorClient();
+            final String responseJson = client.fetchComparablesByPropertyId(propertyCache.getIdentifier().getAttomId());
 
-                final JsonNode addressNode = propertyNode.get("address");
-                if (addressNode != null) {
-                    final String line1;
-                    if (addressNode.has("line1")) {
-                        line1 = addressNode.get("line1").asText();
-                    }
-                    else {
-                        line1 = "";
-                    }
+            // Parse the JSON response to extract comparables
+            final JsonNode rootNode = MAPPER.readTree(responseJson);
 
-                    final String city;
-                    if (addressNode.has("city")) {
-                        city = addressNode.get("city").asText();
-                    }
-                    else {
-                        city = "";
-                    }
+            // Assuming the response contains a "PROPERTY_INFORMATION_RESPONSE_ext" with "COMPARABLE_PROPERTY_ext"
+            final JsonNode responseNode = rootNode.path("RESPONSE_GROUP").path("RESPONSE").path("RESPONSE_DATA").path("PROPERTY_INFORMATION_RESPONSE_ext");
+            final JsonNode comparablesNode = responseNode.path("COMPARABLE_PROPERTY_ext");
 
-                    final String state;
-                    if (addressNode.has("state")) {
-                        state = addressNode.get("state").asText();
-                    }
-                    else {
-                        state = "";
-                    }
+            // Iterate over the list and process each comparable property
+            for (JsonNode comparableNode : comparablesNode) {
+                // Extract summary details
+                final String propertyType = comparableNode.path("@StandardUseDescription_ext").asText();
+                final int beds = comparableNode.path("STRUCTURE").path("@TotalBedroomCount").asInt();
+                final int baths = comparableNode.path("STRUCTURE").path("@TotalBathroomCount").asInt();
+                final int size = comparableNode.path("STRUCTURE").path("@GrossLivingAreaSquareFeetCount").asInt();
+                final int yearBuilt = comparableNode.path("STRUCTURE").path("STRUCTURE_ANALYSIS").path("@PropertyStructureBuiltYear").asInt();
+                final int levels = comparableNode.path("STRUCTURE").path("@StoriesCount").asInt();
+                final String condition = comparableNode.path("STRUCTURE").path("CONSTRUCTION").path("@Condition").asText();
 
-                    final String fetchedPostalCode;
-                    if (addressNode.has("postalCode")) {
-                        fetchedPostalCode = addressNode.get("postalCode").asText();
-                    }
-                    else {
-                        fetchedPostalCode = "";
-                    }
+                // Extract address details
+                final String street = comparableNode.path("@_StreetAddress").asText();
+                final String city = comparableNode.path("@_City").asText();
+                final String state = comparableNode.path("@_State").asText();
+                final String postalCode = comparableNode.path("@_PostalCode").asText();
+                final String countryCode = comparableNode.path("@_CountryCode").asText();
+                final String streetNumber = comparableNode.path("@_StreetNumber").asText();
 
-                    if (!line1.isEmpty() && !city.isEmpty() && !state.isEmpty() && !fetchedPostalCode.isEmpty()) {
-                        final Address address = new Address("", state, city, line1, "", fetchedPostalCode);
-                        comparedProperties.add(new Property(identifier, address, summary));
-                    }
-                }
+                // Build Address and Summary objects
+                final Address address = new Address(streetNumber, state, city, street, countryCode, postalCode);
+                final Summary summary = new Summary(propertyType, beds, baths, condition, levels, size, yearBuilt);
+                final Property property = new Property(new Identifier(comparableNode.path("_IDENTIFICATION").path("@RTPropertyID_ext").asText(), null), address, summary);
+                comparedProperties.add(property);
             }
-        }
 
-        // Calculate similarity scores and sort properties by score in descending order
-        comparedProperties.sort(Comparator.comparingInt(this::calculateSimilarityScore).reversed());
-        // limit to top 3
-        return comparedProperties.stream().limit(three).collect(Collectors.toList());
+            // Return sorted properties
+            comparedProperties.sort(Comparator.comparingInt(this::calculateSimilarityScore).reversed());
+            return comparedProperties.stream().limit(3).collect(Collectors.toList());
+
+        } catch (Exception e) {
+            throw new ApiRequestException("Failed to fetch or process comparables.", e);
+        }
     }
 }
+
