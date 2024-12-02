@@ -51,8 +51,7 @@ public interface LandingInputBoundary {
     void selectAddress(AddressInputData addressInputData);
 
     /**
-     * Selects passed property as current property and caches in data access.
-     * @param property the property selected.
+     * * Selects passed property as current property and caches in data access.
      */
-    void selectProperty(Property property);
+    void selectPropertyInCache();
 }

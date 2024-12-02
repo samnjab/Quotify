@@ -99,6 +99,8 @@ public class LandingInteractor implements LandingInputBoundary {
             final Address address = addressInputData.constructAddress();
             // fetching property at address from data access:
             final Property property = propertyDataAccessObject.getPropertyAtAddress(address);
+            // caching property in data access as current property:
+            propertyDataAccessObject.setCurrentProperty(property);
             // producing propertyOutputData:
             final PropertyOutputData propertyOutputData = new PropertyOutputData(address, property);
             landingPresenter.preparePropertySuccessView(propertyOutputData);
@@ -113,10 +115,8 @@ public class LandingInteractor implements LandingInputBoundary {
     }
 
     @Override
-    public void selectProperty(Property property) {
-        // caching property in data access as current property:
-        propertyDataAccessObject.setCurrentProperty(property);
-        landingPresenter.prepareNextPageNavigation(property);
+    public void selectPropertyInCache() {
+        landingPresenter.prepareNextPageNavigation(propertyDataAccessObject.getCurrentProperty());
     }
 
     @Override

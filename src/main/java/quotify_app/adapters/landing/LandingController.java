@@ -58,7 +58,7 @@ public class LandingController {
      * @param property current property selected.
      */
     public void selectProperty(Property property) {
-        landingInteractor.selectProperty(property);
+        landingInteractor.selectPropertyInCache();
     }
 
     /**
@@ -79,7 +79,7 @@ public class LandingController {
      * Triggers navigation to the login view.
      */
     public void goToNextPage() {
-        landingInteractor.goToNextPage();
+        landingInteractor.selectPropertyInCache();
     }
 
 }
