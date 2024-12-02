@@ -5,10 +5,13 @@ package quotify_app.usecases.comparator;
  */
 public class ComparatorInteractor implements ComparatorInputBoundary {
     private final ComparatorOutputBoundary comparatorPresenter;
+    private final ComparatorDataAccessInterface comparatorDataAccessObject;
 
     public ComparatorInteractor(
-                                ComparatorOutputBoundary comparatorPresenter) {
+            ComparatorOutputBoundary comparatorPresenter,
+            ComparatorDataAccessInterface comparatorDataAccessInterface) {
         this.comparatorPresenter = comparatorPresenter;
+        this.comparatorDataAccessObject = comparatorDataAccessInterface;
 
     }
 

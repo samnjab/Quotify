@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import quotify_app.adapters.ViewManagerModel;
 import quotify_app.adapters.comparator.ComparatorPresenter;
 import quotify_app.adapters.comparator.ComparatorViewModel;
+import quotify_app.data_access.ComparatorDataAccessObject;
+import quotify_app.usecases.comparator.ComparatorDataAccessInterface;
 import quotify_app.usecases.comparator.ComparatorInteractor;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,13 +20,15 @@ public class ComparatorInteractorTest {
     private ComparatorPresenter comparatorPresenter;
     private ViewManagerModel viewManagerModel;
     private ComparatorViewModel comparatorViewModel;
+    private ComparatorDataAccessObject comparatorDataAccessObject;
 
     @BeforeEach
     public void setUp() {
         viewManagerModel = new ViewManagerModel();
         comparatorViewModel = new ComparatorViewModel();
         comparatorPresenter = new ComparatorPresenter(viewManagerModel, comparatorViewModel);
-        comparatorInteractor = new ComparatorInteractor(comparatorPresenter);
+        comparatorDataAccessObject = new ComparatorDataAccessObject();
+        comparatorInteractor = new ComparatorInteractor(comparatorPresenter, comparatorDataAccessObject);
     }
 
     @Test

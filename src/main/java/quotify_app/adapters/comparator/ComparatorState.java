@@ -1,9 +1,10 @@
 package quotify_app.adapters.comparator;
 
+import quotify_app.entities.regionEntities.Property;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import quotify_app.entities.Property;
 
 /**
  * The state for the Comparator View Model.
