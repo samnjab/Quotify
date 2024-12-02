@@ -33,6 +33,7 @@ public class FuturePriceView extends JPanel implements PropertyChangeListener {
 
     private final JTable futurePriceGraph = new JTable(6, 2);
 
+    private final JButton showFuturePriceButton = new JButton(FuturePriceViewModel.SHOW_FUTURE_PRICE_LABEL);
     private final JButton currentButton = new JButton(FuturePriceViewModel.CURRENT_PRICING_BUTTON_LABEL);
     private final JButton comparePropertyButton = new JButton(FuturePriceViewModel.COMPARE_PROPERTY_BUTTON_LABEL);
     private final JButton landingPageButton = new JButton(FuturePriceViewModel.LANDING_PAGE_BUTTOM_LABEL);
@@ -69,10 +70,6 @@ public class FuturePriceView extends JPanel implements PropertyChangeListener {
      * Initializes the UI components and layout.
      */
     private void initializeUserInterface() {
-        if (futurePriceViewModel.getState().isPredictionError()) {
-            // Fetch the future prices
-            futurePriceController.fetchFuturePrices();
-        }
 
         // Set layout manager
         setLayout(new BorderLayout());
@@ -97,6 +94,7 @@ public class FuturePriceView extends JPanel implements PropertyChangeListener {
         final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         bottomPanel.add(comparePropertyButton);
         bottomPanel.add(currentButton);
+        bottomPanel.add(showFuturePriceButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
         // Register action listeners
@@ -146,6 +144,18 @@ public class FuturePriceView extends JPanel implements PropertyChangeListener {
                 }
             }
         });
+
+        showFuturePriceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (futurePriceController != null) {
+                    if (!futurePriceViewModel.getState().isPredictionError()) {
+                        // Fetch the future prices
+                        futurePriceController.fetchFuturePrices();
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -159,7 +169,7 @@ public class FuturePriceView extends JPanel implements PropertyChangeListener {
             futurePriceGraph.setVisible(true);
             errorPredictingLabel.setVisible(false);
             for (int i = 0; i < state.getFuturePrices().length; i++) {
-                futurePriceGraph.setValueAt(i + " Month's in the Future", i, 0);
+                futurePriceGraph.setValueAt(i + " Months in the Future", i, 0);
                 futurePriceGraph.setValueAt(state.getFuturePrices()[i], i, 1);
             }
         }

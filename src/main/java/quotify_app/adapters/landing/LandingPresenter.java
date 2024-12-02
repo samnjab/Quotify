@@ -119,6 +119,8 @@ public class LandingPresenter implements LandingOutputBoundary {
         landingViewModel.getState().setPropertyAddress(propertyOutputData.getPropertyAddress());
         landingViewModel.getState().setPropertyDetails(propertyOutputData.getPropertyDetails());
         landingViewModel.setPropertyFound(true);
+        viewManagerModel.setState("function");
+        viewManagerModel.firePropertyChanged();
     }
 
     /**
