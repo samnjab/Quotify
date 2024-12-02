@@ -81,5 +81,4 @@ public class CurrentPricePresenter implements CurrentPriceOutputBoundary {
         currentPriceViewModel.getState().setCurrentPrice("Error: " + message);
         currentPriceViewModel.firePropertyChanged();
     }
-
 }
