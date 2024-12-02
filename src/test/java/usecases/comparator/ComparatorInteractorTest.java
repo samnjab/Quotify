@@ -6,6 +6,8 @@ import quotify_app.adapters.ViewManagerModel;
 import quotify_app.adapters.comparator.ComparatorPresenter;
 import quotify_app.adapters.comparator.ComparatorViewModel;
 import quotify_app.usecases.comparator.ComparatorInteractor;
+import quotify_app.adapters.currentprice.CurrentPriceController;
+import quotify_app.usecases.currentprice.CurrentPriceInputBoundary;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -67,3 +69,5 @@ public class ComparatorInteractorTest {
         assertTrue(viewManagerModel.getState().equals("user profile"));
     }
 }
+
+

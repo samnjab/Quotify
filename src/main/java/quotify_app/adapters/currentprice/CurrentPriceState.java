@@ -13,7 +13,7 @@ public class CurrentPriceState {
      */
     public CurrentPriceState() {
         // this placeholder will show the generated estimate price of the house.
-        this.currentPrice = "(placeholder)";
+        this.currentPrice = "(loading... )";
         // Default to not logged in
         this.isLoggedIn = false;
     }
