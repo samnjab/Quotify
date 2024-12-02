@@ -25,7 +25,7 @@ public class LandingView extends JPanel implements PropertyChangeListener {
 
     // UI Components
     private JButton loginButton = new JButton("Login");
-    private JButton signInButton = new JButton("Sign In");
+    private JButton signUpButton = new JButton("Sign Up");
     private JComboBox<Area> countryDropdown = new JComboBox<>();
     private JComboBox<Area> stateDropdown = new JComboBox<>();
     private JComboBox<Area> cityDropdown = new JComboBox<>();
@@ -70,8 +70,8 @@ public class LandingView extends JPanel implements PropertyChangeListener {
         loginButton.addActionListener(evt -> handleLogin());
         userPanel.add(loginButton, BorderLayout.WEST);
 
-        signInButton.addActionListener(evt -> handleSignIn());
-        userPanel.add(signInButton, BorderLayout.EAST);
+        signUpButton.addActionListener(evt -> handleSignUp());
+        userPanel.add(signUpButton, BorderLayout.EAST);
 
         // Form Panel
         final JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
@@ -186,8 +186,8 @@ public class LandingView extends JPanel implements PropertyChangeListener {
         landingController.goToLogin();
     }
 
-    private void handleSignIn() {
-        landingController.goToLogin();
+    private void handleSignUp() {
+        landingController.goToSignup();
     }
 
     /**
@@ -292,6 +292,8 @@ public class LandingView extends JPanel implements PropertyChangeListener {
 
             propPanel = new PropertyDetailsPanel(propertyAddress, propertyDetails);
             add(propPanel);
+            // adding action listener to confirm button:
+            propConfirm.addActionListener(evt -> navigateToNextPage());
             add(propConfirm);
 
             revalidate();
@@ -305,7 +307,7 @@ public class LandingView extends JPanel implements PropertyChangeListener {
     /**
      * Navigates to the next page.
      */
-    public void navigateToNextPage(){
+    public void navigateToNextPage() {
         landingController.goToNextPage();
     }
 

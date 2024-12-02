@@ -160,6 +160,7 @@ public class LandingPresenter implements LandingOutputBoundary {
     @Override
     public void prepareNextPageNavigation(Property property) {
         // Transition to function view
+        landingViewModel.getState().setPropertyConfirmed(true);
         viewManagerModel.setState(functionViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }

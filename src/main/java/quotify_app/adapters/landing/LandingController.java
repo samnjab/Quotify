@@ -54,14 +54,6 @@ public class LandingController {
     }
 
     /**
-     * Triggers caching of property as current property.
-     * @param property current property selected.
-     */
-    public void selectProperty(Property property) {
-        landingInteractor.selectPropertyInCache();
-    }
-
-    /**
      * Triggers navigation to the signup view.
      */
     public void goToSignup() {
@@ -76,10 +68,9 @@ public class LandingController {
     }
 
     /**
-     * Triggers navigation to the login view.
+     * Triggers selection of property in cache and navigation to the login view.
      */
     public void goToNextPage() {
         landingInteractor.selectPropertyInCache();
     }
-
 }

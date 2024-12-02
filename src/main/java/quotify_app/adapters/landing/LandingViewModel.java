@@ -161,11 +161,11 @@ public class LandingViewModel {
 
     /**
      * Updates the confirmed property status and notifies listeners.
-     * @param confirmedProperty The confirmed property found status.
+     * @param propertyConfirmed The confirmed property found status.
      */
-    public void setPropertyConfirmed(Property confirmedProperty) {
-        final Property oldValue = state.getCurrentProperty();
-        state.setCurrentProperty(confirmedProperty);
-        support.firePropertyChange("propertyConfirmed", oldValue, confirmedProperty);
+    public void setPropertyConfirmed(boolean propertyConfirmed) {
+        final boolean oldValue = state.isPropertyConfirmed();
+        state.setPropertyConfirmed(propertyConfirmed);
+        support.firePropertyChange("propertyConfirmed", oldValue, propertyConfirmed);
     }
 }

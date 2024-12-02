@@ -41,6 +41,7 @@ public class LandingState {
     private String errorMessage;
 
     // Getters and Setters
+    // Log in status:
     public boolean isLoggedIn() {
         return isLoggedIn;
     }
@@ -49,6 +50,7 @@ public class LandingState {
         isLoggedIn = loggedIn;
     }
 
+    // User profile status
     public String getCurrentUser() {
         return currentUser;
     }
@@ -57,17 +59,34 @@ public class LandingState {
         this.currentUser = currentUser;
     }
 
+    // Property found boolean status:
+    public boolean isPropertyFound() {
+        return isPropertyFound;
+    }
+
+    public void setPropertyFound(boolean propertyFound) {
+        isPropertyFound = propertyFound;
+    }
+
+    // Property Confirmed boolean status:
     public boolean isPropertyConfirmed() {
         return propertyConfirmed;
     }
 
-    public void setPropertyConfirmed(boolean propertyConfirmed) {
-        this.propertyConfirmed = propertyConfirmed;
+    public void setPropertyConfirmed(boolean confirmed) {
+        this.propertyConfirmed = confirmed;
     }
 
+    // Confirmed property:
     public void setCurrentProperty(Property property) {
         this.currentProperty = property;
     }
+
+    public Property getCurrentProperty() {
+        return currentProperty;
+    }
+
+    // Available Areas:
 
     public List<Area> getAvailableCountries() {
         return availableCountries;
@@ -141,14 +160,7 @@ public class LandingState {
         this.streetAddress = streetAddress;
     }
 
-    public boolean isPropertyFound() {
-        return isPropertyFound;
-    }
-
-    public void setPropertyFound(boolean propertyFound) {
-        isPropertyFound = propertyFound;
-    }
-
+    // Property address and details:
     public String getPropertyAddress() {
         return propertyAddress;
     }
@@ -165,15 +177,12 @@ public class LandingState {
         this.propertyDetails = propertyDetails;
     }
 
+    // Error message:
     public String getErrorMessage() {
         return errorMessage;
     }
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
-    }
-
-    public Property getCurrentProperty() {
-        return currentProperty;
     }
 }
