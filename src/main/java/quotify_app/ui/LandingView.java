@@ -45,7 +45,6 @@ public class LandingView extends JPanel implements PropertyChangeListener {
      * @param landingViewModel The ViewModel used to manage the state of the Landing Page.
      */
     public LandingView(LandingViewModel landingViewModel) {
-        System.out.println("Landing view initialized");
         this.landingViewModel = landingViewModel;
         this.landingViewModel.addPropertyChangeListener(this);
 
@@ -57,6 +56,10 @@ public class LandingView extends JPanel implements PropertyChangeListener {
      * Initializes the UI components for the Landing Page.
      */
     private void initializeUI() {
+        // Create a main panel with BoxLayout to stack components vertically
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        // Form Panel
         final JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -72,7 +75,7 @@ public class LandingView extends JPanel implements PropertyChangeListener {
 
             @Override
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                System.out.println("Dropdown closed.");
+
             }
 
             @Override
@@ -184,7 +187,6 @@ public class LandingView extends JPanel implements PropertyChangeListener {
      */
     private void handleFetchAreas(Area parentArea) {
         if (parentArea != null) {
-            System.out.println("Fetching sub-areas for: " + parentArea);
             landingController.fetchAvailableSubAreas(parentArea);
         }
     }
@@ -193,7 +195,6 @@ public class LandingView extends JPanel implements PropertyChangeListener {
      * Handles country selection from the dropdown.
      */
     private void handleCountrySelection() {
-        System.out.println("event listener firing. Selected Country: " + countryDropdown.getSelectedItem());
         final Area selectedCountry = (Area) countryDropdown.getSelectedItem();
         if (selectedCountry != null) {
             landingController.selectArea(selectedCountry);
@@ -205,7 +206,6 @@ public class LandingView extends JPanel implements PropertyChangeListener {
      * Handles state selection from the dropdown.
      */
     private void handleStateSelection() {
-        System.out.println("event listener firing. Selected State: " + stateDropdown.getSelectedItem());
         final Area selectedState = (Area) stateDropdown.getSelectedItem();
         if (selectedState != null) {
             landingController.selectArea(selectedState);
@@ -217,7 +217,6 @@ public class LandingView extends JPanel implements PropertyChangeListener {
      * Handles city selection from the dropdown.
      */
     private void handleCitySelection() {
-        System.out.println("event listener firing. Selected City: " + cityDropdown.getSelectedItem());
         final Area selectedCity = (Area) cityDropdown.getSelectedItem();
         if (selectedCity != null) {
             landingController.selectArea(selectedCity);
@@ -229,7 +228,6 @@ public class LandingView extends JPanel implements PropertyChangeListener {
      * Handles zip code selection from the dropdown.
      */
     private void handleZipCodeSelection() {
-        System.out.println("event listener firing. Selected zipcode: " + zipCodeDropdown.getSelectedItem());
         final Area selectedZipCode = (Area) zipCodeDropdown.getSelectedItem();
         if (selectedZipCode != null) {
             landingController.selectArea(selectedZipCode);
@@ -275,7 +273,7 @@ public class LandingView extends JPanel implements PropertyChangeListener {
             }
 
             propPanel = new PropertyDetailsPanel(propertyAddress, propertyDetails);
-            add(propPanel, BorderLayout.SOUTH);
+            add(propPanel);
 
             revalidate();
             repaint();
@@ -314,7 +312,7 @@ public class LandingView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         switch (evt.getPropertyName()) {
-            case "propertyAddress":
+            case "propertyFound":
                 displayPropertyDetailsPanel();
                 break;
             case "availableCountries":
