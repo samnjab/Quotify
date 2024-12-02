@@ -8,14 +8,14 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import quotify_app.adapters.future_price.FuturePriceController;
 import quotify_app.adapters.future_price.FuturePriceState;
 import quotify_app.adapters.future_price.FuturePriceViewModel;
+import quotify_app.data_access.PredictionDataAccessObject;
+import quotify_app.usecases.future_pricing.FuturePredictionDataAccessInterface;
+import quotify_app.usecases.future_pricing.FuturePropertyDataAccessInterface;
 
 /**
  * The View for displaying the future price.
@@ -23,11 +23,15 @@ import quotify_app.adapters.future_price.FuturePriceViewModel;
  */
 public class FuturePriceView extends JPanel implements PropertyChangeListener {
     private final String viewName;
+    private FuturePropertyDataAccessInterface futurePropertyDataAccessInterface;
+    private FuturePredictionDataAccessInterface futurePredictionDataAccessInterface;
     private FuturePriceController futurePriceController;
     private final FuturePriceViewModel futurePriceViewModel;
 
     private final JLabel futurePriceTitle = new JLabel();
-    private final JLabel futurePriceGraph = new JLabel();
+    private final JLabel errorPredictingLabel = new JLabel();
+
+    private final JTable futurePriceGraph = new JTable(6, 2);
 
     private final JButton currentButton = new JButton(FuturePriceViewModel.CURRENT_PRICING_BUTTON_LABEL);
     private final JButton comparePropertyButton = new JButton(FuturePriceViewModel.COMPARE_PROPERTY_BUTTON_LABEL);
@@ -65,6 +69,11 @@ public class FuturePriceView extends JPanel implements PropertyChangeListener {
      * Initializes the UI components and layout.
      */
     private void initializeUserInterface() {
+        if (futurePriceViewModel.getState().isPredictionError()) {
+            // Fetch the future prices
+            futurePriceController.fetchFuturePrices();
+        }
+
         // Set layout manager
         setLayout(new BorderLayout());
 
@@ -76,8 +85,10 @@ public class FuturePriceView extends JPanel implements PropertyChangeListener {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
         futurePriceTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        errorPredictingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         futurePriceGraph.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(futurePriceTitle);
+        centerPanel.add(errorPredictingLabel);
         centerPanel.add(futurePriceGraph);
 
         add(centerPanel, BorderLayout.CENTER);
@@ -143,7 +154,20 @@ public class FuturePriceView extends JPanel implements PropertyChangeListener {
     private void updateView() {
         final FuturePriceState state = futurePriceViewModel.getState();
         futurePriceTitle.setText(FuturePriceViewModel.TITLE_LABEL);
-        futurePriceGraph.setText("graph go here");
+
+        if (!state.isPredictionError()) {
+            futurePriceGraph.setVisible(true);
+            errorPredictingLabel.setVisible(false);
+            for (int i = 0; i < state.getFuturePrices().length; i++) {
+                futurePriceGraph.setValueAt(i + " Month's in the Future", i, 0);
+                futurePriceGraph.setValueAt(state.getFuturePrices()[i], i, 1);
+            }
+        }
+        else {
+            futurePriceGraph.setVisible(false);
+            errorPredictingLabel.setVisible(true);
+            errorPredictingLabel.setText(state.getPredictionErrorMsg());
+        }
 
         // Update topPanel based on login status
         topPanel.removeAll();

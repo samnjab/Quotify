@@ -39,4 +39,10 @@ public interface FuturePriceInputBoundary {
      * Handles the action to navigate to the Landing Page View.
      */
     void goToLandingPage();
+
+    /**
+     * Handles the action to retrieve the data for the predicted future prices.
+     */
+    void fetchFuturePrices();
+
 }

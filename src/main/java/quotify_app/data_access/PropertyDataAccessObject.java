@@ -7,10 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.*;
+import quotify_app.usecases.future_pricing.FuturePropertyDataAccessInterface;
 import quotify_app.usecases.landing.PropertyDataAccessInterface;
 import quotify_app.usecases.landing.exceptions.AddressNotFound;
 
-public class PropertyDataAccessObject implements PropertyDataAccessInterface {
+public class PropertyDataAccessObject implements PropertyDataAccessInterface, FuturePropertyDataAccessInterface {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private Property propertyCache;
