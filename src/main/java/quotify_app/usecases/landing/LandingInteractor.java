@@ -10,7 +10,6 @@ import quotify_app.data_access.exceptions.IllegalTypeException;
 import quotify_app.entities.regionEntities.Address;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.entities.regionEntities.Property;
-import quotify_app.entities.regionEntities.Summary;
 
 /**
  * The Landing Interactor.
@@ -100,8 +99,6 @@ public class LandingInteractor implements LandingInputBoundary {
             final Address address = addressInputData.constructAddress();
             // fetching property at address from data access:
             final Property property = propertyDataAccessObject.getPropertyAtAddress(address);
-            // caching property in data access:
-            propertyDataAccessObject.setCurrentProperty(property);
             // producing propertyOutputData:
             final PropertyOutputData propertyOutputData = new PropertyOutputData(address, property);
             landingPresenter.preparePropertySuccessView(propertyOutputData);
@@ -113,6 +110,13 @@ public class LandingInteractor implements LandingInputBoundary {
             landingPresenter.prepareErrorView("Failed to fetch address due to an API error: "
                     + exception.getMessage());
         }
+    }
+
+    @Override
+    public void selectProperty(Property property) {
+        // caching property in data access as current property:
+        propertyDataAccessObject.setCurrentProperty(property);
+        landingPresenter.prepareNextPageNavigation(property);
     }
 
     @Override

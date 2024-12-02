@@ -1,6 +1,7 @@
 package quotify_app.adapters.landing;
 
 import quotify_app.entities.regionEntities.Area;
+import quotify_app.entities.regionEntities.Property;
 import quotify_app.usecases.landing.AddressInputData;
 import quotify_app.usecases.landing.LandingInputBoundary;
 
@@ -53,6 +54,14 @@ public class LandingController {
     }
 
     /**
+     * Triggers caching of property as current property.
+     * @param property current property selected.
+     */
+    public void selectProperty(Property property) {
+        landingInteractor.selectProperty(property);
+    }
+
+    /**
      * Triggers navigation to the signup view.
      */
     public void goToSignup() {
@@ -65,4 +74,12 @@ public class LandingController {
     public void goToLogin() {
         landingInteractor.goToLogin();
     }
+
+    /**
+     * Triggers navigation to the login view.
+     */
+    public void goToNextPage() {
+        landingInteractor.goToNextPage();
+    }
+
 }

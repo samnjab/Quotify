@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import quotify_app.entities.regionEntities.Area;
+import quotify_app.entities.regionEntities.Property;
 
 /**
  * Represents the state of the Landing Page, including the current user profile,
@@ -32,6 +33,10 @@ public class LandingState {
     private String propertyAddress;
     private Map<String, String> propertyDetails;
 
+    // Confirmed property state:
+    private Property currentProperty;
+    private boolean propertyConfirmed;
+
     // Error state
     private String errorMessage;
 
@@ -50,6 +55,18 @@ public class LandingState {
 
     public void setCurrentUser(String currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public boolean isPropertyConfirmed() {
+        return propertyConfirmed;
+    }
+
+    public void setPropertyConfirmed(boolean propertyConfirmed) {
+        this.propertyConfirmed = propertyConfirmed;
+    }
+
+    public void setCurrentProperty(Property property) {
+        this.currentProperty = property;
     }
 
     public List<Area> getAvailableCountries() {
@@ -154,5 +171,9 @@ public class LandingState {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public Property getCurrentProperty() {
+        return currentProperty;
     }
 }

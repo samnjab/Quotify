@@ -24,14 +24,17 @@ public class LandingView extends JPanel implements PropertyChangeListener {
     private final LandingViewModel landingViewModel;
 
     // UI Components
-    private JComboBox<Area> countryDropdown;
-    private JComboBox<Area> stateDropdown;
-    private JComboBox<Area> cityDropdown;
-    private JComboBox<Area> zipCodeDropdown;
-    private JTextField streetAddressField;
-    private JButton findPropertyButton;
-    private JLabel errorMessageLabel;
+    private JButton loginButton = new JButton("Login");
+    private JButton signInButton = new JButton("Sign In");
+    private JComboBox<Area> countryDropdown = new JComboBox<>();
+    private JComboBox<Area> stateDropdown = new JComboBox<>();
+    private JComboBox<Area> cityDropdown = new JComboBox<>();
+    private JComboBox<Area> zipCodeDropdown = new JComboBox<>();
+    private JTextField streetAddressField = new JTextField();
+    private JButton findPropertyButton = new JButton("Find Property");
+    private JLabel errorMessageLabel = new JLabel("", SwingConstants.CENTER);
     private PropertyDetailsPanel propPanel;
+    private JButton propConfirm = new JButton("Confirm Property");
 
     // Area Selections
     private Area selectedCountry;
@@ -41,7 +44,6 @@ public class LandingView extends JPanel implements PropertyChangeListener {
 
     /**
      * Constructs a new LandingView and initializes UI components.
-     *
      * @param landingViewModel The ViewModel used to manage the state of the Landing Page.
      */
     public LandingView(LandingViewModel landingViewModel) {
@@ -59,13 +61,23 @@ public class LandingView extends JPanel implements PropertyChangeListener {
         // Create a main panel with BoxLayout to stack components vertically
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        // User Panel:
+        final JPanel userPanel = new JPanel();
+        userPanel.setLayout(new BorderLayout());
+        userPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Login and SignIn Buttons
+        loginButton.addActionListener(evt -> handleLogin());
+        userPanel.add(loginButton, BorderLayout.WEST);
+
+        signInButton.addActionListener(evt -> handleSignIn());
+        userPanel.add(signInButton, BorderLayout.EAST);
+
         // Form Panel
         final JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
         // Country Dropdown
         formPanel.add(new JLabel("Select Country:"));
-        countryDropdown = new JComboBox<>();
         countryDropdown.addActionListener(evt -> handleCountrySelection());
         countryDropdown.addPopupMenuListener(new PopupMenuListener() {
             @Override
@@ -87,7 +99,6 @@ public class LandingView extends JPanel implements PropertyChangeListener {
 
         // State Dropdown
         formPanel.add(new JLabel("Select State:"));
-        stateDropdown = new JComboBox<>();
         stateDropdown.addActionListener(evt -> handleStateSelection());
         stateDropdown.addPopupMenuListener(new PopupMenuListener() {
             @Override
@@ -110,7 +121,6 @@ public class LandingView extends JPanel implements PropertyChangeListener {
 
         // City Dropdown
         formPanel.add(new JLabel("Select City:"));
-        cityDropdown = new JComboBox<>();
         cityDropdown.addActionListener(evt -> handleCitySelection());
         cityDropdown.addPopupMenuListener(new PopupMenuListener() {
             @Override
@@ -133,7 +143,6 @@ public class LandingView extends JPanel implements PropertyChangeListener {
 
         // Zip Code Dropdown
         formPanel.add(new JLabel("Select Zip Code:"));
-        zipCodeDropdown = new JComboBox<>();
         zipCodeDropdown.addActionListener(evt -> handleZipCodeSelection());
         zipCodeDropdown.addPopupMenuListener(new PopupMenuListener() {
             @Override
@@ -160,16 +169,25 @@ public class LandingView extends JPanel implements PropertyChangeListener {
         formPanel.add(streetAddressField);
 
         // Find Property Button
-        findPropertyButton = new JButton("Find Property");
         findPropertyButton.addActionListener(evt -> handleFindProperty());
         formPanel.add(findPropertyButton);
 
         // Error Message Label
-        errorMessageLabel = new JLabel("", SwingConstants.CENTER);
         errorMessageLabel.setForeground(Color.RED);
 
-        add(formPanel, BorderLayout.CENTER);
-        add(errorMessageLabel, BorderLayout.SOUTH);
+        // Appending to main panel:
+        add(userPanel);
+        add(formPanel);
+        add(errorMessageLabel);
+
+    }
+
+    private void handleLogin() {
+        landingController.goToLogin();
+    }
+
+    private void handleSignIn() {
+        landingController.goToLogin();
     }
 
     /**
@@ -274,6 +292,7 @@ public class LandingView extends JPanel implements PropertyChangeListener {
 
             propPanel = new PropertyDetailsPanel(propertyAddress, propertyDetails);
             add(propPanel);
+            add(propConfirm);
 
             revalidate();
             repaint();
@@ -281,6 +300,13 @@ public class LandingView extends JPanel implements PropertyChangeListener {
         else {
             errorMessageLabel.setText("No property details available.");
         }
+    }
+
+    /**
+     * Navigates to the next page.
+     */
+    public void navigateToNextPage(){
+        landingController.goToNextPage();
     }
 
     /**
@@ -312,6 +338,9 @@ public class LandingView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         switch (evt.getPropertyName()) {
+            case "propertyConfirmed":
+                navigateToNextPage();
+                break;
             case "propertyFound":
                 displayPropertyDetailsPanel();
                 break;
