@@ -27,26 +27,32 @@ public class PropertyDataAccessObject implements PropertyDataAccessInterface, Cu
     }
 
     // Helper methods:
+    private String safeGetString(JsonNode node, String key) {
+        return (node != null && node.has(key) && !node.get(key).isNull()) ? node.get(key).asText() : "Not found";
+    }
+
+    // Helper method to safely extract integer values
+    int safeGetInt(JsonNode node, String key) {
+        return (node != null && node.has(key) && !node.get(key).isNull()) ? node.get(key).asInt() : -1;
+    }
+
     /**
      * Extracts a Summary object from the detailed property JSON node.
      * @param propertyNode The detailed property JSON node.
      * @return A Summary object containing property details.
      */
     private Summary extractPropertySummary(JsonNode propertyNode) {
-        final JsonNode summaryNode = propertyNode.get("summary");
-        final JsonNode buildingSummaryNode = propertyNode.get("building").get("summary");
-        final JsonNode roomsNode = propertyNode.get("building").get("rooms");
-        final JsonNode constructionNode = propertyNode.get("building").get("construction");
+        // Extracting individual fields safely, avoiding Null.get()
+        final String propType = safeGetString(propertyNode.get("summary"), "proptype");
+        final int beds = safeGetInt(propertyNode.get("building").get("rooms"), "beds");
+        final int baths = safeGetInt(propertyNode.get("building").get("rooms"), "bathstotal");
+        final String condition = safeGetString(propertyNode.get("building").get("construction"), "condition");
+        final int levels = safeGetInt(propertyNode.get("building").get("summary"), "levels");
+        final int size = safeGetInt(propertyNode.get("building").get("size"), "bldgsize");
+        final int yearBuilt = safeGetInt(propertyNode.get("summary"), "yearbuilt");
 
-        return new Summary(
-                summaryNode.get("proptype").asText(),
-                roomsNode.get("beds").asInt(),
-                roomsNode.get("bathstotal").asInt(),
-                constructionNode.get("condition").asText(),
-                buildingSummaryNode.get("levels").asInt(),
-                propertyNode.get("building").get("size").get("bldgsize").asInt(),
-                summaryNode.get("yearbuilt").asInt()
-        );
+        // Constructing and returning the Summary object
+        return new Summary(propType, beds, baths, condition, levels, size, yearBuilt);
     }
 
     /**
@@ -92,7 +98,7 @@ public class PropertyDataAccessObject implements PropertyDataAccessInterface, Cu
             throws ApiRequestException, AddressNotFound, ClientRequestException {
         final JsonNode properties = AttomClient.fetchPropertiesByZipcode(address.getPostalCode());
         final String attomId = findPropertyAttomId(properties, address);
-        final JsonNode propertyNode = AttomClient.fetchPropertyDetails(attomId).get("property").get(0);
+        final JsonNode propertyNode = AttomClient.fetchPropertyDetails(attomId).get(0);
         final Summary summary = extractPropertySummary(propertyNode);
         final Identifier identifier = extractPropertyIdentifier(propertyNode);
         return new Property(identifier, address, summary);

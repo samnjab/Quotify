@@ -10,6 +10,7 @@ import quotify_app.data_access.exceptions.IllegalTypeException;
 import quotify_app.entities.regionEntities.Address;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.entities.regionEntities.Property;
+import quotify_app.entities.regionEntities.Summary;
 
 /**
  * The Landing Interactor.
@@ -31,11 +32,11 @@ public class LandingInteractor implements LandingInputBoundary {
         this.areaTypeHierarchy.put("CS", "ZI");
     }
 
+    // Override methods:
     @Override
     public void fetchCountries() {
         try {
             final List<Area> countries = areaDataAccessObject.getCountries();
-            System.out.println("in landing interactor, fetched countries are " + countries);
             areaDataAccessObject.cacheAreas(countries, "CN");
             final AreaListOutputData outputData = areaDataAccessObject.getCache().getSubAreaList("CN");
             landingPresenter.prepareAreaListSuccessView(outputData);
@@ -95,9 +96,15 @@ public class LandingInteractor implements LandingInputBoundary {
     @Override
     public void selectAddress(AddressInputData addressInputData) {
         try {
+            // constructing address from addressInputData:
             final Address address = addressInputData.constructAddress();
+            // fetching property at address from data access:
             final Property property = propertyDataAccessObject.getPropertyAtAddress(address);
+            // caching property in data access:
             propertyDataAccessObject.setCurrentProperty(property);
+            // producing propertyOutputData:
+            final PropertyOutputData propertyOutputData = new PropertyOutputData(address, property);
+            landingPresenter.preparePropertySuccessView(propertyOutputData);
         }
         catch (ClientRequestException exception) {
             landingPresenter.prepareErrorView("A network error occurred while fetching address. Please try again.");

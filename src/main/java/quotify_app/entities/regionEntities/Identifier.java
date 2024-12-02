@@ -29,12 +29,6 @@ public class Identifier {
         if (geoIdV4 == null) {
             throw new IllegalArgumentException("geoIdV4 cannot be null");
         }
-
-        for (String requiredKey : REQUIRED_KEYS) {
-            if (!geoIdV4.containsKey(requiredKey)) {
-                throw new IllegalArgumentException("Missing required key in geoIdV4: " + requiredKey);
-            }
-        }
         return geoIdV4;
     }
 

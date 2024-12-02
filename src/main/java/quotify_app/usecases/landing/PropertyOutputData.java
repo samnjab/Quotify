@@ -1,8 +1,11 @@
 package quotify_app.usecases.landing;
 
-import java.util.Map;
-
 import quotify_app.entities.regionEntities.Address;
+import quotify_app.entities.regionEntities.Property;
+import quotify_app.entities.regionEntities.Summary;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents the output data for a property retrieval use case.
@@ -10,24 +13,38 @@ import quotify_app.entities.regionEntities.Address;
  */
 public class PropertyOutputData {
 
-    private final Address propertyAddress;
+    private final String propertyAddress;
     private final Map<String, String> propertyDetails;
 
     /**
-     * Constructs a new PropertyOutputData object with the specified property address and details.
-     * @param propertyAddress  The confirmed property address.
-     * @param propertyDetails  Additional property metadata to be displayed.
+     * Constructs a new PropertyOutputData object with the specified property address and property object.
+     * @param address  The confirmed property address.
+     * @param property  the property object.
      */
-    public PropertyOutputData(Address propertyAddress, Map<String, String> propertyDetails) {
-        this.propertyAddress = propertyAddress;
-        this.propertyDetails = propertyDetails;
+    public PropertyOutputData(Address address, Property property) {
+        this.propertyAddress = address.fetchAddress1() + address.fetchAddress2();
+        this.propertyDetails = constructPropDetails(property.getSummary());
+    }
+
+    // Helper methods:
+    private Map<String, String> constructPropDetails(Summary summary) {
+        final Map<String, String> propDetails = new HashMap<>();
+        propDetails.put("Property Type", summary.getPropTypeString());
+        propDetails.put("Condition", summary.getConditionString());
+        propDetails.put("Bedrooms", summary.getBedsString());
+        propDetails.put("Bathrooms", summary.getBathsString());
+        propDetails.put("Year Built", summary.getYearBuiltString());
+        propDetails.put("Size (sqft)", summary.getSizeString());
+        propDetails.put("Number of levels", summary.getLevelsString());
+
+        return propDetails;
     }
 
     /**
      * Gets the confirmed property address.
      * @return The property address.
      */
-    public Address getPropertyAddress() {
+    public String getPropertyAddress() {
         return propertyAddress;
     }
 

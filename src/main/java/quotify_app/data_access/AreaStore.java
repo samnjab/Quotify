@@ -93,17 +93,19 @@ public class AreaStore {
      */
     public void storeAreas(List<Area> areas, String areaType) {
         boolean legalStore = false;
-        for (AreaListOutputData areaList: areaCache) {
+        final List<AreaListOutputData> copy = new ArrayList<>(areaCache);
+        for (AreaListOutputData areaList : copy) {
             if (areaList.getAreaType().equals(areaType)) {
                 areaCache.remove(areaList);
-                areaCache.add(new AreaListOutputData(areas, areaType, false));
                 legalStore = true;
+                break;
             }
         }
+        // Add the new AreaListOutputData
+        areaCache.add(new AreaListOutputData(areas, areaType, false));
         if (!legalStore) {
             throw new IllegalTypeException("Area type " + areaType + " not found");
         }
-
     }
 
     /**
