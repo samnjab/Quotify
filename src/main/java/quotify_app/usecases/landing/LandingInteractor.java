@@ -32,20 +32,6 @@ public class LandingInteractor implements LandingInputBoundary {
         this.areaTypeHierarchy.put("CS", "ZI");
     }
 
-    // Helper methods:
-    private Map<String, String> constructPropDetails(Summary summary) {
-        final Map<String, String> propDetails = new HashMap<>();
-        propDetails.put("Property Type", summary.getPropTypeString());
-        propDetails.put("Condition", summary.getConditionString());
-        propDetails.put("Bedrooms", String.valueOf(summary.getBeds()));
-        propDetails.put("Bathrooms", String.valueOf(summary.getBaths()));
-        propDetails.put("Year Built", String.valueOf(summary.getYearBuilt()));
-        propDetails.put("Size (sqft)", String.valueOf(summary.getSize()));
-        propDetails.put("Number of levels", String.valueOf(summary.getLevels()));
-
-        return propDetails;
-    }
-
     // Override methods:
     @Override
     public void fetchCountries() {
@@ -117,9 +103,7 @@ public class LandingInteractor implements LandingInputBoundary {
             // caching property in data access:
             propertyDataAccessObject.setCurrentProperty(property);
             // producing propertyOutputData:
-            final String stringAddress = address.fetchAddress1() + address.fetchAddress2();
-            final Map<String, String> propDetails = constructPropDetails(property.getSummary());
-            final PropertyOutputData propertyOutputData = new PropertyOutputData(stringAddress, propDetails);
+            final PropertyOutputData propertyOutputData = new PropertyOutputData(address, property);
             landingPresenter.preparePropertySuccessView(propertyOutputData);
         }
         catch (ClientRequestException exception) {
