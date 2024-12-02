@@ -30,20 +30,28 @@ public class PropertyDataAccessObject implements PropertyDataAccessInterface {
      * @return A Summary object containing property details.
      */
     private Summary extractPropertySummary(JsonNode propertyNode) {
-        final JsonNode summaryNode = propertyNode.get("summary");
-        final JsonNode buildingSummaryNode = propertyNode.get("building").get("summary");
-        final JsonNode roomsNode = propertyNode.get("building").get("rooms");
-        final JsonNode constructionNode = propertyNode.get("building").get("construction");
+        // This method needs editting. This is a quick fix.
+        try {
+            final JsonNode summaryNode = propertyNode.get("summary");
+            final JsonNode buildingNode = propertyNode.get("building");
 
-        return new Summary(
-                summaryNode.get("proptype").asText(),
-                roomsNode.get("beds").asInt(),
-                roomsNode.get("bathstotal").asInt(),
-                constructionNode.get("condition").asText(),
-                buildingSummaryNode.get("levels").asInt(),
-                propertyNode.get("building").get("size").get("bldgsize").asInt(),
-                summaryNode.get("yearbuilt").asInt()
-        );
+            final JsonNode buildingSummaryNode = propertyNode.get("building").get("summary");
+            final JsonNode roomsNode = propertyNode.get("building").get("rooms");
+            final JsonNode constructionNode = propertyNode.get("building").get("construction");
+
+            return new Summary(
+                    summaryNode.get("proptype").asText(),
+                    roomsNode.get("beds").asInt(),
+                    roomsNode.get("bathstotal").asInt(),
+                    constructionNode.get("condition").asText(),
+                    buildingSummaryNode.get("levels").asInt(),
+                    propertyNode.get("building").get("size").get("bldgsize").asInt(),
+                    summaryNode.get("yearbuilt").asInt()
+            );
+        }
+        catch (NullPointerException e) {
+            return new Summary();
+        }
     }
 
     /**
@@ -87,9 +95,10 @@ public class PropertyDataAccessObject implements PropertyDataAccessInterface {
     @Override
     public Property getPropertyAtAddress(Address address)
             throws ApiRequestException, AddressNotFound, ClientRequestException {
+        System.out.println("postal code is" + address.getPostalCode());
         final JsonNode properties = AttomClient.fetchPropertiesByZipcode(address.getPostalCode());
         final String attomId = findPropertyAttomId(properties, address);
-        final JsonNode propertyNode = AttomClient.fetchPropertyDetails(attomId).get("property").get(0);
+        final JsonNode propertyNode = AttomClient.fetchPropertyDetails(attomId).get(0);
         final Summary summary = extractPropertySummary(propertyNode);
         final Identifier identifier = extractPropertyIdentifier(propertyNode);
         return new Property(identifier, address, summary);

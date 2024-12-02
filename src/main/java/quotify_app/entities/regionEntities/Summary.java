@@ -8,15 +8,20 @@ import java.util.Map;
 
 public class Summary {
     public static final Map<String, Integer> PROPTYPE = Map.of(
+            "Not found", -1,
             "Condo", 0,
             "SFR", 1
     );
     public static final Map<String, Integer> CONDITION = Map.of(
+            "Not found", -1,
             "Bad", 0,
             "Good", 1
     );
+
     private final int propType;
+    private final String propTypeString;
     private final int condition;
+    private final String conditionString;
     private final int beds;
     private final int baths;
     private final int levels;
@@ -30,6 +35,7 @@ public class Summary {
             throw new IllegalArgumentException("Invalid property type: " + propType);
         }
         this.propType = propTypeValue;
+        this.propTypeString = propType;
 
         this.beds = beds;
         this.baths = baths;
@@ -39,6 +45,7 @@ public class Summary {
             throw new IllegalArgumentException("Invalid condition: " + condition);
         }
         this.condition = conditionValue;
+        this.conditionString = condition;
 
         this.levels = levels;
         this.size = size;
@@ -47,9 +54,11 @@ public class Summary {
 
     public Summary() {
         this.propType = -1;
+        this.propTypeString = "Not found";
         this.beds = -1;
         this.baths = -1;
         this.condition = -1;
+        this.conditionString = "Not found";
         this.levels = -1;
         this.size = -1;
         this.yearBuilt = -1;
@@ -104,5 +113,13 @@ public class Summary {
     @Override
     public String toString() {
         return getFullSummary();
+    }
+
+    public String getPropTypeString() {
+        return propTypeString;
+    }
+
+    public String getConditionString() {
+        return conditionString;
     }
 }

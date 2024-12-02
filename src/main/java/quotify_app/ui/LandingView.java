@@ -1,12 +1,15 @@
 package quotify_app.ui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.awt.*;
 import java.util.List;
+import java.util.Map;
+
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+
 import quotify_app.adapters.landing.LandingController;
 import quotify_app.adapters.landing.LandingViewModel;
 import quotify_app.entities.regionEntities.Area;
@@ -28,6 +31,13 @@ public class LandingView extends JPanel implements PropertyChangeListener {
     private JTextField streetAddressField;
     private JButton findPropertyButton;
     private JLabel errorMessageLabel;
+    private PropertyDetailsPanel propPanel;
+
+    // Area Selections
+    private Area selectedCountry;
+    private Area selectedState;
+    private Area selectedCity;
+    private Area selectedZipCode;
 
     /**
      * Constructs a new LandingView and initializes UI components.
@@ -53,25 +63,92 @@ public class LandingView extends JPanel implements PropertyChangeListener {
         // Country Dropdown
         formPanel.add(new JLabel("Select Country:"));
         countryDropdown = new JComboBox<>();
-//        countryDropdown.addActionListener(evt -> handleFetchCountries());
+        countryDropdown.addActionListener(evt -> handleCountrySelection());
+        countryDropdown.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                handleFetchCountries();
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                System.out.println("Dropdown closed.");
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                System.out.println("Dropdown canceled.");
+            }
+        });
         formPanel.add(countryDropdown);
 
         // State Dropdown
         formPanel.add(new JLabel("Select State:"));
         stateDropdown = new JComboBox<>();
         stateDropdown.addActionListener(evt -> handleStateSelection());
+        stateDropdown.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                System.out.println("Dropdown opened to view items.");
+                handleFetchAreas(selectedCountry);
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                System.out.println("Dropdown closed.");
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                System.out.println("Dropdown canceled.");
+            }
+        });
         formPanel.add(stateDropdown);
 
         // City Dropdown
         formPanel.add(new JLabel("Select City:"));
         cityDropdown = new JComboBox<>();
         cityDropdown.addActionListener(evt -> handleCitySelection());
+        cityDropdown.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                System.out.println("Dropdown opened to view items.");
+                handleFetchAreas(selectedState);
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                System.out.println("Dropdown closed.");
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                System.out.println("Dropdown canceled.");
+            }
+        });
         formPanel.add(cityDropdown);
 
         // Zip Code Dropdown
         formPanel.add(new JLabel("Select Zip Code:"));
         zipCodeDropdown = new JComboBox<>();
         zipCodeDropdown.addActionListener(evt -> handleZipCodeSelection());
+        zipCodeDropdown.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                System.out.println("Dropdown opened to view items.");
+                handleFetchAreas(selectedCity);
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                System.out.println("Dropdown closed.");
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                System.out.println("Dropdown canceled.");
+            }
+        });
         formPanel.add(zipCodeDropdown);
 
         // Street Address Field
@@ -90,24 +167,11 @@ public class LandingView extends JPanel implements PropertyChangeListener {
 
         add(formPanel, BorderLayout.CENTER);
         add(errorMessageLabel, BorderLayout.SOUTH);
-        addActionListeners();
     }
 
     /**
      * Fetches sub-areas for the selected parent area.
-     *
-     *
      */
-    private void addActionListeners() {
-        countryDropdown.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (landingController != null) {
-                    landingController.fetchCountries();
-                }
-            }
-        });
-    }
 
     private void handleFetchCountries() {
         landingController.fetchCountries();
@@ -133,6 +197,7 @@ public class LandingView extends JPanel implements PropertyChangeListener {
         final Area selectedCountry = (Area) countryDropdown.getSelectedItem();
         if (selectedCountry != null) {
             landingController.selectArea(selectedCountry);
+            this.selectedCountry = selectedCountry;
         }
     }
 
@@ -144,6 +209,7 @@ public class LandingView extends JPanel implements PropertyChangeListener {
         final Area selectedState = (Area) stateDropdown.getSelectedItem();
         if (selectedState != null) {
             landingController.selectArea(selectedState);
+            this.selectedState = selectedState;
         }
     }
 
@@ -155,6 +221,7 @@ public class LandingView extends JPanel implements PropertyChangeListener {
         final Area selectedCity = (Area) cityDropdown.getSelectedItem();
         if (selectedCity != null) {
             landingController.selectArea(selectedCity);
+            this.selectedCity = selectedCity;
         }
     }
 
@@ -166,6 +233,7 @@ public class LandingView extends JPanel implements PropertyChangeListener {
         final Area selectedZipCode = (Area) zipCodeDropdown.getSelectedItem();
         if (selectedZipCode != null) {
             landingController.selectArea(selectedZipCode);
+            this.selectedZipCode = selectedZipCode;
         }
     }
 
@@ -187,9 +255,34 @@ public class LandingView extends JPanel implements PropertyChangeListener {
             errorMessageLabel.setText("Please complete all fields before finding the property.");
             return;
         }
-        System.out.println("event listener firing. Selected address");
         // Call the controller method with the selected data
         landingController.selectAddress(selectedCountry, selectedState, selectedCity, selectedZipCode, streetAddress);
+
+        // Create and display the PropertyDetailsPanel
+        displayPropertyDetailsPanel();
+    }
+
+    /**
+     * Updates the PropertyDetailsPanel dynamically.
+     */
+    private void displayPropertyDetailsPanel() {
+        final String propertyAddress = landingViewModel.getState().getPropertyAddress();
+        final Map<String, String> propertyDetails = landingViewModel.getState().getPropertyDetails();
+
+        if (propertyAddress != null && propertyDetails != null) {
+            if (propPanel != null) {
+                remove(propPanel);
+            }
+
+            propPanel = new PropertyDetailsPanel(propertyAddress, propertyDetails);
+            add(propPanel, BorderLayout.SOUTH);
+
+            revalidate();
+            repaint();
+        }
+        else {
+            errorMessageLabel.setText("No property details available.");
+        }
     }
 
     /**
@@ -211,7 +304,6 @@ public class LandingView extends JPanel implements PropertyChangeListener {
      * @param landingController The controller managing Landing use cases.
      */
     public void setLandingController(LandingController landingController) {
-        System.out.println("from landing view: setLandingController");
         this.landingController = landingController;
     }
 
@@ -221,8 +313,10 @@ public class LandingView extends JPanel implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        System.out.println("from property change firing");
         switch (evt.getPropertyName()) {
+            case "propertyAddress":
+                displayPropertyDetailsPanel();
+                break;
             case "availableCountries":
                 updateDropdownOptions(countryDropdown, landingViewModel.getState().getAvailableCountries());
                 break;

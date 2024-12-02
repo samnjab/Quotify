@@ -37,7 +37,7 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
             final Area areaObj = new Area(
                     areaNode.get("type").asText(),
                     areaNode.get("geoIdV4").asText(),
-                    areaNode.get("geoId").asText(),
+                    areaNode.get("geo_id").asText(),
                     name,
                     abbreviation
             );
