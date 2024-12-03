@@ -27,9 +27,10 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
     private final CurrentPriceViewModel currentPriceViewModel;
 
     private final JLabel currentPriceLabel = new JLabel();
+    private final JButton showCurrentPriceButton = new JButton(CurrentPriceViewModel.SHOW_CURRENT_PRICE_BUTTON_LABEL);
     private final JButton futureButton = new JButton(CurrentPriceViewModel.FUTURE_BUTTON_LABEL);
     private final JButton comparePropertyButton = new JButton(CurrentPriceViewModel.COMPARE_PROPERTY_BUTTON_LABEL);
-    private final JButton landingPageButton = new JButton(CurrentPriceViewModel.LANDING_PAGE_BUTTOM_LABEL);
+    private final JButton landingPageButton = new JButton(CurrentPriceViewModel.LANDING_PAGE_BUTTON_LABEL);
     private final JButton userProfileButton = new JButton(CurrentPriceViewModel.USER_PROFILE_BUTTON_LABEL);
 
     // Store reference to topPanel
@@ -57,6 +58,7 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
         this.currentPriceController = currentPriceController;
         // After setting the controller, check the login status
         currentPriceController.checkLoginStatus();
+        // Removed fetchCurrentPrice() call to avoid calling it before property is set
     }
 
     /**
@@ -73,6 +75,11 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
         final JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
+        // Show Current Price button
+        showCurrentPriceButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(showCurrentPriceButton);
+
+        // Current Price Label
         currentPriceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(currentPriceLabel);
 
@@ -137,11 +144,17 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
                 }
             }
         });
+
+        showCurrentPriceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (currentPriceController != null) {
+                    currentPriceController.fetchCurrentPrice();
+                }
+            }
+        });
     }
 
-    /**
-     * Updates the view based on the current state in the ViewModel.
-     */
     private void updateView() {
         final CurrentPriceState state = currentPriceViewModel.getState();
         currentPriceLabel.setText(CurrentPriceViewModel.TITLE_LABEL + state.getCurrentPrice());
@@ -158,6 +171,14 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
         }
         topPanel.revalidate();
         topPanel.repaint();
+
+        // Hide the Show Current Price button after the price has been fetched
+        if (state.isPriceFetched()) {
+            showCurrentPriceButton.setVisible(false);
+        }
+        else {
+            showCurrentPriceButton.setVisible(true);
+        }
     }
 
     /**
@@ -180,6 +201,11 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
         updateView();
     }
 
+    /**
+     * Gets the Landing Page button (useful for testing or further customization).
+     *
+     * @return the landing page JButton.
+     */
     public JButton getLandingPageButton() {
         return landingPageButton;
     }

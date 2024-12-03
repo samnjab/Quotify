@@ -39,4 +39,18 @@ public interface CurrentPriceOutputBoundary {
      * Prepares the response to navigate to the LandingPageView.
      */
     void presentGoToLandingPage();
+
+    /**
+     * Presents the current price prediction.
+     *
+     * @param price The predicted price.
+     */
+    void presentCurrentPrice(double price);
+
+    /**
+     * Presents an error message related to prediction.
+     *
+     * @param message The error message.
+     */
+    void presentPredictionError(String message);
 }

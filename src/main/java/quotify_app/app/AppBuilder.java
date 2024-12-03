@@ -51,8 +51,8 @@ public class AppBuilder {
         signupFactory.setUpController(loginFactory, viewManagerModel, userDataAccessObject);
         functionFactory.setUpController(viewManagerModel);
         comparatorFactory.setUpController(viewManagerModel);
-        currentPriceFactory.setUpController(viewManagerModel);
-        futurePriceFactory.setUpController(viewManagerModel);
+        currentPriceFactory.setUpController(viewManagerModel, predictionDataAccess, propertyDataAccessObject);
+        futurePriceFactory.setUpController(viewManagerModel, propertyDataAccessObject, predictionDataAccess);
         landingFactory.setUpController(
                 viewManagerModel,
                 areaDataAccessObject,

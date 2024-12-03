@@ -39,4 +39,16 @@ public interface FuturePriceOutputBoundary {
      * Prepares the response to navigate to the LandingPageView.
      */
     void presentGoToLandingPage();
+
+    /**
+     * Prepares the response to display the future prices.
+     * @param futurePrices array containing predicted prices
+     */
+    void presentFuturePrices(double[] futurePrices);
+
+    /**
+     * Prepares the response to display that there was an error predicting the future prices.
+     * @param errorMessage describing what happened.
+     */
+    void presentPredictionError(String errorMessage);
 }

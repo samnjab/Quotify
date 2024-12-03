@@ -64,7 +64,23 @@ public class FuturePricePresenter implements FuturePriceOutputBoundary {
 
     @Override
     public void presentGoToLandingPage() {
-        viewManagerModel.setState("landing page");
+        viewManagerModel.setState("landing");
         viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void presentFuturePrices(double[] futurePrices) {
+        // Update the ViewModel's state with the predicted price
+        futurePriceViewModel.getState().setFuturePrices(futurePrices);
+        futurePriceViewModel.firePropertyChanged();
+    }
+
+    @Override
+    public void presentPredictionError(String message) {
+        // Update the ViewModel's state with error message
+
+        futurePriceViewModel.getState().setPredictionErrorMsg("Error: " + message);
+        futurePriceViewModel.getState().setIsPredictionError();
+        futurePriceViewModel.firePropertyChanged();
     }
 }
