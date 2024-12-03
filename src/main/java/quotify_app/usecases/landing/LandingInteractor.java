@@ -129,4 +129,14 @@ public class LandingInteractor implements LandingInputBoundary {
         landingPresenter.goToLogin();
     }
 
+    @Override
+    public void goToUserProfile() {
+        landingPresenter.presentGoToUserProfile();
+    }
+
+    @Override
+    public void checkLoginStatus() {
+        landingPresenter.updateLoginStatus();
+    }
+
 }

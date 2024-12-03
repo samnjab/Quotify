@@ -24,8 +24,10 @@ public class LandingView extends JPanel implements PropertyChangeListener {
     private final LandingViewModel landingViewModel;
 
     // UI Components
-    private JButton loginButton = new JButton("Login");
-    private JButton signUpButton = new JButton("Sign Up");
+    private final JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    private final JButton loginButton = new JButton("Login");
+    private final JButton signUpButton = new JButton("Sign Up");
+    private final JButton userProfileButton = new JButton("User Profile");
     private JComboBox<Area> countryDropdown = new JComboBox<>();
     private JComboBox<Area> stateDropdown = new JComboBox<>();
     private JComboBox<Area> cityDropdown = new JComboBox<>();
@@ -50,28 +52,25 @@ public class LandingView extends JPanel implements PropertyChangeListener {
         this.landingViewModel = landingViewModel;
         this.landingViewModel.addPropertyChangeListener(this);
 
-        setLayout(new BorderLayout());
         initializeUI();
+        // Ensure updateView is called after initialization
+        updateView();
     }
 
     /**
      * Initializes the UI components for the Landing Page.
      */
     private void initializeUI() {
-        // Create a main panel with BoxLayout to stack components vertically
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        // Set up the layout
+        setLayout(new BorderLayout());
 
-        // User Panel:
-        final JPanel userPanel = new JPanel();
-        userPanel.setLayout(new BorderLayout());
-        userPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        // Login and SignIn Buttons
+        // Add action listeners for the buttons
         loginButton.addActionListener(evt -> handleLogin());
-        userPanel.add(loginButton, BorderLayout.WEST);
-
         signUpButton.addActionListener(evt -> handleSignUp());
-        userPanel.add(signUpButton, BorderLayout.EAST);
+        userProfileButton.addActionListener(evt -> handleUserProfile());
+
+        // Add the top panel to the main panel
+        add(topPanel, BorderLayout.NORTH);
 
         // Form Panel
         final JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
@@ -175,11 +174,9 @@ public class LandingView extends JPanel implements PropertyChangeListener {
         // Error Message Label
         errorMessageLabel.setForeground(Color.RED);
 
-        // Appending to main panel:
-        add(userPanel);
-        add(formPanel);
-        add(errorMessageLabel);
-
+        // Add formPanel to center of the layout
+        add(formPanel, BorderLayout.CENTER);
+        add(errorMessageLabel, BorderLayout.SOUTH);
     }
 
     private void handleLogin() {
@@ -188,6 +185,10 @@ public class LandingView extends JPanel implements PropertyChangeListener {
 
     private void handleSignUp() {
         landingController.goToSignup();
+    }
+
+    private void handleUserProfile() {
+        landingController.goToUserProfile();
     }
 
     /**
@@ -291,15 +292,14 @@ public class LandingView extends JPanel implements PropertyChangeListener {
             }
 
             propPanel = new PropertyDetailsPanel(propertyAddress, propertyDetails);
-            add(propPanel);
+            add(propPanel, BorderLayout.CENTER);
             // adding action listener to confirm button:
             propConfirm.addActionListener(evt -> navigateToNextPage());
-            add(propConfirm);
+            add(propConfirm, BorderLayout.SOUTH);
 
             revalidate();
             repaint();
-        }
-        else {
+        } else {
             errorMessageLabel.setText("No property details available.");
         }
     }
@@ -331,6 +331,8 @@ public class LandingView extends JPanel implements PropertyChangeListener {
      */
     public void setLandingController(LandingController landingController) {
         this.landingController = landingController;
+        // After setting the controller, check the login status
+        landingController.checkLoginStatus();
     }
 
     /**
@@ -339,6 +341,9 @@ public class LandingView extends JPanel implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        if ("isLoggedIn".equals(evt.getPropertyName())) {
+            updateView();
+        }
         switch (evt.getPropertyName()) {
             case "propertyConfirmed":
                 navigateToNextPage();
@@ -364,6 +369,20 @@ public class LandingView extends JPanel implements PropertyChangeListener {
             default:
                 break;
         }
+    }
+
+    private void updateView() {
+        System.out.println("updateView called");
+        topPanel.removeAll();
+        final boolean isLoggedIn = landingViewModel.getState().isLoggedIn();
+        if (isLoggedIn) {
+            topPanel.add(userProfileButton);
+        } else {
+            topPanel.add(loginButton);
+            topPanel.add(signUpButton);
+        }
+        topPanel.revalidate();
+        topPanel.repaint();
     }
 
     public String getViewName() {

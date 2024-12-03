@@ -54,4 +54,14 @@ public interface LandingInputBoundary {
      * * Selects passed property as current property and caches in data access.
      */
     void selectPropertyInCache();
+
+    /**
+     * Triggers navigation to the user profile view.
+     */
+    void goToUserProfile();
+
+    /**
+     * Checks the login status.
+     */
+    void checkLoginStatus();
 }
