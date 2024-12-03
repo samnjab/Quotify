@@ -7,6 +7,7 @@ import quotify_app.adapters.landing.LandingPresenter;
 import quotify_app.adapters.landing.LandingViewModel;
 import quotify_app.adapters.login.LoginViewModel;
 import quotify_app.adapters.signup.SignupViewModel;
+import quotify_app.adapters.userprofile.UserProfileViewModel;
 import quotify_app.data_access.AreaDataAccessObject;
 import quotify_app.data_access.PropertyDataAccessObject;
 import quotify_app.ui.LandingView;
@@ -47,7 +48,8 @@ public class LandingFactory {
                                 PropertyDataAccessObject propertyDataAccessObject,
                                 SignupViewModel signupViewModel,
                                 LoginViewModel loginViewModel,
-                                FunctionViewModel functionViewModel) {
+                                FunctionViewModel functionViewModel,
+                                UserProfileViewModel userProfileViewModel) {
 
         // Setup Presenter and Interactor for Landing with necessary dependencies
         final LandingOutputBoundary landingPresenter = new LandingPresenter(
@@ -55,7 +57,8 @@ public class LandingFactory {
                 viewManagerModel,
                 signupViewModel,
                 loginViewModel,
-                functionViewModel
+                functionViewModel,
+                userProfileViewModel
         );
 
         final LandingInputBoundary landingInteractor = new LandingInteractor(

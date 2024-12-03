@@ -1,22 +1,22 @@
 package quotify_app.data_access;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import quotify_app.entities.User;
 import quotify_app.entities.UserFactory;
 import quotify_app.usecases.login.LoginUserDataAccessInterface;
 import quotify_app.usecases.signup.SignupUserDataAccessInterface;
+import quotify_app.usecases.userprofile.UserProfileDataAccessInterface;
 
 /**
  * Data access object for user-related operations, interacting with an SQLite database.
  */
-public class DBUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
+public class DBUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface,
+        UserProfileDataAccessInterface {
 
     private final UserFactory userFactory;
     private String currentUsername;
+    private Timestamp currentCreatedAt;
     private final int three = 3;
 
     public DBUserDataAccessObject(UserFactory userFactory) {
@@ -33,7 +33,8 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
                      "CREATE TABLE IF NOT EXISTS users ("
                              + "username TEXT PRIMARY KEY, "
                              + "email TEXT UNIQUE, "
-                             + "password TEXT NOT NULL)"
+                             + "password TEXT NOT NULL, "
+                             + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
              )) {
             stmt.executeUpdate();
             System.out.println("Database initialized successfully. Users table created if it didn't exist.");
@@ -49,7 +50,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
      * @return User
      */
     public User get(String username) {
-        final String query = "SELECT username, email, password FROM users WHERE username = ?";
+        final String query = "SELECT username, email, password, created_at FROM users WHERE username = ?";
         User result = null;
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -61,6 +62,8 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
                         rs.getString("password"),
                         rs.getString("email")
                 );
+                System.out.println("User created at: " + rs.getTimestamp("created_at"));
+                this.currentCreatedAt = rs.getTimestamp("created_at");
             }
         }
         catch (SQLException error) {
@@ -148,5 +151,14 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface, Lo
 
     public String getCurrentUsername() {
         return currentUsername;
+    }
+
+    @Override
+    public String getCurrentUserName() {
+        return currentUsername;
+    }
+
+    public Timestamp getCurrentCreatedAt() {
+        return currentCreatedAt;
     }
 }

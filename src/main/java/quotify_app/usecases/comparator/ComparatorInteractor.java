@@ -1,14 +1,26 @@
 package quotify_app.usecases.comparator;
 
+import quotify_app.data_access.AreaStore;
+import quotify_app.data_access.exceptions.ApiRequestException;
+import quotify_app.data_access.exceptions.ClientRequestException;
+import quotify_app.entities.regionEntities.Area;
+import quotify_app.entities.regionEntities.Property;
+import quotify_app.usecases.landing.AreaOutputData;
+
+import java.util.List;
+
 /**
  * The Comparator Interactor.
  */
 public class ComparatorInteractor implements ComparatorInputBoundary {
     private final ComparatorOutputBoundary comparatorPresenter;
+    private final ComparatorDataAccessInterface comparatorDataAccessObject;
 
     public ComparatorInteractor(
-                                ComparatorOutputBoundary comparatorPresenter) {
+            ComparatorOutputBoundary comparatorPresenter,
+            ComparatorDataAccessInterface comparatorDataAccessInterface) {
         this.comparatorPresenter = comparatorPresenter;
+        this.comparatorDataAccessObject = comparatorDataAccessInterface;
 
     }
 
@@ -24,8 +36,8 @@ public class ComparatorInteractor implements ComparatorInputBoundary {
      * Trigger view transition to Input through the presenter.
      */
     @Override
-    public void goToInput() {
-        comparatorPresenter.goToInput();
+    public void goToLanding() {
+        comparatorPresenter.goToLanding();
     }
 
     @Override
@@ -36,5 +48,17 @@ public class ComparatorInteractor implements ComparatorInputBoundary {
     @Override
     public void goToUserProfile() {
         comparatorPresenter.goToUserProfile();
+    }
+
+    @Override
+    public void getComparables() {
+        try {
+            final List<Property> comparables = comparatorDataAccessObject.getSaleComparables();
+            // Update the presenter with the fetched properties
+            comparatorPresenter.updateProperties(comparables);
+        }
+        catch (ClientRequestException | ApiRequestException err) {
+            comparatorPresenter.presentCompareFailed();
+        }
     }
 }

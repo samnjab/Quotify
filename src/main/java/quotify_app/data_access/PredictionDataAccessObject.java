@@ -42,6 +42,7 @@ public class PredictionDataAccessObject implements PredictionDataAccessInterface
     public double getCurrentPricePrediction(final Property property) throws PredictionClientException {
         final PredictionRequest request = buildPredictionRequest(property, 0);
         final String predictionResponse = predictionClient.predict(request);
+        System.out.println(predictionResponse);
 
         try {
             // Parse the prediction value from the JSON response

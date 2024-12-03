@@ -6,6 +6,7 @@ import quotify_app.adapters.ViewManagerModel;
 import quotify_app.adapters.currentprice.CurrentPricePresenter;
 import quotify_app.adapters.currentprice.CurrentPriceViewModel;
 import quotify_app.app.ApplicationState;
+import quotify_app.entities.CommonUserFactory;
 import quotify_app.entities.User;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,12 +19,14 @@ public class CurrentPricePresenterTest {
     private CurrentPricePresenter presenter;
     private ViewManagerModel viewManagerModel;
     private CurrentPriceViewModel currentPriceViewModel;
+    private CommonUserFactory commonUserFactory;
 
     @BeforeEach
     public void setUp() {
         viewManagerModel = new ViewManagerModel();
         currentPriceViewModel = new CurrentPriceViewModel();
         presenter = new CurrentPricePresenter(viewManagerModel, currentPriceViewModel);
+        commonUserFactory = new CommonUserFactory();
     }
 
     @Test
@@ -74,24 +77,10 @@ public class CurrentPricePresenterTest {
     @Test
     public void testUpdateLoginStatusLoggedIn() {
         // Arrange
-        ApplicationState.getInstance().setLoggedIn(true, new User() {
-            @Override
-            public String getName() {
-                return "TestUser";
-            }
-
-            // Implement other abstract methods if any
-            @Override
-            public String getEmail() {
-                return "testuser@example.com";
-            }
-
-            @Override
-            public String getPassword() {
-                return "password";
-            }
-
-        });
+        final User user = commonUserFactory.create("TestUser",
+                "testuser@example.com",
+                "password");
+        ApplicationState.getInstance().setLoggedIn(true, user.getName());
 
         // Act
         presenter.updateLoginStatus();
@@ -118,7 +107,7 @@ public class CurrentPricePresenterTest {
         presenter.presentGoToLandingPage();
 
         // Assert
-        assertEquals("landing page", viewManagerModel.getState());
+        assertEquals("landing", viewManagerModel.getState());
     }
 
     @Test

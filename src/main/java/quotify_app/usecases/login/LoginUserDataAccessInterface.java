@@ -20,4 +20,6 @@ public interface LoginUserDataAccessInterface {
      * @return the User object corresponding to the username
      */
     User get(String username);
+
+    void setCurrentUsername(String username);
 }

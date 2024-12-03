@@ -96,7 +96,7 @@ public class AttomClient {
      */
     public static JsonNode fetchPropertiesByZipcode(String zipcode)
             throws ApiRequestException, ClientRequestException {
-        final String url = BASE_URL + "address?postalcode=" + zipcode;
+        final String url = BASE_URL + "address?postalcode=" + zipcode + "&pagesize=100";
         final JsonNode rootNode = sendApiRequest(url);
         return parseResponseNode(rootNode, "property");
     }
