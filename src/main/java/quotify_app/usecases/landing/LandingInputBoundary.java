@@ -1,8 +1,5 @@
 package quotify_app.usecases.landing;
 
-import quotify_app.entities.regionEntities.Area;
-import quotify_app.entities.regionEntities.Property;
-
 /**
  * Input Boundary for actions related to the landing page.
  */
@@ -40,15 +37,15 @@ public interface LandingInputBoundary {
 
     /**
      * Selects area and calls presenter with the selected area.
-     * @param area the selected area
+     * @param areaDto the DTO representation of selected area.
      */
-    void selectArea(Area area);
+    void selectArea(AreaDataTransferObj areaDto);
 
     /**
      * Executes the Select Address use case.
-     * @param addressInputData the input data containing the selected region.
+     * @param addressDataTransferObj the input data containing the selected region.
      */
-    void selectAddress(AddressInputData addressInputData);
+    void selectAddress(AddressDataTransferObj addressDataTransferObj);
 
     /**
      * * Selects passed property as current property and caches in data access.

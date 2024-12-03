@@ -3,8 +3,8 @@ package quotify_app.adapters.landing;
 import java.util.List;
 import java.util.Map;
 
-import quotify_app.entities.regionEntities.Area;
 import quotify_app.entities.regionEntities.Property;
+import quotify_app.usecases.landing.AreaDataTransferObj;
 
 /**
  * Represents the state of the Landing Page, including the current user profile,
@@ -16,16 +16,17 @@ public class LandingState {
     private boolean isLoggedIn;
     private String currentUser;
 
-    // Address input form state
-    private List<Area> availableCountries;
-    private List<Area> availableStates;
-    private List<Area> availableCities;
-    private List<Area> availableZipCodes;
+    // Area Browser
+    private List<AreaDataTransferObj> availableCountries;
+    private List<AreaDataTransferObj> availableStates;
+    private List<AreaDataTransferObj> availableCities;
+    private List<AreaDataTransferObj> availableZipCodes;
 
-    private Area selectedCountry;
-    private Area selectedState;
-    private Area selectedCity;
-    private String selectedZipCode;
+    // Selected areas
+    private AreaDataTransferObj selectedCountry;
+    private AreaDataTransferObj selectedState;
+    private AreaDataTransferObj selectedCity;
+    private AreaDataTransferObj selectedZipCode;
     private String streetAddress;
 
     // Property-related state
@@ -88,67 +89,67 @@ public class LandingState {
 
     // Available Areas:
 
-    public List<Area> getAvailableCountries() {
+    public List<AreaDataTransferObj> getAvailableCountries() {
         return availableCountries;
     }
 
-    public void setAvailableCountries(List<Area> availableCountries) {
+    public void setAvailableCountries(List<AreaDataTransferObj> availableCountries) {
         this.availableCountries = availableCountries;
     }
 
-    public List<Area> getAvailableStates() {
+    public List<AreaDataTransferObj> getAvailableStates() {
         return availableStates;
     }
 
-    public void setAvailableStates(List<Area> availableStates) {
+    public void setAvailableStates(List<AreaDataTransferObj> availableStates) {
         this.availableStates = availableStates;
     }
 
-    public List<Area> getAvailableCities() {
+    public List<AreaDataTransferObj> getAvailableCities() {
         return availableCities;
     }
 
-    public void setAvailableCities(List<Area> availableCities) {
+    public void setAvailableCities(List<AreaDataTransferObj> availableCities) {
         this.availableCities = availableCities;
     }
 
-    public List<Area> getAvailableZipCodes() {
+    public List<AreaDataTransferObj> getAvailableZipCodes() {
         return availableZipCodes;
     }
 
-    public void setAvailableZipCodes(List<Area> availableZipCodes) {
+    public void setAvailableZipCodes(List<AreaDataTransferObj> availableZipCodes) {
         this.availableZipCodes = availableZipCodes;
     }
 
-    public Area getSelectedCountry() {
+    public AreaDataTransferObj getSelectedCountry() {
         return selectedCountry;
     }
 
-    public void setSelectedCountry(Area selectedCountry) {
+    public void setSelectedCountry(AreaDataTransferObj selectedCountry) {
         this.selectedCountry = selectedCountry;
     }
 
-    public Area getSelectedState() {
+    public AreaDataTransferObj getSelectedState() {
         return selectedState;
     }
 
-    public void setSelectedState(Area selectedState) {
+    public void setSelectedState(AreaDataTransferObj selectedState) {
         this.selectedState = selectedState;
     }
 
-    public Area getSelectedCity() {
+    public AreaDataTransferObj getSelectedCity() {
         return selectedCity;
     }
 
-    public void setSelectedCity(Area selectedCity) {
+    public void setSelectedCity(AreaDataTransferObj selectedCity) {
         this.selectedCity = selectedCity;
     }
 
-    public String getSelectedZipCode() {
+    public AreaDataTransferObj getSelectedZipCode() {
         return selectedZipCode;
     }
 
-    public void setSelectedZipCode(String selectedZipCode) {
+    public void setSelectedZipCode(AreaDataTransferObj selectedZipCode) {
         this.selectedZipCode = selectedZipCode;
     }
 

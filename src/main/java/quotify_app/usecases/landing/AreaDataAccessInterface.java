@@ -20,9 +20,9 @@ public interface AreaDataAccessInterface {
 
     /**
      * Stores the area selection.
-     * @param area the selected area to be stored.
+     * @param areaDto the DTO representation of area to be selected.
      */
-    void selectArea(Area area);
+    void selectArea(AreaDataTransferObj areaDto);
 
     /**
      * Retrieves all the sub-Areas of the Area with geoIdV4.

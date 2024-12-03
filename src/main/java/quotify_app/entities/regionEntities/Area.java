@@ -22,7 +22,7 @@ public class Area {
         this.type = type;
         this.geoIdV4 = "";
         this.geoId = "";
-        this.name = "Select a" + type;
+        this.name = "";
         this.nameCode = "";
     }
 

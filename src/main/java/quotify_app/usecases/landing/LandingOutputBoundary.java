@@ -7,15 +7,15 @@ public interface LandingOutputBoundary {
 
     /**
      * Prepares the success view for the Select Area Use Case.
-     * @param areaOutputData The output data containing the selected area result.
+     * @param areaDataTransferObj The output data containing the selected area result.
      */
-    void prepareAreaSuccessView(AreaOutputData areaOutputData);
+    void prepareAreaSuccessView(AreaDataTransferObj areaDataTransferObj);
 
     /**
      * Prepares the success view for the fetch list of areas Use Case.
      * @param outputData The output data containing the list of available areas.
      */
-    void prepareAreaListSuccessView(AreaListOutputData outputData);
+    void prepareAreaListSuccessView(AreaListDataTransferObj outputData);
 
     /**
      * Prepares the failure view for the fetch list of areas Use Case.

@@ -9,9 +9,8 @@ import quotify_app.adapters.function.FunctionViewModel;
 import quotify_app.adapters.login.LoginViewModel;
 import quotify_app.adapters.signup.SignupViewModel;
 import quotify_app.app.ApplicationState;
-import quotify_app.entities.regionEntities.Area;
-import quotify_app.usecases.landing.AreaListOutputData;
-import quotify_app.usecases.landing.AreaOutputData;
+import quotify_app.usecases.landing.AreaDataTransferObj;
+import quotify_app.usecases.landing.AreaListDataTransferObj;
 import quotify_app.usecases.landing.LandingOutputBoundary;
 import quotify_app.usecases.landing.PropertyOutputData;
 
@@ -29,7 +28,6 @@ public class LandingPresenter implements LandingOutputBoundary {
 
     /**
      * Constructs a new LandingPresenter with the specified view models.
-     *
      * @param landingViewModel  The view model for managing Landing Page state.
      * @param viewManagerModel  The view model for managing view transitions.
      * @param signupViewModel the view model for sign up.
@@ -60,13 +58,13 @@ public class LandingPresenter implements LandingOutputBoundary {
 
     /**
      * Prepares the view for successful area data retrieval.
-     * @param areaListOutputData The output data containing the list of areas and their type.
+     * @param areaListDataTransferObj The output data containing the list of areas and their type.
      */
     @Override
-    public void prepareAreaListSuccessView(AreaListOutputData areaListOutputData) {
-        if (!areaListOutputData.isSelectionFailed()) {
-            final List<Area> areas = areaListOutputData.getAreas();
-            final String type = areaListOutputData.getAreaType();
+    public void prepareAreaListSuccessView(AreaListDataTransferObj areaListDataTransferObj) {
+        if (!areaListDataTransferObj.isSelectionFailed()) {
+            final List<AreaDataTransferObj> areas = areaListDataTransferObj.getAreaDtoList();
+            final String type = areaListDataTransferObj.getAreaType();
 
             switch (type) {
                 case "CN":
@@ -102,32 +100,25 @@ public class LandingPresenter implements LandingOutputBoundary {
 
     /**
      * Prepares the view for a successful area selection.
-     * @param areaOutputData The output data containing the selected area result.
+     * @param areaDataTransferObj The output data containing the selected area result.
      */
     @Override
-    public void prepareAreaSuccessView(AreaOutputData areaOutputData) {
-        if (!areaOutputData.isSelectionFailed()) {
-            final Area selectedArea = areaOutputData.getArea();
-            final String type = selectedArea.getType();
+    public void prepareAreaSuccessView(AreaDataTransferObj areaDataTransferObj) {
+        if (!areaDataTransferObj.isSelectionFailed()) {
+            final String type = areaDataTransferObj.getType();
 
             switch (type) {
                 case "CN":
-                    landingViewModel.setAvailableStates(null);
-                    landingViewModel.setAvailableCities(null);
-                    landingViewModel.setAvailableZipCodes(null);
-                    landingViewModel.setSelectedCountry(selectedArea);
+                    landingViewModel.setSelectedCountry(areaDataTransferObj);
                     break;
                 case "ST":
-                    landingViewModel.setAvailableCities(null);
-                    landingViewModel.setAvailableZipCodes(null);
-                    landingViewModel.setSelectedState(selectedArea);
+                    landingViewModel.setSelectedState(areaDataTransferObj);
                     break;
                 case "CS":
-                    landingViewModel.setAvailableZipCodes(null);
-                    landingViewModel.setSelectedCity(selectedArea);
+                    landingViewModel.setSelectedCity(areaDataTransferObj);
                     break;
                 case "ZI":
-                    landingViewModel.setSelectedZipCode(selectedArea.getName());
+                    landingViewModel.setSelectedZipCode(areaDataTransferObj);
                     break;
                 default:
                     landingViewModel.setErrorMessage("Unknown area type: " + type);
@@ -135,7 +126,7 @@ public class LandingPresenter implements LandingOutputBoundary {
             }
         }
         else {
-            landingViewModel.setErrorMessage("Failed to select area: " + areaOutputData.getArea().getName());
+            landingViewModel.setErrorMessage("Failed to select area: " + areaDataTransferObj.getAreaName());
         }
     }
 
@@ -148,7 +139,6 @@ public class LandingPresenter implements LandingOutputBoundary {
         landingViewModel.getState().setPropertyAddress(propertyOutputData.getPropertyAddress());
         landingViewModel.getState().setPropertyDetails(propertyOutputData.getPropertyDetails());
         landingViewModel.setPropertyFound(true);
-        viewManagerModel.setState("function");
         viewManagerModel.firePropertyChanged();
     }
 

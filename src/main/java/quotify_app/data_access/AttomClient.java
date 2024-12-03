@@ -18,7 +18,7 @@ import quotify_app.data_access.exceptions.ClientRequestException;
 public class AttomClient {
 
     // Replace with your actual API key
-    private static final String API_KEY = "bb0a69f6de4bafb18f6d0dde08c81aa8";
+    private static final String API_KEY = "0e29c4abc247f423a6e3cea218cb1d7d";
     private static final String BASE_URL = "https://api.gateway.attomdata.com/propertyapi/v1.0.0/property/";
     private static final String AREA_BASE_URL = "https://api.gateway.attomdata.com/v4/area/";
 
