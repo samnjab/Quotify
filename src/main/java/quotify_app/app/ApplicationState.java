@@ -1,9 +1,9 @@
 package quotify_app.app;
 
-import quotify_app.entities.User;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+
+import quotify_app.entities.User;
 
 /**
  * Singleton class that holds the global application state.

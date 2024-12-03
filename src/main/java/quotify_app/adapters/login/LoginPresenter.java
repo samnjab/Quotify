@@ -45,7 +45,7 @@ public class LoginPresenter implements LoginOutputBoundary {
         ApplicationState.getInstance().setLoggedIn(true, loggedInUser);
 
         // Transition to the desired view after login
-        viewManagerModel.setState("current price");
+        viewManagerModel.setState("landing");
         viewManagerModel.firePropertyChanged();
 
         System.out.println("Successfully logged in");
