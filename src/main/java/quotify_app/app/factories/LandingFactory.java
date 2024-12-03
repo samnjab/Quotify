@@ -42,6 +42,7 @@ public class LandingFactory {
      * @param signupViewModel the signup viewModel.
      * @param loginViewModel the login viewModel.
      * @param functionViewModel the function viewModel.
+     * @param userProfileViewModel the function viewModel.
      */
     public void setUpController(ViewManagerModel viewManagerModel,
                                 AreaDataAccessObject areaDataAccessObject,

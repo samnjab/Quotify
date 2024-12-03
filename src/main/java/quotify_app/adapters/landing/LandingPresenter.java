@@ -8,6 +8,7 @@ import quotify_app.adapters.ViewManagerModel;
 import quotify_app.adapters.function.FunctionViewModel;
 import quotify_app.adapters.login.LoginViewModel;
 import quotify_app.adapters.signup.SignupViewModel;
+import quotify_app.adapters.userprofile.UserProfileViewModel;
 import quotify_app.app.ApplicationState;
 import quotify_app.usecases.landing.AreaDataTransferObj;
 import quotify_app.usecases.landing.AreaListDataTransferObj;
@@ -25,6 +26,7 @@ public class LandingPresenter implements LandingOutputBoundary {
     private final LoginViewModel loginViewModel;
     private final FunctionViewModel functionViewModel;
     private final ViewManagerModel viewManagerModel;
+    private final UserProfileViewModel userProfileViewModel;
 
     /**
      * Constructs a new LandingPresenter with the specified view models.
@@ -33,17 +35,20 @@ public class LandingPresenter implements LandingOutputBoundary {
      * @param signupViewModel the view model for sign up.
      * @param loginViewModel the view model for login.
      * @param functionViewModel the view model for function page.
+     * @param userProfileViewModel the view omdel for userprofile.
      */
     public LandingPresenter(LandingViewModel landingViewModel,
                             ViewManagerModel viewManagerModel,
                             SignupViewModel signupViewModel,
                             LoginViewModel loginViewModel,
-                            FunctionViewModel functionViewModel) {
+                            FunctionViewModel functionViewModel,
+                            UserProfileViewModel userProfileViewModel) {
         this.landingViewModel = landingViewModel;
         this.viewManagerModel = viewManagerModel;
         this.signupViewModel = signupViewModel;
         this.loginViewModel = loginViewModel;
         this.functionViewModel = functionViewModel;
+        this.userProfileViewModel = userProfileViewModel;
 
         ApplicationState.getInstance().addPropertyChangeListener(new PropertyChangeListener() {
             @Override
@@ -193,6 +198,7 @@ public class LandingPresenter implements LandingOutputBoundary {
     public void presentGoToUserProfile() {
         viewManagerModel.setState("user profile");
         viewManagerModel.firePropertyChanged();
+        userProfileViewModel.firePropertyChanged();
     }
 
     @Override
