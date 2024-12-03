@@ -10,6 +10,7 @@ import quotify_app.entities.regionEntities.Summary;
 import quotify_app.entities.regionEntities.Identifier;
 import quotify_app.entities.regionEntities.Address;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class ComparatorDataAccessObjectTest {
 
-    private ComparatorDataAccessObject dataAccessObject;
+    private ComparatorDataAccessObject comparatorDataAccessObject;
     private final Address address = new Address(
             "US",
             "CA",
@@ -49,6 +50,7 @@ public class ComparatorDataAccessObjectTest {
             2000
     );
     private final Property property = new Property(identifier, address, summary);
+    List<Property> comparedProperties = new ArrayList<>();
 
 
 
@@ -56,7 +58,8 @@ public class ComparatorDataAccessObjectTest {
     void setUp() {
         // Initialize the real PredictionClient and DataAccessObject
         final ComparatorClient client = new ComparatorClient();
-        dataAccessObject = new ComparatorDataAccessObject();
+        comparatorDataAccessObject = new ComparatorDataAccessObject();
+
     }
 
 
@@ -64,18 +67,15 @@ public class ComparatorDataAccessObjectTest {
     void testGetSaleComparablesPass() throws ApiRequestException, ClientRequestException {
         // Set up property data for testing
 
-
-        dataAccessObject.setCurrentProperty(property);
-
-        // Use a clean zip code without any prefix
+        comparatorDataAccessObject.setCurrentProperty(property);
         Area zipcode = new Area("94103");
 
 
         // Call getSaleComparables and verify the response
-        List<Property> result = dataAccessObject.getSaleComparables(zipcode);
+        comparedProperties = comparatorDataAccessObject.getSaleComparables(zipcode);
 
         // Verify that the result contains three properties
-        assertEquals(3, result.size(), "The result should contain exactly three properties.");
+        assertEquals(3, comparedProperties.size(), "The result should contain exactly three properties.");
     }
 
 }

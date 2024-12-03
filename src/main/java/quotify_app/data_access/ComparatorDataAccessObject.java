@@ -14,7 +14,6 @@ import quotify_app.data_access.exceptions.ComparatorClientException;
 import quotify_app.entities.regionEntities.*;
 import quotify_app.usecases.comparator.ComparatorDataAccessInterface;
 
-
 /**
  * The ComparatorDataAccessObject is responsible for providing data access operation related to property comparison.
  */
@@ -27,6 +26,7 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
     private final int three = 3;
     private final int hundred = 100;
     private final int twenty = 20;
+
 
     // Helper Methods (Existing Ones from PropertyDataAccessObject)
     /**
@@ -139,7 +139,7 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
      */
     @Override
     public List<Property> getSaleComparables(Area zipCode) throws ApiRequestException {
-        final List<Property> comparedProperties = new ArrayList<>();
+        List<Property> comparedProperties = new ArrayList<>();
 
         try {
             // Fetch JSON response from API
@@ -150,13 +150,17 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
             final JsonNode rootNode = MAPPER.readTree(responseJson);
 
             // Assuming the response contains a "PROPERTY_INFORMATION_RESPONSE_ext" with "COMPARABLE_PROPERTY_ext"
-            final JsonNode responseNode = rootNode.path("RESPONSE_GROUP").path("RESPONSE").path("RESPONSE_DATA").path("PROPERTY_INFORMATION_RESPONSE_ext");
-            final JsonNode comparablesNode = responseNode.path("COMPARABLE_PROPERTY_ext");
+            final JsonNode responseNode = parseResponseNode(rootNode, "RESPONSE_GROUP", "RESPONSE", "RESPONSE_DATA", "PROPERTY_INFORMATION_RESPONSE_ext");
+            final JsonNode comparables1Node = parseResponseNode(responseNode, "SUBJECT_PROPERTY_ext");
+            final JsonNode comparables0Node = parseResponseNode(comparables1Node, "PROPERTY");
 
             // Iterate over the list and process each comparable property
-            for (JsonNode comparableNode : comparablesNode) {
+            for (JsonNode comparableNode : comparables0Node) {
                 // Extract summary details
-                final String propertyType = comparableNode.path("@StandardUseDescription_ext").asText();
+                String propertyType = comparableNode.path("@StandardUseDescription_ext").asText();
+                if ("Single Family House".equals(propertyType)) {
+                    propertyType = "SFH";
+                }
                 final int beds = comparableNode.path("STRUCTURE").path("@TotalBedroomCount").asInt();
                 final int baths = comparableNode.path("STRUCTURE").path("@TotalBathroomCount").asInt();
                 final int size = comparableNode.path("STRUCTURE").path("@GrossLivingAreaSquareFeetCount").asInt();
@@ -165,18 +169,20 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
                 final String condition = comparableNode.path("STRUCTURE").path("CONSTRUCTION").path("@Condition").asText();
 
                 // Extract address details
-                final String street = comparableNode.path("@_StreetAddress").asText();
+                String street = comparableNode.path("@_StreetAddress").asText();
                 final String city = comparableNode.path("@_City").asText();
                 final String state = comparableNode.path("@_State").asText();
                 final String postalCode = comparableNode.path("@_PostalCode").asText();
-                final String countryCode = comparableNode.path("@_CountryCode").asText();
-                final String streetNumber = comparableNode.path("@_StreetNumber").asText();
-
+                final String countryCode = "CN1";
+                String streetNumber = comparableNode.path("@_StreetAddress").asText();
+                streetNumber = streetNumber.split(" ")[0];
+                street = street.substring(street.indexOf(" ") + 1);
                 // Build Address and Summary objects
                 final Address address = new Address(streetNumber, state, city, street, countryCode, postalCode);
                 final Summary summary = new Summary(propertyType, beds, baths, condition, levels, size, yearBuilt);
                 final Property property = new Property(new Identifier(comparableNode.path("_IDENTIFICATION").path("@RTPropertyID_ext").asText(), null), address, summary);
                 comparedProperties.add(property);
+                System.out.println(comparedProperties);
             }
 
             // Return sorted properties
@@ -186,6 +192,30 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
         } catch (Exception e) {
             throw new ApiRequestException("Failed to fetch or process comparables.", e);
         }
+    }
+    /**
+     * Helper method to parse a response node.
+     * @param rootNode The root JSON node of the response.
+     * @param path Path to the desired array node.
+     * @return The array node as a JsonNode.
+     * @throws ApiRequestException if the node is not a valid array.
+     * @throws ClientRequestException if any Json parsing error occurs.
+     */
+    private static JsonNode parseResponseNode(JsonNode rootNode, String... path)
+            throws ApiRequestException, ClientRequestException {
+        JsonNode node = rootNode;
+        for (String key : path) {
+            node = node.path(key);
+        }
+        if (node.isTextual()) {
+            try {
+                node = MAPPER.readTree(node.asText());
+            }
+            catch (JsonProcessingException e) {
+                throw new ClientRequestException("Failed to parse JSON string to array: " + node.asText(), e);
+            }
+        }
+        return node;
     }
 }
 
