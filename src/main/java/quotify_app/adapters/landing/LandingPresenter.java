@@ -1,11 +1,14 @@
 package quotify_app.adapters.landing;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import quotify_app.adapters.ViewManagerModel;
 import quotify_app.adapters.function.FunctionViewModel;
 import quotify_app.adapters.login.LoginViewModel;
 import quotify_app.adapters.signup.SignupViewModel;
+import quotify_app.app.ApplicationState;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.usecases.landing.AreaListOutputData;
 import quotify_app.usecases.landing.AreaOutputData;
@@ -43,6 +46,16 @@ public class LandingPresenter implements LandingOutputBoundary {
         this.signupViewModel = signupViewModel;
         this.loginViewModel = loginViewModel;
         this.functionViewModel = functionViewModel;
+
+        ApplicationState.getInstance().addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("isLoggedIn".equals(evt.getPropertyName())) {
+                    final boolean isLoggedIn = (Boolean) evt.getNewValue();
+                    landingViewModel.setLoggedIn(isLoggedIn);
+                }
+            }
+        });
     }
 
     /**
@@ -183,4 +196,17 @@ public class LandingPresenter implements LandingOutputBoundary {
         viewManagerModel.setState(loginViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
+
+    @Override
+    public void presentGoToUserProfile() {
+        viewManagerModel.setState("user profile");
+        viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void updateLoginStatus() {
+        final boolean isLoggedIn = ApplicationState.getInstance().isLoggedIn();
+        landingViewModel.setLoggedIn(isLoggedIn);
+    }
+
 }

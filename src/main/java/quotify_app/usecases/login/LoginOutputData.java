@@ -27,4 +27,13 @@ public class LoginOutputData {
     public boolean isLoginFailed() {
         return loginFailed;
     }
+
+    /**
+     * Retrieves the logged-in user.
+     *
+     * @return The User object representing the logged-in user.
+     */
+    public String getUser() {
+        return username;
+    }
 }

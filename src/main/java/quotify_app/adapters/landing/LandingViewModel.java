@@ -167,4 +167,14 @@ public class LandingViewModel {
         state.setPropertyConfirmed(propertyConfirmed);
         support.firePropertyChange("propertyConfirmed", oldValue, propertyConfirmed);
     }
+
+    /**
+     * Changes the view depending on if the user is logged in or not.
+     * @param loggedIn The login status of the current user.
+     */
+    public void setLoggedIn(boolean loggedIn) {
+        final boolean oldValue = state.isLoggedIn();
+        state.setLoggedIn(loggedIn);
+        support.firePropertyChange("isLoggedIn", oldValue, loggedIn);
+    }
 }

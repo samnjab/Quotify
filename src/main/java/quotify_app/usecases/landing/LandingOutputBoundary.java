@@ -55,4 +55,14 @@ public interface LandingOutputBoundary {
      * Interface for executing the switch to the login screen Use Case.
      */
     void goToLogin();
+
+    /**
+     * Interface for executing the switch to the User profile Use Case.
+     */
+    void presentGoToUserProfile();
+
+    /**
+     * Interface for executing the check on login status.
+     */
+    void updateLoginStatus();
 }

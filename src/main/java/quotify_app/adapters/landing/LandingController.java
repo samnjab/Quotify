@@ -72,4 +72,19 @@ public class LandingController {
     public void goToNextPage() {
         landingInteractor.selectPropertyInCache();
     }
+
+
+    /**
+     * Triggers navigation to the user profile view.
+     */
+    public void goToUserProfile() {
+        landingInteractor.goToUserProfile();
+    }
+
+    /**
+     * Checks the login status.
+     */
+    public void checkLoginStatus() {
+        landingInteractor.checkLoginStatus();
+    }
 }
