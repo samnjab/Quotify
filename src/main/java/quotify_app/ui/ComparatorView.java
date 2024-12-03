@@ -169,7 +169,7 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (comparatorController != null) {
-                    comparatorController.goToInput();
+                    comparatorController.goToLanding();
                 }
             }
         });
@@ -205,9 +205,9 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final ComparatorState state = comparatorViewModel.getState();
-        property1Label.setText(state.getProperty(0));
-        property2Label.setText(state.getProperty(1));
-        property3Label.setText(state.getProperty(2));
+        property1Label.setText("Property 1:" + state.getProperty(0));
+        property2Label.setText("Property 2:" + state.getProperty(1));
+        property3Label.setText("Property 3:" + state.getProperty(2));
 
         // Update topPanel based on login status
         topPanel.removeAll();

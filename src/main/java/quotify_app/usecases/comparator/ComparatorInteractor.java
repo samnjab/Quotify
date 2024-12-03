@@ -36,8 +36,8 @@ public class ComparatorInteractor implements ComparatorInputBoundary {
      * Trigger view transition to Input through the presenter.
      */
     @Override
-    public void goToInput() {
-        comparatorPresenter.goToInput();
+    public void goToLanding() {
+        comparatorPresenter.goToLanding();
     }
 
     @Override

@@ -31,7 +31,7 @@ public class ComparatorClient {
         try {
             // Construct the complete API URL with query parameters
             final String url = BASE_URL + propId
-                    + "?searchType=ZipCode"
+                    + "?searchType=Radius"
                     + "&minComps=1"
                     + "&maxComps=10"
                     + "&miles=5"
@@ -40,7 +40,7 @@ public class ComparatorClient {
                     + "&sqFeetRange=600"
                     + "&lotSizeRange=2000"
                     + "&saleDateRange=6"
-                    + "&yearBuiltRange=10"
+                    + "&yearBuiltRange=60"
                     + "&ownerOccupied=Both"
                     + "&distressed=IncludeDistressed";
 

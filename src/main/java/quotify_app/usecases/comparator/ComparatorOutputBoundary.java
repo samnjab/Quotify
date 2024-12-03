@@ -17,7 +17,7 @@ public interface ComparatorOutputBoundary {
     /**
      *  Interface for executing the switch to input screen usecase.
      */
-    void goToInput();
+    void goToLanding();
 
     /**
      * Prepares the response if the user is logged in or not.

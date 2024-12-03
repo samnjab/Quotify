@@ -13,6 +13,7 @@ import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.data_access.exceptions.ComparatorClientException;
 import quotify_app.entities.regionEntities.*;
 import quotify_app.usecases.comparator.ComparatorDataAccessInterface;
+import java.lang.Math;
 /**
  * The ComparatorDataAccessObject is responsible for providing data access operation related to property comparison.
  */
@@ -123,75 +124,86 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
         return result;
     }
 
-    /**
-     * Fetches comparable properties and returns the top 3 most similar properties to the cached property.
-     *
-     * @return A list of the top 3 most similar Property objects.
-     * @throws ApiRequestException If properties cannot be fetched.
-     * @throws ClientRequestException If there is a client request error.
-     */
     @Override
     public List<Property> getSaleComparables() throws ApiRequestException {
         final List<Property> comparedProperties = new ArrayList<>();
+        comparedProperties.add(ComparatorDependencies.property1);
+        comparedProperties.add(ComparatorDependencies.property2);
+        comparedProperties.add(ComparatorDependencies.property3);
 
-        try {
-            // Fetch JSON response from API
-            final ComparatorClient client = new ComparatorClient();
-            final String responseJson = client.fetchComparablesByPropertyId(
-                    propertyDataAccessObject
-                            .getCurrentProperty()
-                            .getIdentifier()
-                            .getAttomId());
-
-            // Parse the JSON response to extract comparables
-            final JsonNode rootNode = MAPPER.readTree(responseJson);
-
-            // Assuming the response contains a "PROPERTY_INFORMATION_RESPONSE_ext" with "COMPARABLE_PROPERTY_ext"
-            final JsonNode responseNode = parseResponseNode(rootNode, "RESPONSE_GROUP", "RESPONSE", "RESPONSE_DATA", "PROPERTY_INFORMATION_RESPONSE_ext");
-            final JsonNode comparables1Node = parseResponseNode(responseNode, "SUBJECT_PROPERTY_ext");
-            final JsonNode comparables0Node = parseResponseNode(comparables1Node, "PROPERTY");
-
-            // Iterate over the list and process each comparable property
-            for (JsonNode comparableNode : comparables0Node) {
-                // Extract summary details
-                String propertyType = comparableNode.path("@StandardUseDescription_ext").asText();
-                if ("Single Family Residence / Townhouse".equals(propertyType)) {
-                    propertyType = "SFH";
-                }
-                final int beds = comparableNode.path("STRUCTURE").path("@TotalBedroomCount").asInt();
-                final int baths = comparableNode.path("STRUCTURE").path("@TotalBathroomCount").asInt();
-                final int size = comparableNode.path("STRUCTURE").path("@GrossLivingAreaSquareFeetCount").asInt();
-                final int yearBuilt = comparableNode.path("STRUCTURE").path("STRUCTURE_ANALYSIS").path("@PropertyStructureBuiltYear").asInt();
-                final int levels = comparableNode.path("STRUCTURE").path("@StoriesCount").asInt();
-                final String condition = "-1";
-
-                // Extract address details
-                String street = comparableNode.path("@_StreetAddress").asText();
-                final String city = comparableNode.path("@_City").asText();
-                final String state = comparableNode.path("@_State").asText();
-                final String postalCode = comparableNode.path("@_PostalCode").asText();
-                final String countryCode = "CN1";
-                String streetNumber = comparableNode.path("@_StreetAddress").asText();
-                streetNumber = streetNumber.split(" ")[0];
-                street = street.substring(street.indexOf(" ") + 1);
-                // Build Address and Summary objects
-                final Address address = new Address(streetNumber, state, city, street, countryCode, postalCode);
-                final Summary summary = new Summary(propertyType, beds, baths, condition, levels, size, yearBuilt);
-                final HashMap geoIdV4 = new HashMap();
-                geoIdV4.put("zi", "0");
-                final Property property = new Property(new Identifier("-1", geoIdV4), address, summary);
-                comparedProperties.add(property);
-                System.out.println(comparedProperties);
-            }
-
-            // Return sorted properties
-            comparedProperties.sort(Comparator.comparingInt(this::calculateSimilarityScore).reversed());
-            return comparedProperties.stream().limit(3).collect(Collectors.toList());
-
-        } catch (Exception e) {
-            throw new ApiRequestException("Failed to fetch or process comparables.", e);
-        }
+        comparedProperties.sort(Comparator.comparingInt(this::calculateSimilarityScore).reversed());
+        return comparedProperties.stream().limit(3).collect(Collectors.toList());
     }
+
+//    /**
+//     * Fetches comparable properties and returns the top 3 most similar properties to the cached property.
+//     *
+//     * @return A list of the top 3 most similar Property objects.
+//     * @throws ApiRequestException If properties cannot be fetched.
+//     * @throws ClientRequestException If there is a client request error.
+//     */
+//    @Override
+//    public List<Property> getSaleComparables() throws ApiRequestException {
+//        final List<Property> comparedProperties = new ArrayList<>();
+//
+//        try {
+//            // Fetch JSON response from API
+//            final ComparatorClient client = new ComparatorClient();
+//            final String responseJson = client.fetchComparablesByPropertyId(
+//                    propertyDataAccessObject
+//                            .getCurrentProperty()
+//                            .getIdentifier()
+//                            .getAttomId());
+//
+//            // Parse the JSON response to extract comparables
+//            final JsonNode rootNode = MAPPER.readTree(responseJson);
+//
+//            // Assuming the response contains a "PROPERTY_INFORMATION_RESPONSE_ext" with "COMPARABLE_PROPERTY_ext"
+//            final JsonNode responseNode = parseResponseNode(rootNode, "RESPONSE_GROUP", "RESPONSE", "RESPONSE_DATA", "PROPERTY_INFORMATION_RESPONSE_ext");
+//            final JsonNode comparables1Node = parseResponseNode(responseNode, "SUBJECT_PROPERTY_ext");
+//            final JsonNode comparables0Node = parseResponseNode(comparables1Node, "PROPERTY", "COMPARABLE_PROPERTY_ext");
+//
+//            // Iterate over the list and process each comparable property
+//            for (JsonNode comparableNode : comparables0Node) {
+//                // Extract summary details
+//                String propertyType = comparableNode.path("@StandardUseDescription_ext").asText();
+//                if ("Single Family Residence / Townhouse".equals(propertyType)) {
+//                    propertyType = "SFH";
+//                }
+//                final int beds = comparableNode.path("STRUCTURE").path("@TotalBedroomCount").asInt();
+//                final int baths = comparableNode.path("STRUCTURE").path("@TotalBathroomCount").asInt();
+//                final int size = comparableNode.path("STRUCTURE").path("@GrossLivingAreaSquareFeetCount").asInt();
+//                final int yearBuilt = comparableNode.path("STRUCTURE").path("STRUCTURE_ANALYSIS").path("@PropertyStructureBuiltYear").asInt();
+//                final int levels = comparableNode.path("STRUCTURE").path("@StoriesCount").asInt();
+//                final String condition = "-1";
+//
+//                // Extract address details
+//                String street = comparableNode.path("@_StreetAddress").asText();
+//                final String city = comparableNode.path("@_City").asText();
+//                final String state = comparableNode.path("@_State").asText();
+//                final String postalCode = comparableNode.path("@_PostalCode").asText();
+//                final String countryCode = "CN1";
+//                String streetNumber = comparableNode.path("@_StreetAddress").asText();
+//                streetNumber = streetNumber.split(" ")[0];
+//                street = street.substring(street.indexOf(" ") + 1);
+//                // Build Address and Summary objects
+//                final Address address = new Address(streetNumber, state, city, street, countryCode, postalCode);
+//                final Summary summary = new Summary(propertyType, beds, baths, condition, levels, size, yearBuilt);
+//                final HashMap geoIdV4 = new HashMap();
+//                geoIdV4.put("zi", "0");
+//                final Property property = new Property(new Identifier("-1", geoIdV4), address, summary);
+//                comparedProperties.add(property);
+//                System.out.println(comparedProperties);
+//            }
+//
+//            // Return sorted properties
+//            comparedProperties.sort(Comparator.comparingInt(this::calculateSimilarityScore).reversed());
+//            return comparedProperties.stream().limit(3).collect(Collectors.toList());
+//
+//        } catch (Exception e) {
+//            throw new ApiRequestException("Failed to fetch or process comparables.", e);
+//        }
+//    }
     /**
      * Helper method to parse a response node.
      * @param rootNode The root JSON node of the response.

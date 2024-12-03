@@ -72,7 +72,7 @@ public class ComparatorState {
     public String getProperty(int index) {
         String result = null;
         if (index >= 0 && index < properties.size()) {
-            result = properties.get(index).toString();
+            result = properties.get(index).getSummary().getFullSummary();
         }
         return result;
     }

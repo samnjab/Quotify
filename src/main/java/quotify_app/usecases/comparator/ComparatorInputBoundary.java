@@ -17,7 +17,7 @@ public interface ComparatorInputBoundary {
     /**
      * Switches to the input view.
      */
-    void goToInput();
+    void goToLanding();
 
     /**
      * Prepares the response if the user is logged in or not.

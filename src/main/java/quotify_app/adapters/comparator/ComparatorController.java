@@ -26,8 +26,8 @@ public class ComparatorController {
     /**
      * Triggers the navigation to Input through the comparatorInteractor.
      */
-    public void goToInput() {
-        comparatorInteractor.goToInput();
+    public void goToLanding() {
+        comparatorInteractor.goToLanding();
     }
 
     /**

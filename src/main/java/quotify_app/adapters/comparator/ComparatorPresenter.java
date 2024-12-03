@@ -30,9 +30,9 @@ public class ComparatorPresenter implements ComparatorOutputBoundary {
     }
 
     @Override
-    public void goToInput() {
+    public void goToLanding() {
         // Transition to input view
-        viewManagerModel.setState("input");
+        viewManagerModel.setState("landing");
         viewManagerModel.firePropertyChanged();
 
     }
@@ -58,7 +58,7 @@ public class ComparatorPresenter implements ComparatorOutputBoundary {
     @Override
     public void updateProperties(List<Property> properties) {
         comparatorViewModel.getState().setProperties(properties);
-        viewManagerModel.firePropertyChanged();
+        comparatorViewModel.firePropertyChanged();
     }
 
     /**
@@ -67,6 +67,6 @@ public class ComparatorPresenter implements ComparatorOutputBoundary {
     @Override
     public void presentCompareFailed() {
         comparatorViewModel.getState().setCompareFailed(true);
-        viewManagerModel.firePropertyChanged();
+        comparatorViewModel.firePropertyChanged();
     }
 }

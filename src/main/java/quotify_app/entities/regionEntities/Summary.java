@@ -192,11 +192,12 @@ public class Summary {
 
     // Summary Methods
     public String getBriefSummary() {
-        return propTypeString + " - " + getBedsString() + " Beds, " + getBathsString() + " Baths, " + getSizeString() + " sqft, built in " + getYearBuiltString();
+        return propTypeString + "  -  " + getBedsString() + "  Beds, " + getBathsString() + "  Baths, "
+                + getSizeString() + "  sqft,   built in " + getYearBuiltString();
     }
 
     public String getFullSummary() {
-        return getBriefSummary() + "\nCondition: " + conditionString + "\nLevels: " + getLevelsString();
+        return getBriefSummary() + "  Condition: " + conditionString + "  Levels:  " + getLevelsString();
     }
 
     @Override

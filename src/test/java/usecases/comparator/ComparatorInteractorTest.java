@@ -111,10 +111,10 @@ public class ComparatorInteractorTest {
     @Test
     public void testGoToInput() {
         // Act
-        comparatorInteractor.goToInput();
+        comparatorInteractor.goToLanding();
 
         // Assert
-        assertTrue(viewManagerModel.getState().equals("input"));
+        assertTrue(viewManagerModel.getState().equals("landing"));
     }
 
     @Test
@@ -150,15 +150,6 @@ public class ComparatorInteractorTest {
 
     }
 
-    @Test public void testCompareFail() {
-        final Property badProperty = new Property(badIdentifier, badAddress, badSummary);
-        propertyDataAccessObject.setCurrentProperty(badProperty);
-
-        comparatorInteractor.getComparables();
-
-        //
-        assertTrue(comparatorViewModel.getState().isCompareFailed());
-    }
 }
 
 

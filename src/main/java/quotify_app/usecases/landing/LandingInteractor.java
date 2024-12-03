@@ -103,6 +103,7 @@ public class LandingInteractor implements LandingInputBoundary {
             final Property property = propertyDataAccessObject.getPropertyAtAddress(address);
             // set currentProperty for caching later:
             this.currentProperty = property;
+            selectPropertyInCache();
             // producing propertyOutputData:
             final PropertyOutputData propertyOutputData = new PropertyOutputData(address, property);
             landingPresenter.preparePropertySuccessView(propertyOutputData);
