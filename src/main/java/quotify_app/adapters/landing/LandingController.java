@@ -1,7 +1,7 @@
 package quotify_app.adapters.landing;
 
-import quotify_app.entities.regionEntities.Area;
-import quotify_app.usecases.landing.AddressInputData;
+import quotify_app.usecases.landing.AddressDataTransferObj;
+import quotify_app.usecases.landing.AreaDataTransferObj;
 import quotify_app.usecases.landing.LandingInputBoundary;
 
 /**
@@ -24,18 +24,18 @@ public class LandingController {
 
     /**
      * Triggers a selection of the passed area.
-     * @param area the area selected by the user.
+     * @param areaDto the DTO representation of area selected by the user.
      */
-    public void selectArea(Area area) {
-        landingInteractor.selectArea(area);
+    public void selectArea(AreaDataTransferObj areaDto) {
+        landingInteractor.selectArea(areaDto);
     }
 
     /**
      * Triggers a fetch of available subareas of the parenArea.
-     * @param parentArea the selected parent area for which to fetch subareas.
+     * @param parentAreaDto the DTO representation of selected parent area for which to fetch subareas.
      */
-    public void fetchAvailableSubAreas(Area parentArea) {
-        landingInteractor.fetchAreas(parentArea.getGeoIdV4(), parentArea.getType());
+    public void fetchAvailableSubAreas(AreaDataTransferObj parentAreaDto) {
+        landingInteractor.fetchAreas(parentAreaDto.getGeoIdV4(), parentAreaDto.getType());
     }
 
     /**
@@ -47,9 +47,11 @@ public class LandingController {
      * @param zipCode the selected zip code area.
      * @param address the street address of the property.
      */
-    public void selectAddress(Area country, Area state, Area city, Area zipCode, String address) {
-        final AddressInputData addressInputData = new AddressInputData(country, state, city, zipCode, address);
-        landingInteractor.selectAddress(addressInputData);
+    public void selectAddress(AreaDataTransferObj country, AreaDataTransferObj state,
+                              AreaDataTransferObj city, AreaDataTransferObj zipCode, String address) {
+        final AddressDataTransferObj addressDataTransferObj =
+                new AddressDataTransferObj(country, state, city, zipCode, address);
+        landingInteractor.selectAddress(addressDataTransferObj);
     }
 
     /**
@@ -72,7 +74,6 @@ public class LandingController {
     public void goToNextPage() {
         landingInteractor.selectPropertyInCache();
     }
-
 
     /**
      * Triggers navigation to the user profile view.

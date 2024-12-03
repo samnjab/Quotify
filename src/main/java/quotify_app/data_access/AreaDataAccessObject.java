@@ -8,6 +8,7 @@ import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.usecases.landing.AreaDataAccessInterface;
+import quotify_app.usecases.landing.AreaDataTransferObj;
 
 /**
  * The Data Access Object providing all the data pertaining to the areas, interacting with
@@ -23,7 +24,6 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
     }
 
     // Helper methods:
-
     /**
      * Constructs a list of Area objects from JsonNode fetched from the API.
      * @param areas the list of subareas returned from the API in the API information format.
@@ -78,7 +78,8 @@ public class AreaDataAccessObject implements AreaDataAccessInterface {
     }
 
     @Override
-    public void selectArea(Area area) {
+    public void selectArea(AreaDataTransferObj areaDto) {
+        final Area area = areaCache.findArea(areaDto.getType(), areaDto.getGeoIdV4());
         areaCache.storeArea(area, area.getType());
     }
 

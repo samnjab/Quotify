@@ -39,7 +39,7 @@ public class LandingInteractor implements LandingInputBoundary {
         try {
             final List<Area> countries = areaDataAccessObject.getCountries();
             areaDataAccessObject.cacheAreas(countries, "CN");
-            final AreaListOutputData outputData = areaDataAccessObject.getCache().getSubAreaList("CN");
+            final AreaListDataTransferObj outputData = new AreaListDataTransferObj(countries, "CN", false);
             landingPresenter.prepareAreaListSuccessView(outputData);
         }
         catch (ApiRequestException exception) {
@@ -57,7 +57,7 @@ public class LandingInteractor implements LandingInputBoundary {
         try {
             final List<Area> areaList = areaDataAccessObject.getSubAreas(geoIdV4, type);
             areaDataAccessObject.cacheAreas(areaList, type);
-            final AreaListOutputData outputData = areaDataAccessObject.getCache().getSubAreaList(type);
+            final AreaListDataTransferObj outputData = new AreaListDataTransferObj(areaList, type, false);
             landingPresenter.prepareAreaListSuccessView(outputData);
         }
         catch (ClientRequestException exception) {
@@ -73,10 +73,9 @@ public class LandingInteractor implements LandingInputBoundary {
     }
 
     @Override
-    public void selectArea(Area area) {
-        areaDataAccessObject.selectArea(area);
-        final AreaOutputData outputData = areaDataAccessObject.getCache().getSelectedArea(area.getType());
-        landingPresenter.prepareAreaSuccessView(outputData);
+    public void selectArea(AreaDataTransferObj areaDto) {
+        areaDataAccessObject.selectArea(areaDto);
+        landingPresenter.prepareAreaSuccessView(areaDto);
     }
 
     @Override
@@ -89,16 +88,16 @@ public class LandingInteractor implements LandingInputBoundary {
             landingPresenter.prepareAreaListFailView("No matches found for: " + partialName);
         }
         else {
-            final AreaListOutputData outputData = new AreaListOutputData(matchedAreas, type, false);
+            final AreaListDataTransferObj outputData = new AreaListDataTransferObj(matchedAreas, type, false);
             landingPresenter.prepareAreaListSuccessView(outputData);
         }
     }
 
     @Override
-    public void selectAddress(AddressInputData addressInputData) {
+    public void selectAddress(AddressDataTransferObj addressDataTransferObj) {
         try {
             // constructing address from addressInputData:
-            final Address address = addressInputData.constructAddress();
+            final Address address = addressDataTransferObj.constructAddress();
             // fetching property at address from data access:
             final Property property = propertyDataAccessObject.getPropertyAtAddress(address);
             // set currentProperty for caching later:

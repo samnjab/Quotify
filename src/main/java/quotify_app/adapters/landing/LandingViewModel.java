@@ -4,7 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 
-import quotify_app.entities.regionEntities.Area;
+import quotify_app.usecases.landing.AreaDataTransferObj;
 
 /**
  * The ViewModel for the Landing Page. Encapsulates the state of the page and provides
@@ -51,8 +51,8 @@ public class LandingViewModel {
      * Updates the list of available countries and notifies listeners.
      * @param availableCountries The updated list of available countries.
      */
-    public void setAvailableCountries(List<Area> availableCountries) {
-        final List<Area> oldValue = state.getAvailableCountries();
+    public void setAvailableCountries(List<AreaDataTransferObj> availableCountries) {
+        final List<AreaDataTransferObj> oldValue = state.getAvailableCountries();
         state.setAvailableCountries(availableCountries);
         support.firePropertyChange("availableCountries", oldValue, availableCountries);
     }
@@ -61,8 +61,8 @@ public class LandingViewModel {
      * Updates the list of available states and notifies listeners.
      * @param availableStates The updated list of available states.
      */
-    public void setAvailableStates(List<Area> availableStates) {
-        final List<Area> oldValue = state.getAvailableStates();
+    public void setAvailableStates(List<AreaDataTransferObj> availableStates) {
+        final List<AreaDataTransferObj> oldValue = state.getAvailableStates();
         state.setAvailableStates(availableStates);
         support.firePropertyChange("availableStates", oldValue, availableStates);
     }
@@ -71,8 +71,8 @@ public class LandingViewModel {
      * Updates the list of available cities and notifies listeners.
      * @param availableCities The updated list of available cities.
      */
-    public void setAvailableCities(List<Area> availableCities) {
-        final List<Area> oldValue = state.getAvailableCities();
+    public void setAvailableCities(List<AreaDataTransferObj> availableCities) {
+        final List<AreaDataTransferObj> oldValue = state.getAvailableCities();
         state.setAvailableCities(availableCities);
         support.firePropertyChange("availableCities", oldValue, availableCities);
     }
@@ -81,8 +81,8 @@ public class LandingViewModel {
      * Updates the list of available zip codes and notifies listeners.
      * @param availableZipCodes The updated list of available zip codes.
      */
-    public void setAvailableZipCodes(List<Area> availableZipCodes) {
-        final List<Area> oldValue = state.getAvailableZipCodes();
+    public void setAvailableZipCodes(List<AreaDataTransferObj> availableZipCodes) {
+        final List<AreaDataTransferObj> oldValue = state.getAvailableZipCodes();
         state.setAvailableZipCodes(availableZipCodes);
         support.firePropertyChange("availableZipCodes", oldValue, availableZipCodes);
     }
@@ -91,19 +91,18 @@ public class LandingViewModel {
      * Updates the selected country and notifies listeners.
      * @param selectedCountry The updated selected country.
      */
-    public void setSelectedCountry(Area selectedCountry) {
-        final Area oldValue = state.getSelectedCountry();
+    public void setSelectedCountry(AreaDataTransferObj selectedCountry) {
+        final AreaDataTransferObj oldValue = state.getSelectedCountry();
         state.setSelectedCountry(selectedCountry);
         support.firePropertyChange("selectedCountry", oldValue, selectedCountry);
     }
 
     /**
      * Updates the selected state and notifies listeners.
-     *
      * @param selectedState The updated selected state.
      */
-    public void setSelectedState(Area selectedState) {
-        final Area oldValue = state.getSelectedState();
+    public void setSelectedState(AreaDataTransferObj selectedState) {
+        final AreaDataTransferObj oldValue = state.getSelectedState();
         state.setSelectedState(selectedState);
         support.firePropertyChange("selectedState", oldValue, selectedState);
     }
@@ -112,8 +111,8 @@ public class LandingViewModel {
      * Updates the selected city and notifies listeners.
      * @param selectedCity The updated selected city.
      */
-    public void setSelectedCity(Area selectedCity) {
-        final Area oldValue = state.getSelectedCity();
+    public void setSelectedCity(AreaDataTransferObj selectedCity) {
+        final AreaDataTransferObj oldValue = state.getSelectedCity();
         state.setSelectedCity(selectedCity);
         support.firePropertyChange("selectedCity", oldValue, selectedCity);
     }
@@ -122,8 +121,8 @@ public class LandingViewModel {
      * Updates the selected zip code and notifies listeners.
      * @param selectedZipCode The updated selected zip code.
      */
-    public void setSelectedZipCode(String selectedZipCode) {
-        final String oldValue = state.getSelectedZipCode();
+    public void setSelectedZipCode(AreaDataTransferObj selectedZipCode) {
+        final AreaDataTransferObj oldValue = state.getSelectedZipCode();
         state.setSelectedZipCode(selectedZipCode);
         support.firePropertyChange("selectedZipCode", oldValue, selectedZipCode);
     }
