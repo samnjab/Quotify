@@ -158,7 +158,7 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
             for (JsonNode comparableNode : comparables0Node) {
                 // Extract summary details
                 String propertyType = comparableNode.path("@StandardUseDescription_ext").asText();
-                if ("Single Family House".equals(propertyType)) {
+                if ("Single Family Residence / Townhouse".equals(propertyType)) {
                     propertyType = "SFH";
                 }
                 final int beds = comparableNode.path("STRUCTURE").path("@TotalBedroomCount").asInt();
@@ -166,7 +166,7 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
                 final int size = comparableNode.path("STRUCTURE").path("@GrossLivingAreaSquareFeetCount").asInt();
                 final int yearBuilt = comparableNode.path("STRUCTURE").path("STRUCTURE_ANALYSIS").path("@PropertyStructureBuiltYear").asInt();
                 final int levels = comparableNode.path("STRUCTURE").path("@StoriesCount").asInt();
-                final String condition = comparableNode.path("STRUCTURE").path("CONSTRUCTION").path("@Condition").asText();
+                final String condition = "-1";
 
                 // Extract address details
                 String street = comparableNode.path("@_StreetAddress").asText();
@@ -180,7 +180,9 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
                 // Build Address and Summary objects
                 final Address address = new Address(streetNumber, state, city, street, countryCode, postalCode);
                 final Summary summary = new Summary(propertyType, beds, baths, condition, levels, size, yearBuilt);
-                final Property property = new Property(new Identifier(comparableNode.path("_IDENTIFICATION").path("@RTPropertyID_ext").asText(), null), address, summary);
+                final HashMap geoIdV4 = new HashMap();
+                geoIdV4.put("zi", "0");
+                final Property property = new Property(new Identifier("-1", geoIdV4), address, summary);
                 comparedProperties.add(property);
                 System.out.println(comparedProperties);
             }
@@ -217,5 +219,14 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
         }
         return node;
     }
+
+    private String safeGetString(JsonNode node, String key) {
+        return (node != null && node.has(key) && !node.get(key).isNull()) ? node.get(key).asText() : "Not found";
+    }
+
+    int safeGetInt(JsonNode node, String key) {
+        return (node != null && node.has(key) && !node.get(key).isNull()) ? node.get(key).asInt() : -1;
+    }
+
 }
 

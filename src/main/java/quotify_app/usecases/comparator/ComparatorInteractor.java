@@ -1,6 +1,5 @@
 package quotify_app.usecases.comparator;
 
-import quotify_app.adapters.comparator.ComparatorPresenter;
 import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.Area;
@@ -22,20 +21,6 @@ public class ComparatorInteractor implements ComparatorInputBoundary {
         this.comparatorDataAccessObject = comparatorDataAccessInterface;
 
     }
-
-    /**
-     * Fetches a list of properties that are similar to the current property based on certain criteria.
-     *
-     * @param area The area to search for comparable properties.
-     * @return A list of `Property` objects that are most similar to the cached property.
-     * @throws ApiRequestException If there is an issue with the external API request while fetching properties.
-     * @throws ClientRequestException If there is an issue with the client request when fetching properties.
-     */
-    public void getComparables(Area area) throws ClientRequestException {
-        final List<Property> comparables = comparatorDataAccessObject.getSaleComparables(area);
-        // Update the presenter with the fetched properties
-        comparatorPresenter.updateProperties(comparables);
-        }
 
     /**
      * Trigger view transition to CurrentPrice through the presenter.
@@ -61,5 +46,12 @@ public class ComparatorInteractor implements ComparatorInputBoundary {
     @Override
     public void goToUserProfile() {
         comparatorPresenter.goToUserProfile();
+    }
+
+    @Override
+    public void getComparables() {
+        final List<Property> comparables = comparatorDataAccessObject.getSaleComparables(area);
+        // Update the presenter with the fetched properties
+        comparatorPresenter.updateProperties(comparables);
     }
 }

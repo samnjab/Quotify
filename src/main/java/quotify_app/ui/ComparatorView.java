@@ -36,6 +36,7 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
     private final JButton generatePriceButton = new JButton(ComparatorViewModel.ESTIMATE_PRICE_BUTTON_LABEL);
     private final JButton newHouseButton = new JButton(ComparatorViewModel.NEW_HOUSE_BUTTON_LABEL);
     private final JButton userProfileButton = new JButton(ComparatorViewModel.USER_PROFILE_BUTTON_LABEL);
+    private final JButton comapreButton = new JButton(ComparatorViewModel.USER_PROFILE_BUTTON_LABEL);
 
     // Top panel to store title label and user profile button
     private final JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -98,6 +99,7 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
         final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         bottomPanel.add(generatePriceButton);
         bottomPanel.add(newHouseButton);
+        bottomPanel.add(comapreButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
         // Register action listeners
@@ -134,6 +136,15 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
                 }
             }
         });
+
+        comapreButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (comparatorController != null) {
+                    comparatorController.
+                }
+            }
+        })
     }
 
     /**

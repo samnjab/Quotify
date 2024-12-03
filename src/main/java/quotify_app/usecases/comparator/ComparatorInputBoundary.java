@@ -1,5 +1,7 @@
 package quotify_app.usecases.comparator;
 
+import quotify_app.entities.regionEntities.Area;
+
 /**
  * Input Boundary for actions related to seeing comparison.
  */
@@ -24,4 +26,6 @@ public interface ComparatorInputBoundary {
      * Handles the action to navigate to the User Profile View.
      */
     void goToUserProfile();
+
+    void getComparables();
 }
