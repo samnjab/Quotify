@@ -5,9 +5,7 @@ import quotify_app.adapters.future_price.FuturePriceController;
 import quotify_app.adapters.future_price.FuturePricePresenter;
 import quotify_app.adapters.future_price.FuturePriceViewModel;
 import quotify_app.ui.FuturePriceView;
-import quotify_app.usecases.future_pricing.FuturePriceInputBoundary;
-import quotify_app.usecases.future_pricing.FuturePriceInteractor;
-import quotify_app.usecases.future_pricing.FuturePriceOutputBoundary;
+import quotify_app.usecases.future_pricing.*;
 
 /**
  * The FuturePriceFactory class is responsible for setting up and wiring together the FuturePrice components
@@ -32,15 +30,21 @@ public class FuturePriceFactory {
      * Sets up the FuturePriceController.
      *
      * @param viewManagerModel the ViewManagerModel from the AppBuilder.
+     * @param futurePredictionDataAccessObject future prediction array
+     * @param futurePropertyDataAccess property for the future prediction array
      */
-    public void setUpController(ViewManagerModel viewManagerModel) {
+    public void setUpController(ViewManagerModel viewManagerModel,
+                                FuturePropertyDataAccessInterface futurePropertyDataAccess,
+                                FuturePredictionDataAccessInterface futurePredictionDataAccessObject) {
         // Setup Presenter and Interactor for CurrentPrice with necessary dependencies
         final FuturePriceOutputBoundary futurePricePresenter = new FuturePricePresenter(
                 viewManagerModel,
                 futurePriceViewModel
         );
 
-        final FuturePriceInputBoundary futurePriceInteractor = new FuturePriceInteractor(futurePricePresenter);
+        final FuturePriceInputBoundary futurePriceInteractor = new FuturePriceInteractor(futurePricePresenter,
+                futurePredictionDataAccessObject,
+                futurePropertyDataAccess);
 
         futurePriceController = new FuturePriceController(futurePriceInteractor);
     }

@@ -5,9 +5,7 @@ import quotify_app.adapters.comparator.ComparatorController;
 import quotify_app.adapters.comparator.ComparatorPresenter;
 import quotify_app.adapters.comparator.ComparatorViewModel;
 import quotify_app.ui.ComparatorView;
-import quotify_app.usecases.comparator.ComparatorInputBoundary;
-import quotify_app.usecases.comparator.ComparatorInteractor;
-import quotify_app.usecases.comparator.ComparatorOutputBoundary;
+import quotify_app.usecases.comparator.*;
 
 /**
  * The ComparatorFactory class is responsible for setting up and wiring together the Comparator components
@@ -26,21 +24,25 @@ public class ComparatorFactory {
     public ComparatorFactory() {
         this.comparatorViewModel = new ComparatorViewModel();
         this.comparatorView = new ComparatorView(comparatorViewModel);
+
     }
 
     /**
      * Sets up the ComparatorController.
      *
      * @param viewManagerModel the ViewManagerModel from the AppBuilder.
+     * @param comparatorDataAccessObject the propertydataaccessobject for the comparator usecase.
      */
-    public void setUpController(ViewManagerModel viewManagerModel) {
+    public void setUpController(ViewManagerModel viewManagerModel,
+                                ComparatorDataAccessInterface comparatorDataAccessObject) {
         // Setup Presenter and Interactor for Comparator with necessary dependencies
         final ComparatorOutputBoundary comparatorPresenter = new ComparatorPresenter(
                 viewManagerModel,
                 comparatorViewModel
         );
 
-        final ComparatorInputBoundary comparatorInteractor = new ComparatorInteractor(comparatorPresenter);
+        final ComparatorInputBoundary comparatorInteractor = new
+                ComparatorInteractor(comparatorPresenter, comparatorDataAccessObject);
 
         comparatorController = new ComparatorController(comparatorInteractor);
     }

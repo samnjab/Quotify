@@ -2,6 +2,7 @@ package quotify_app.usecases.landing;
 
 import java.util.List;
 
+import quotify_app.data_access.AreaStore;
 import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.Area;
@@ -19,9 +20,9 @@ public interface AreaDataAccessInterface {
 
     /**
      * Stores the area selection.
-     * @param area the selected area to be stored.
+     * @param areaDto the DTO representation of area to be selected.
      */
-    void selectArea(Area area);
+    void selectArea(AreaDataTransferObj areaDto);
 
     /**
      * Retrieves all the sub-Areas of the Area with geoIdV4.
@@ -40,6 +41,11 @@ public interface AreaDataAccessInterface {
      * @param type the type of areas to be stored.
      */
     void cacheAreas(List<Area> areas, String type);
+
+    /**
+     * Returns cached object.
+     */
+    AreaStore getCache();
 
     /**
      * Retrieves a list of Areas matching the type and partial name.

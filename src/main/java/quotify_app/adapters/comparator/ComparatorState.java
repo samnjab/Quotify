@@ -1,9 +1,10 @@
 package quotify_app.adapters.comparator;
 
+import quotify_app.entities.regionEntities.Property;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import quotify_app.entities.Property;
 
 /**
  * The state for the Comparator View Model.
@@ -12,6 +13,7 @@ import quotify_app.entities.Property;
 public class ComparatorState {
     private boolean isLoggedIn;
     private List<Property> properties;
+    private boolean compareFailed;
 
     /**
      * Initializes the ComparatorState with default values.
@@ -20,11 +22,20 @@ public class ComparatorState {
         // Default to not logged in
         this.isLoggedIn = false;
         this.properties = new ArrayList<>();
+        this.compareFailed = false;
     }
 
     // Getter and setter for isLoggedIn
     public boolean isLoggedIn() {
         return isLoggedIn;
+    }
+
+    public boolean isCompareFailed() {
+        return compareFailed;
+    }
+
+    public void setCompareFailed(boolean compareFailed) {
+        this.compareFailed = compareFailed;
     }
 
     public void setLoggedIn(boolean loggedIn) {
@@ -48,18 +59,7 @@ public class ComparatorState {
      */
     public void setProperties(List<Property> properties) {
         if (properties != null) {
-            this.properties = new ArrayList<>(properties);
-        }
-    }
-
-    /**
-     * Adds a property to the list.
-     *
-     * @param property the property to add. If null, the method does nothing.
-     */
-    public void addProperty(Property property) {
-        if (property != null) {
-            this.properties.add(property);
+            this.properties = properties;
         }
     }
 
@@ -72,7 +72,7 @@ public class ComparatorState {
     public String getProperty(int index) {
         String result = null;
         if (index >= 0 && index < properties.size()) {
-            result = properties.get(index).toString();
+            result = properties.get(index).getSummary().getFullSummary();
         }
         return result;
     }

@@ -1,50 +1,156 @@
 package quotify_app.adapters.landing;
 
-import quotify_app.entities.regionEntities.Area;
+import java.util.List;
+import java.util.Map;
+
+import quotify_app.entities.regionEntities.Property;
+import quotify_app.usecases.landing.AreaDataTransferObj;
 
 /**
- * The state for the Landing View Model.
+ * Represents the state of the Landing Page, including the current user profile,
+ * address input form selections, and dynamic dropdowns for country, state, city, and zip codes.
  */
 public class LandingState {
 
-    private Area selectedCountry;
-    private Area selectedState;
-    private Area selectedCity;
-    private String streetAddress;
+    // User profile-related state
     private boolean isLoggedIn;
+    private String currentUser;
+
+    // Area Browser
+    private List<AreaDataTransferObj> availableCountries;
+    private List<AreaDataTransferObj> availableStates;
+    private List<AreaDataTransferObj> availableCities;
+    private List<AreaDataTransferObj> availableZipCodes;
+
+    // Selected areas
+    private AreaDataTransferObj selectedCountry;
+    private AreaDataTransferObj selectedState;
+    private AreaDataTransferObj selectedCity;
+    private AreaDataTransferObj selectedZipCode;
+    private String streetAddress;
+
+    // Property-related state
+    private boolean isPropertyFound;
+    private String propertyAddress;
+    private Map<String, String> propertyDetails;
+
+    // Confirmed property state:
+    private Property currentProperty;
+    private boolean propertyConfirmed;
+
+    // Error state
     private String errorMessage;
 
-    public LandingState() {
-        this.selectedCountry = null;
-        this.selectedState = null;
-        this.selectedCity = null;
-        this.streetAddress = "";
-        this.isLoggedIn = false;
-        this.errorMessage = "";
+    // Getters and Setters
+    // Log in status:
+    public boolean isLoggedIn() {
+        return isLoggedIn;
     }
 
-    public Area getSelectedCountry() {
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
+
+    // User profile status
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    // Property found boolean status:
+    public boolean isPropertyFound() {
+        return isPropertyFound;
+    }
+
+    public void setPropertyFound(boolean propertyFound) {
+        isPropertyFound = propertyFound;
+    }
+
+    // Property Confirmed boolean status:
+    public boolean isPropertyConfirmed() {
+        return propertyConfirmed;
+    }
+
+    public void setPropertyConfirmed(boolean confirmed) {
+        this.propertyConfirmed = confirmed;
+    }
+
+    // Confirmed property:
+    public void setCurrentProperty(Property property) {
+        this.currentProperty = property;
+    }
+
+    public Property getCurrentProperty() {
+        return currentProperty;
+    }
+
+    // Available Areas:
+
+    public List<AreaDataTransferObj> getAvailableCountries() {
+        return availableCountries;
+    }
+
+    public void setAvailableCountries(List<AreaDataTransferObj> availableCountries) {
+        this.availableCountries = availableCountries;
+    }
+
+    public List<AreaDataTransferObj> getAvailableStates() {
+        return availableStates;
+    }
+
+    public void setAvailableStates(List<AreaDataTransferObj> availableStates) {
+        this.availableStates = availableStates;
+    }
+
+    public List<AreaDataTransferObj> getAvailableCities() {
+        return availableCities;
+    }
+
+    public void setAvailableCities(List<AreaDataTransferObj> availableCities) {
+        this.availableCities = availableCities;
+    }
+
+    public List<AreaDataTransferObj> getAvailableZipCodes() {
+        return availableZipCodes;
+    }
+
+    public void setAvailableZipCodes(List<AreaDataTransferObj> availableZipCodes) {
+        this.availableZipCodes = availableZipCodes;
+    }
+
+    public AreaDataTransferObj getSelectedCountry() {
         return selectedCountry;
     }
 
-    public void setSelectedCountry(Area selectedCountry) {
+    public void setSelectedCountry(AreaDataTransferObj selectedCountry) {
         this.selectedCountry = selectedCountry;
     }
 
-    public Area getSelectedState() {
+    public AreaDataTransferObj getSelectedState() {
         return selectedState;
     }
 
-    public void setSelectedState(Area selectedState) {
+    public void setSelectedState(AreaDataTransferObj selectedState) {
         this.selectedState = selectedState;
     }
 
-    public Area getSelectedCity() {
+    public AreaDataTransferObj getSelectedCity() {
         return selectedCity;
     }
 
-    public void setSelectedCity(Area selectedCity) {
+    public void setSelectedCity(AreaDataTransferObj selectedCity) {
         this.selectedCity = selectedCity;
+    }
+
+    public AreaDataTransferObj getSelectedZipCode() {
+        return selectedZipCode;
+    }
+
+    public void setSelectedZipCode(AreaDataTransferObj selectedZipCode) {
+        this.selectedZipCode = selectedZipCode;
     }
 
     public String getStreetAddress() {
@@ -55,31 +161,29 @@ public class LandingState {
         this.streetAddress = streetAddress;
     }
 
-    public boolean isLoggedIn() {
-        return isLoggedIn;
+    // Property address and details:
+    public String getPropertyAddress() {
+        return propertyAddress;
     }
 
-    public void setLoggedIn(boolean loggedIn) {
-        isLoggedIn = loggedIn;
+    public void setPropertyAddress(String propertyAddress) {
+        this.propertyAddress = propertyAddress;
     }
 
+    public Map<String, String> getPropertyDetails() {
+        return propertyDetails;
+    }
+
+    public void setPropertyDetails(Map<String, String> propertyDetails) {
+        this.propertyDetails = propertyDetails;
+    }
+
+    // Error message:
     public String getErrorMessage() {
         return errorMessage;
     }
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
-    }
-
-    /**
-     * Resets the state of the landing page to its default.
-     */
-    public void resetState() {
-        this.selectedCountry = null;
-        this.selectedState = null;
-        this.selectedCity = null;
-        this.streetAddress = "";
-        this.isLoggedIn = false;
-        this.errorMessage = "";
     }
 }

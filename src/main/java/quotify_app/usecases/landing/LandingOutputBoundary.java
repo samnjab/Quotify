@@ -1,47 +1,68 @@
 package quotify_app.usecases.landing;
 
 /**
- * Output Boundary for presenting the result of the actions perfomred on the landing page.
+ * Output Boundary for presenting the result of the actions performed on the landing page.
  */
 public interface LandingOutputBoundary {
 
     /**
      * Prepares the success view for the Select Area Use Case.
-     * @param areaOutputData the output data containing selected area result
+     * @param areaDataTransferObj The output data containing the selected area result.
      */
-    void prepareAreaSuccessView(AreaOutputData areaOutputData);
-
-    /**
-     * Prepares the failure view for the Select Area Use Case.
-     * @param errorMessage the explanation of the failure
-     */
-    void prepareAreaFailView(String errorMessage);
+    void prepareAreaSuccessView(AreaDataTransferObj areaDataTransferObj);
 
     /**
      * Prepares the success view for the fetch list of areas Use Case.
-     * @param outputData the output data containing list of available areas.
+     * @param outputData The output data containing the list of available areas.
      */
-    void prepareAreaListSuccessView(AreaListOutputData outputData);
+    void prepareAreaListSuccessView(AreaListDataTransferObj outputData);
 
     /**
-     * Prepares the failure view for the fetch list of area Use Case.
-     * @param errorMessage the explanation of the failure
+     * Prepares the failure view for the fetch list of areas Use Case.
+     * @param errorMessage The explanation of the failure.
      */
     void prepareAreaListFailView(String errorMessage);
 
     /**
-     *  Interface for executing the switch to sign up screen usecase.
+     * Prepares the success view for property retrieval.
+     * @param propertyOutputData The output data containing property details.
+     */
+    void preparePropertySuccessView(PropertyOutputData propertyOutputData);
+
+    /**
+     * Prepares the failure view for property retrieval.
+     * @param errorMessage The explanation of the failure.
+     */
+    void preparePropertyFailView(String errorMessage);
+
+    /**
+     * Caches property as current property.
+     */
+    void prepareNextPageNavigation();
+
+    /**
+     * Prepares an error message view for a general error.
+     * @param errorMessage The message to be presented to the user.
+     */
+    void prepareErrorView(String errorMessage);
+
+    /**
+     * Interface for executing the switch to the sign-up screen Use Case.
      */
     void goToSignup();
 
     /**
-     *  Interface for executing the switch to Login screen usecase.
+     * Interface for executing the switch to the login screen Use Case.
      */
     void goToLogin();
 
     /**
-     *  Preppares an Error message view for a general error.
-     * @param errorMessage the message to be presented to the user.
+     * Interface for executing the switch to the User profile Use Case.
      */
-    void prepareErrorView(String errorMessage);
+    void presentGoToUserProfile();
+
+    /**
+     * Interface for executing the check on login status.
+     */
+    void updateLoginStatus();
 }

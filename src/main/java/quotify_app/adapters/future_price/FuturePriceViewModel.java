@@ -14,6 +14,7 @@ public class FuturePriceViewModel extends ViewModel<FuturePriceState> {
     public static final String COMPARE_PROPERTY_BUTTON_LABEL = "Compare Property";
     public static final String LANDING_PAGE_BUTTOM_LABEL = "Home";
     public static final String USER_PROFILE_BUTTON_LABEL = "User Profile";
+    public static final String SHOW_FUTURE_PRICE_LABEL = "Show Future Pricing";
 
     /**
      * Initializes the FuturePriceViewModel with default state.

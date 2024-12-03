@@ -168,7 +168,7 @@ class PredictionDataAccessObjectLiveTest {
             dataAccessObject.getFuturePricePredictions(property);
 
             // Fetch the future predictions array
-            final double[] futurePrices = dataAccessObject.getFuturePredictionsArray();
+            final double[] futurePrices = dataAccessObject.getFuturePricePredictions(property);
 
             // Assert that the array has 6 elements, all positive
             Assertions.assertEquals(numPredictions, futurePrices.length, "The predictions array should have 6 values");

@@ -8,11 +8,13 @@ import quotify_app.data_access.exceptions.PredictionClientException;
 import quotify_app.entities.PredictionRequest;
 import quotify_app.entities.regionEntities.Property;
 import quotify_app.entities.regionEntities.Summary;
+import quotify_app.usecases.currentprice.PredictionDataAccessInterface;
+import quotify_app.usecases.future_pricing.FuturePredictionDataAccessInterface;
 
 /**
  * A Data Access Object for handling predictions via PredictionClient and managing prediction data.
  */
-public class PredictionDataAccessObject {
+public class PredictionDataAccessObject implements PredictionDataAccessInterface, FuturePredictionDataAccessInterface {
     private final int currYear = 2022;
     private final int currMonth = 12;
     private final int numFuturePredictions = 6;
@@ -20,6 +22,11 @@ public class PredictionDataAccessObject {
     private double currentPricePrediction;
     private final double[] futurePredictions = new double[numFuturePredictions];
 
+    /**
+     * Constructs a PredictionDataAccessObject with the given PredictionClient.
+     *
+     * @param predictionClient The client used to make prediction requests.
+     */
     public PredictionDataAccessObject(PredictionClient predictionClient) {
         this.predictionClient = predictionClient;
     }
@@ -31,16 +38,18 @@ public class PredictionDataAccessObject {
      * @return The predicted current price.
      * @throws PredictionClientException If there is an issue with the prediction request or response.
      */
+    @Override
     public double getCurrentPricePrediction(final Property property) throws PredictionClientException {
         final PredictionRequest request = buildPredictionRequest(property, 0);
         final String predictionResponse = predictionClient.predict(request);
+        System.out.println(predictionResponse);
 
         try {
             // Parse the prediction value from the JSON response
             final Map<String, Double> responseMap = new ObjectMapper().readValue(predictionResponse, Map.class);
             final double prediction = responseMap.get("prediction");
 
-            // Store the prediction as a string for logging
+            // Store the prediction for logging or future use
             this.currentPricePrediction = prediction;
 
             return prediction;
@@ -109,15 +118,5 @@ public class PredictionDataAccessObject {
      */
     public double getCurrentPricePredictionString() {
         return currentPricePrediction;
-    }
-
-    /**
-     * Returns an array of 6 values representing the predicted price for the property from the present until
-     * 6 months from the present.
-     *
-     * @return the double array returned, where arr[0] is the current prediction, arr[1] is 1 month prediction, etc.
-     */
-    public double[] getFuturePredictionsArray() {
-        return futurePredictions;
     }
 }

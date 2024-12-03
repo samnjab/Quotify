@@ -11,11 +11,11 @@ import quotify_app.app.factories.ComparatorFactory;
 import quotify_app.app.factories.CurrentPriceFactory;
 import quotify_app.app.factories.FunctionFactory;
 import quotify_app.app.factories.FuturePriceFactory;
+import quotify_app.app.factories.LandingFactory;
 import quotify_app.app.factories.LoginFactory;
 import quotify_app.app.factories.SignupFactory;
-import quotify_app.data_access.DBUserDataAccessObject;
-import quotify_app.data_access.PredictionClient;
-import quotify_app.data_access.PredictionDataAccessObject;
+import quotify_app.app.factories.UserProfileFactory;
+import quotify_app.data_access.*;
 import quotify_app.entities.CommonUserFactory;
 import quotify_app.ui.ViewManager;
 
@@ -34,18 +34,34 @@ public class AppBuilder {
     private final ComparatorFactory comparatorFactory = new ComparatorFactory();
     private final CurrentPriceFactory currentPriceFactory = new CurrentPriceFactory();
     private final FuturePriceFactory futurePriceFactory = new FuturePriceFactory();
+    private final LandingFactory landingFactory = new LandingFactory();
+    private final UserProfileFactory userProfileFactory = new UserProfileFactory();
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
         final PredictionClient predictionClient = new PredictionClient();
+        final AreaStore areaStore = new AreaStore();
         final PredictionDataAccessObject predictionDataAccess = new PredictionDataAccessObject(predictionClient);
         final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(new CommonUserFactory());
+        final AreaDataAccessObject areaDataAccessObject = new AreaDataAccessObject(areaStore);
+        final PropertyDataAccessObject propertyDataAccessObject = new PropertyDataAccessObject();
+        final ComparatorDataAccessObject comparatorDataAccessObject = new ComparatorDataAccessObject(
+                propertyDataAccessObject);
         loginFactory.setUpController(signupFactory, viewManagerModel, userDataAccessObject);
         signupFactory.setUpController(loginFactory, viewManagerModel, userDataAccessObject);
         functionFactory.setUpController(viewManagerModel);
-        comparatorFactory.setUpController(viewManagerModel);
-        currentPriceFactory.setUpController(viewManagerModel);
-        futurePriceFactory.setUpController(viewManagerModel);
+        comparatorFactory.setUpController(viewManagerModel, comparatorDataAccessObject);
+        currentPriceFactory.setUpController(viewManagerModel, predictionDataAccess, propertyDataAccessObject);
+        futurePriceFactory.setUpController(viewManagerModel, propertyDataAccessObject, predictionDataAccess);
+        userProfileFactory.setUpController(viewManagerModel, userDataAccessObject);
+        landingFactory.setUpController(
+                viewManagerModel,
+                areaDataAccessObject,
+                propertyDataAccessObject,
+                signupFactory.getSignupViewModel(),
+                loginFactory.getLoginViewModel(),
+                functionFactory.getFunctionViewModel(),
+                userProfileFactory.getUserProfileViewModel());
     }
 
     /**
@@ -85,6 +101,42 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the UserProfile View to the application.
+     * @return this builder
+     */
+    public AppBuilder addUserProfileView() {
+        cardPanel.add(userProfileFactory.getUserProfileView(), userProfileFactory.getUserProfileView().getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Login Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addUserProfileUseCase() {
+        userProfileFactory.getUserProfileView().setUserProfileController(userProfileFactory.getUserProfileController());
+        return this;
+    }
+
+    /**
+     * Adds the Landing View to the application.
+     * @return this builder
+     */
+    public AppBuilder addLandingView() {
+        cardPanel.add(landingFactory.getLandingView(), landingFactory.getLandingView().getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Landing Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addLandingUseCase() {
+        landingFactory.getLandingView().setLandingController(landingFactory.getLandingController());
+        return this;
+    }
+
+    /**
      * Adds the Function View to the application.
      * @return this builder
      */
@@ -120,7 +172,7 @@ public class AppBuilder {
      */
     public AppBuilder addComparatorView() {
         cardPanel.add(comparatorFactory.getComparatorView(),
-                        comparatorFactory.getComparatorView().getViewName());
+                comparatorFactory.getComparatorView().getViewName());
         return this;
     }
 
@@ -175,9 +227,8 @@ public class AppBuilder {
         // Adding the card panel which holds all views
         application.add(cardPanel);
 
-        // Setting the initial view to SignupView
-
-        viewManagerModel.setState(functionFactory.getFunctionView().getViewName());
+        // Setting the initial view to LandingView
+        viewManagerModel.setState("landing");
         viewManagerModel.firePropertyChanged();
         return application;
     }

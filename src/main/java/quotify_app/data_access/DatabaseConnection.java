@@ -2,6 +2,7 @@ package quotify_app.data_access;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -21,18 +22,18 @@ public class DatabaseConnection {
     }
 
     /**
-     * Initializes the database by creating required tables if they don't exist.
+     * Initializes the database and ensures that the users table exists.
      */
     public static void initializeDatabase() {
-        final String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
-                + "username TEXT PRIMARY KEY,"
-                + "password TEXT NOT NULL,"
-                + "email TEXT UNIQUE NOT NULL"
-                + ");";
-
-        try (Connection conn = getConnection();
-             var stmt = conn.createStatement()) {
-            stmt.execute(createUsersTable);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "CREATE TABLE IF NOT EXISTS users ("
+                             + "username TEXT PRIMARY KEY, "
+                             + "email TEXT UNIQUE, "
+                             + "password TEXT NOT NULL, "
+                             + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+             )) {
+            stmt.executeUpdate();
             System.out.println("Database initialized successfully. Users table created if it didn't exist.");
         }
         catch (SQLException error) {

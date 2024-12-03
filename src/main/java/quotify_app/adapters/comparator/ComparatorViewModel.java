@@ -15,6 +15,7 @@ public class ComparatorViewModel extends ViewModel<ComparatorState> {
     public static final String USER_PROFILE_BUTTON_LABEL = "User Profile";
     public static final String NEW_HOUSE_BUTTON_LABEL = "New House";
     public static final String ESTIMATE_PRICE_BUTTON_LABEL = "Estimate Price";
+    public static final String COMPARE_BUTTON_LABEL = "Compare!";
 
     public ComparatorViewModel() {
         super("comparator");

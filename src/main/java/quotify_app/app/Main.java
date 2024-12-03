@@ -19,16 +19,20 @@ public class Main {
                 .addLoginView()
                 .addFunctionView()
                 .addComparatorView()
+                .addUserProfileView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addFunctionUseCase()
                 .addComparatorUseCase()
                 .addCurrentPriceView()
                 .addFuturePriceView()
+                .addLandingView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addCurrentPriceUseCase()
                 .addFuturePriceUseCase()
+                .addLandingUseCase()
+                .addUserProfileUseCase()
                 .build();
 
         application.pack();

@@ -2,15 +2,17 @@ package quotify_app.adapters.comparator;
 
 import quotify_app.adapters.ViewManagerModel;
 import quotify_app.app.ApplicationState;
+import quotify_app.entities.regionEntities.Property;
 import quotify_app.usecases.comparator.ComparatorOutputBoundary;
+
+import java.util.List;
 
 /**
  * The Presenter for the Comparator Use Case.
  */
 public class ComparatorPresenter implements ComparatorOutputBoundary {
-
+    private static ComparatorViewModel comparatorViewModel;
     private final ViewManagerModel viewManagerModel;
-    private final ComparatorViewModel comparatorViewModel;
 
     public ComparatorPresenter(
             ViewManagerModel viewManagerModel,
@@ -28,9 +30,9 @@ public class ComparatorPresenter implements ComparatorOutputBoundary {
     }
 
     @Override
-    public void goToInput() {
+    public void goToLanding() {
         // Transition to input view
-        viewManagerModel.setState("input");
+        viewManagerModel.setState("landing");
         viewManagerModel.firePropertyChanged();
 
     }
@@ -48,4 +50,23 @@ public class ComparatorPresenter implements ComparatorOutputBoundary {
         comparatorViewModel.getState().setLoggedIn(isLoggedIn);
     }
 
+    /**
+     * Updates the ComparatorState with the provided list of properties.
+     *
+     * @param properties the list of properties to update in the state.
+     */
+    @Override
+    public void updateProperties(List<Property> properties) {
+        comparatorViewModel.getState().setProperties(properties);
+        comparatorViewModel.firePropertyChanged();
+    }
+
+    /**
+     * Updates the ComparatorState to reflect the failed comparables fetch.
+     */
+    @Override
+    public void presentCompareFailed() {
+        comparatorViewModel.getState().setCompareFailed(true);
+        comparatorViewModel.firePropertyChanged();
+    }
 }
