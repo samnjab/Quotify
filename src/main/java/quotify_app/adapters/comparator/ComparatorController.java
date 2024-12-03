@@ -1,5 +1,6 @@
 package quotify_app.adapters.comparator;
 
+import quotify_app.entities.regionEntities.Area;
 import quotify_app.usecases.comparator.ComparatorInputBoundary;
 
 /**
@@ -41,4 +42,6 @@ public class ComparatorController {
     public void goToUserProfile() {
         comparatorInteractor.goToUserProfile();
     }
+
+    public void getComparables() { comparatorInteractor.getComparables(); }
 }

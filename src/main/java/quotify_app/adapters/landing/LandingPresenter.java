@@ -10,7 +10,6 @@ import quotify_app.adapters.login.LoginViewModel;
 import quotify_app.adapters.signup.SignupViewModel;
 import quotify_app.app.ApplicationState;
 import quotify_app.entities.regionEntities.Area;
-import quotify_app.entities.regionEntities.Property;
 import quotify_app.usecases.landing.AreaListOutputData;
 import quotify_app.usecases.landing.AreaOutputData;
 import quotify_app.usecases.landing.LandingOutputBoundary;
@@ -173,7 +172,7 @@ public class LandingPresenter implements LandingOutputBoundary {
     }
 
     @Override
-    public void prepareNextPageNavigation(Property property) {
+    public void prepareNextPageNavigation() {
         // Transition to function view
         landingViewModel.getState().setPropertyConfirmed(true);
         viewManagerModel.setState(functionViewModel.getViewName());

@@ -1,14 +1,24 @@
 package quotify_app.usecases.comparator;
 
+import quotify_app.data_access.exceptions.ApiRequestException;
+import quotify_app.data_access.exceptions.ClientRequestException;
+import quotify_app.entities.regionEntities.Area;
+import quotify_app.entities.regionEntities.Property;
+
+import java.util.List;
+
 /**
  * The Comparator Interactor.
  */
 public class ComparatorInteractor implements ComparatorInputBoundary {
     private final ComparatorOutputBoundary comparatorPresenter;
+    private final ComparatorDataAccessInterface comparatorDataAccessObject;
 
     public ComparatorInteractor(
-                                ComparatorOutputBoundary comparatorPresenter) {
+            ComparatorOutputBoundary comparatorPresenter,
+            ComparatorDataAccessInterface comparatorDataAccessInterface) {
         this.comparatorPresenter = comparatorPresenter;
+        this.comparatorDataAccessObject = comparatorDataAccessInterface;
 
     }
 
@@ -36,5 +46,12 @@ public class ComparatorInteractor implements ComparatorInputBoundary {
     @Override
     public void goToUserProfile() {
         comparatorPresenter.goToUserProfile();
+    }
+
+    @Override
+    public void getComparables() {
+        final List<Property> comparables = comparatorDataAccessObject.getSaleComparables(area);
+        // Update the presenter with the fetched properties
+        comparatorPresenter.updateProperties(comparables);
     }
 }

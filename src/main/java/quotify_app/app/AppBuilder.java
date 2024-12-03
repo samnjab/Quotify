@@ -208,7 +208,7 @@ public class AppBuilder {
         application.add(cardPanel);
 
         // Setting the initial view to LandingView
-        viewManagerModel.setState("landing");
+        viewManagerModel.setState("function");
         viewManagerModel.firePropertyChanged();
         return application;
     }

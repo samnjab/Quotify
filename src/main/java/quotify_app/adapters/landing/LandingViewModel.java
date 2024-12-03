@@ -5,7 +5,6 @@ import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 import quotify_app.entities.regionEntities.Area;
-import quotify_app.entities.regionEntities.Property;
 
 /**
  * The ViewModel for the Landing Page. Encapsulates the state of the page and provides

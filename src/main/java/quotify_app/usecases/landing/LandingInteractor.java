@@ -18,6 +18,7 @@ public class LandingInteractor implements LandingInputBoundary {
     private final AreaDataAccessInterface areaDataAccessObject;
     private final PropertyDataAccessInterface propertyDataAccessObject;
     private final LandingOutputBoundary landingPresenter;
+    private Property currentProperty;
     private final Map<String, String> areaTypeHierarchy = new HashMap<>();
 
     public LandingInteractor(AreaDataAccessInterface areaDataAccessInterface,
@@ -26,6 +27,7 @@ public class LandingInteractor implements LandingInputBoundary {
         this.areaDataAccessObject = areaDataAccessInterface;
         this.propertyDataAccessObject = propertyDataAccessInterface;
         this.landingPresenter = landingOutputBoundary;
+        this.currentProperty = new Property();
         this.areaTypeHierarchy.put("CN", "ST");
         this.areaTypeHierarchy.put("ST", "CS");
         this.areaTypeHierarchy.put("CS", "ZI");
@@ -99,8 +101,8 @@ public class LandingInteractor implements LandingInputBoundary {
             final Address address = addressInputData.constructAddress();
             // fetching property at address from data access:
             final Property property = propertyDataAccessObject.getPropertyAtAddress(address);
-            // caching property in data access as current property:
-            propertyDataAccessObject.setCurrentProperty(property);
+            // set currentProperty for caching later:
+            this.currentProperty = property;
             // producing propertyOutputData:
             final PropertyOutputData propertyOutputData = new PropertyOutputData(address, property);
             landingPresenter.preparePropertySuccessView(propertyOutputData);
@@ -116,7 +118,9 @@ public class LandingInteractor implements LandingInputBoundary {
 
     @Override
     public void selectPropertyInCache() {
-        landingPresenter.prepareNextPageNavigation(propertyDataAccessObject.getCurrentProperty());
+        // caching property in data access as current property:
+        propertyDataAccessObject.setCurrentProperty(currentProperty);
+        landingPresenter.prepareNextPageNavigation();
     }
 
     @Override
