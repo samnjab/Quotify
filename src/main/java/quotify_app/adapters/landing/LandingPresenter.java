@@ -1,9 +1,16 @@
 package quotify_app.adapters.landing;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import quotify_app.adapters.ViewManagerModel;
+import quotify_app.adapters.function.FunctionViewModel;
+import quotify_app.adapters.login.LoginViewModel;
+import quotify_app.adapters.signup.SignupViewModel;
+import quotify_app.app.ApplicationState;
 import quotify_app.entities.regionEntities.Area;
+import quotify_app.entities.regionEntities.Property;
 import quotify_app.usecases.landing.AreaListOutputData;
 import quotify_app.usecases.landing.AreaOutputData;
 import quotify_app.usecases.landing.LandingOutputBoundary;
@@ -16,6 +23,9 @@ import quotify_app.usecases.landing.PropertyOutputData;
 public class LandingPresenter implements LandingOutputBoundary {
 
     private final LandingViewModel landingViewModel;
+    private final SignupViewModel signupViewModel;
+    private final LoginViewModel loginViewModel;
+    private final FunctionViewModel functionViewModel;
     private final ViewManagerModel viewManagerModel;
 
     /**
@@ -23,10 +33,30 @@ public class LandingPresenter implements LandingOutputBoundary {
      *
      * @param landingViewModel  The view model for managing Landing Page state.
      * @param viewManagerModel  The view model for managing view transitions.
+     * @param signupViewModel the view model for sign up.
+     * @param loginViewModel the view model for login.
+     * @param functionViewModel the view model for function page.
      */
-    public LandingPresenter(LandingViewModel landingViewModel, ViewManagerModel viewManagerModel) {
+    public LandingPresenter(LandingViewModel landingViewModel,
+                            ViewManagerModel viewManagerModel,
+                            SignupViewModel signupViewModel,
+                            LoginViewModel loginViewModel,
+                            FunctionViewModel functionViewModel) {
         this.landingViewModel = landingViewModel;
         this.viewManagerModel = viewManagerModel;
+        this.signupViewModel = signupViewModel;
+        this.loginViewModel = loginViewModel;
+        this.functionViewModel = functionViewModel;
+
+        ApplicationState.getInstance().addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("isLoggedIn".equals(evt.getPropertyName())) {
+                    final boolean isLoggedIn = (Boolean) evt.getNewValue();
+                    landingViewModel.setLoggedIn(isLoggedIn);
+                }
+            }
+        });
     }
 
     /**
@@ -142,12 +172,22 @@ public class LandingPresenter implements LandingOutputBoundary {
         landingViewModel.setErrorMessage(errorMessage);
     }
 
+    @Override
+    public void prepareNextPageNavigation(Property property) {
+        // Transition to function view
+        landingViewModel.getState().setPropertyConfirmed(true);
+        viewManagerModel.setState(functionViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
+    }
+
     /**
      * Switches the view to the sign-up screen.
      */
     @Override
     public void goToSignup() {
-        viewManagerModel.setState("signup");
+        // Transition to signup view
+        viewManagerModel.setState(signupViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 
     /**
@@ -155,6 +195,21 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void goToLogin() {
-        viewManagerModel.setState("login");
+        // Transition to login view
+        viewManagerModel.setState(loginViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
+
+    @Override
+    public void presentGoToUserProfile() {
+        viewManagerModel.setState("user profile");
+        viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void updateLoginStatus() {
+        final boolean isLoggedIn = ApplicationState.getInstance().isLoggedIn();
+        landingViewModel.setLoggedIn(isLoggedIn);
+    }
+
 }

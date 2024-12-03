@@ -1,6 +1,7 @@
 package quotify_app.usecases.landing;
 
 import quotify_app.entities.regionEntities.Area;
+import quotify_app.entities.regionEntities.Property;
 
 /**
  * Input Boundary for actions related to the landing page.
@@ -48,4 +49,19 @@ public interface LandingInputBoundary {
      * @param addressInputData the input data containing the selected region.
      */
     void selectAddress(AddressInputData addressInputData);
+
+    /**
+     * * Selects passed property as current property and caches in data access.
+     */
+    void selectPropertyInCache();
+
+    /**
+     * Triggers navigation to the user profile view.
+     */
+    void goToUserProfile();
+
+    /**
+     * Checks the login status.
+     */
+    void checkLoginStatus();
 }

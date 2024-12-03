@@ -10,7 +10,6 @@ import quotify_app.data_access.exceptions.IllegalTypeException;
 import quotify_app.entities.regionEntities.Address;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.entities.regionEntities.Property;
-import quotify_app.entities.regionEntities.Summary;
 
 /**
  * The Landing Interactor.
@@ -100,7 +99,7 @@ public class LandingInteractor implements LandingInputBoundary {
             final Address address = addressInputData.constructAddress();
             // fetching property at address from data access:
             final Property property = propertyDataAccessObject.getPropertyAtAddress(address);
-            // caching property in data access:
+            // caching property in data access as current property:
             propertyDataAccessObject.setCurrentProperty(property);
             // producing propertyOutputData:
             final PropertyOutputData propertyOutputData = new PropertyOutputData(address, property);
@@ -116,6 +115,11 @@ public class LandingInteractor implements LandingInputBoundary {
     }
 
     @Override
+    public void selectPropertyInCache() {
+        landingPresenter.prepareNextPageNavigation(propertyDataAccessObject.getCurrentProperty());
+    }
+
+    @Override
     public void goToSignup() {
         landingPresenter.goToSignup();
     }
@@ -123,6 +127,16 @@ public class LandingInteractor implements LandingInputBoundary {
     @Override
     public void goToLogin() {
         landingPresenter.goToLogin();
+    }
+
+    @Override
+    public void goToUserProfile() {
+        landingPresenter.presentGoToUserProfile();
+    }
+
+    @Override
+    public void checkLoginStatus() {
+        landingPresenter.updateLoginStatus();
     }
 
 }

@@ -53,7 +53,13 @@ public class AppBuilder {
         comparatorFactory.setUpController(viewManagerModel);
         currentPriceFactory.setUpController(viewManagerModel, predictionDataAccess, propertyDataAccessObject);
         futurePriceFactory.setUpController(viewManagerModel, propertyDataAccessObject, predictionDataAccess);
-        landingFactory.setUpController(viewManagerModel, areaDataAccessObject, propertyDataAccessObject);
+        landingFactory.setUpController(
+                viewManagerModel,
+                areaDataAccessObject,
+                propertyDataAccessObject,
+                signupFactory.getSignupViewModel(),
+                loginFactory.getLoginViewModel(),
+                functionFactory.getFunctionViewModel());
     }
 
     /**

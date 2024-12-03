@@ -1,5 +1,8 @@
 package quotify_app.app;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import quotify_app.entities.User;
 
 /**
@@ -27,7 +30,9 @@ public final class ApplicationState {
      * The currently logged-in user.
      * If no user is logged in, this will be {@code null}.
      */
-    private User currentUser;
+    private String currentUser;
+
+    private final PropertyChangeSupport support;
 
     /**
      * Private constructor to prevent instantiation from outside the class.
@@ -36,6 +41,7 @@ public final class ApplicationState {
     private ApplicationState() {
         this.isLoggedIn = false;
         this.currentUser = null;
+        this.support = new PropertyChangeSupport(this);
     }
 
     /**
@@ -70,9 +76,11 @@ public final class ApplicationState {
      * @param user     the {@link User} object representing the currently logged-in user;
      *                 should be {@code null} if {@code loggedIn} is {@code false}.
      */
-    public void setLoggedIn(boolean loggedIn, User user) {
+    public void setLoggedIn(boolean loggedIn, String user) {
+        final boolean oldLoggedIn = this.isLoggedIn;
         this.isLoggedIn = loggedIn;
         this.currentUser = user;
+        support.firePropertyChange("isLoggedIn", oldLoggedIn, loggedIn);
     }
 
     /**
@@ -81,7 +89,7 @@ public final class ApplicationState {
      * @return the {@link User} object representing the current user;
      *         or {@code null} if no user is logged in.
      */
-    public User getCurrentUser() {
+    public String getCurrentUser() {
         return currentUser;
     }
 
@@ -92,7 +100,19 @@ public final class ApplicationState {
      * </p>
      */
     public void logout() {
+        final boolean oldLoggedIn = this.isLoggedIn;
         this.isLoggedIn = false;
         this.currentUser = null;
+        support.firePropertyChange("isLoggedIn", oldLoggedIn, false);
+    }
+
+    /**
+     * Returns the single instance of the ApplicationState.
+     * If the instance does not exist yet, it creates one.
+     *
+     * @param listener checker of the repainting view stuff.
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
     }
 }

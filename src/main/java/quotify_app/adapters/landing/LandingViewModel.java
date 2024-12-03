@@ -5,6 +5,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 import quotify_app.entities.regionEntities.Area;
+import quotify_app.entities.regionEntities.Property;
 
 /**
  * The ViewModel for the Landing Page. Encapsulates the state of the page and provides
@@ -139,16 +140,6 @@ public class LandingViewModel {
     }
 
     /**
-     * Updates the property address and notifies listeners.
-     * @param propertyAddress The updated property address.
-     */
-    public void setPropertyAddress(String propertyAddress) {
-        final String oldValue = state.getPropertyAddress();
-        state.setPropertyAddress(propertyAddress);
-        support.firePropertyChange("propertyAddress", oldValue, propertyAddress);
-    }
-
-    /**
      * Updates the error message and notifies listeners.
      * @param errorMessage The updated error message.
      */
@@ -166,5 +157,25 @@ public class LandingViewModel {
         final boolean oldValue = state.isPropertyFound();
         state.setPropertyFound(propertyFound);
         support.firePropertyChange("propertyFound", oldValue, propertyFound);
+    }
+
+    /**
+     * Updates the confirmed property status and notifies listeners.
+     * @param propertyConfirmed The confirmed property found status.
+     */
+    public void setPropertyConfirmed(boolean propertyConfirmed) {
+        final boolean oldValue = state.isPropertyConfirmed();
+        state.setPropertyConfirmed(propertyConfirmed);
+        support.firePropertyChange("propertyConfirmed", oldValue, propertyConfirmed);
+    }
+
+    /**
+     * Changes the view depending on if the user is logged in or not.
+     * @param loggedIn The login status of the current user.
+     */
+    public void setLoggedIn(boolean loggedIn) {
+        final boolean oldValue = state.isLoggedIn();
+        state.setLoggedIn(loggedIn);
+        support.firePropertyChange("isLoggedIn", oldValue, loggedIn);
     }
 }

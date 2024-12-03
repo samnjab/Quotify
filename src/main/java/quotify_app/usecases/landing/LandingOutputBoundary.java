@@ -1,5 +1,7 @@
 package quotify_app.usecases.landing;
 
+import quotify_app.entities.regionEntities.Property;
+
 /**
  * Output Boundary for presenting the result of the actions performed on the landing page.
  */
@@ -36,6 +38,12 @@ public interface LandingOutputBoundary {
     void preparePropertyFailView(String errorMessage);
 
     /**
+     * caches property as current property.
+     * @param property the current property.
+     */
+    void prepareNextPageNavigation(Property property);
+
+    /**
      * Prepares an error message view for a general error.
      * @param errorMessage The message to be presented to the user.
      */
@@ -50,4 +58,14 @@ public interface LandingOutputBoundary {
      * Interface for executing the switch to the login screen Use Case.
      */
     void goToLogin();
+
+    /**
+     * Interface for executing the switch to the User profile Use Case.
+     */
+    void presentGoToUserProfile();
+
+    /**
+     * Interface for executing the check on login status.
+     */
+    void updateLoginStatus();
 }

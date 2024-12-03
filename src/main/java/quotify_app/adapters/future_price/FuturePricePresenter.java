@@ -64,7 +64,7 @@ public class FuturePricePresenter implements FuturePriceOutputBoundary {
 
     @Override
     public void presentGoToLandingPage() {
-        viewManagerModel.setState("landing page");
+        viewManagerModel.setState("landing");
         viewManagerModel.firePropertyChanged();
     }
 

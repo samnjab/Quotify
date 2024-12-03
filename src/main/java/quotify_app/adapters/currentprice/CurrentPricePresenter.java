@@ -64,7 +64,7 @@ public class CurrentPricePresenter implements CurrentPriceOutputBoundary {
 
     @Override
     public void presentGoToLandingPage() {
-        viewManagerModel.setState("landing page");
+        viewManagerModel.setState("landing");
         viewManagerModel.firePropertyChanged();
     }
 
