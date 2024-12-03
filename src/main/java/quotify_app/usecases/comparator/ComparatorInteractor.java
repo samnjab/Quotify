@@ -1,9 +1,11 @@
 package quotify_app.usecases.comparator;
 
+import quotify_app.data_access.AreaStore;
 import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.entities.regionEntities.Property;
+import quotify_app.usecases.landing.AreaOutputData;
 
 import java.util.List;
 
@@ -50,8 +52,13 @@ public class ComparatorInteractor implements ComparatorInputBoundary {
 
     @Override
     public void getComparables() {
-        final List<Property> comparables = comparatorDataAccessObject.getSaleComparables(area);
-        // Update the presenter with the fetched properties
-        comparatorPresenter.updateProperties(comparables);
+        try {
+            final List<Property> comparables = comparatorDataAccessObject.getSaleComparables();
+            // Update the presenter with the fetched properties
+            comparatorPresenter.updateProperties(comparables);
+        }
+        catch (ClientRequestException | ApiRequestException err) {
+            comparatorPresenter.presentCompareFailed();
+        }
     }
 }

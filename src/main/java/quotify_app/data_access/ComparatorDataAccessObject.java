@@ -13,20 +13,22 @@ import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.data_access.exceptions.ComparatorClientException;
 import quotify_app.entities.regionEntities.*;
 import quotify_app.usecases.comparator.ComparatorDataAccessInterface;
-
 /**
  * The ComparatorDataAccessObject is responsible for providing data access operation related to property comparison.
  */
 public class ComparatorDataAccessObject implements ComparatorDataAccessInterface {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private Property propertyCache;
+    private PropertyDataAccessObject propertyDataAccessObject;
     private final int ten = 10;
     private final int five = 5;
     private final int three = 3;
     private final int hundred = 100;
     private final int twenty = 20;
 
+    public ComparatorDataAccessObject(PropertyDataAccessObject propertyDataAccessObject) {
+        this.propertyDataAccessObject = propertyDataAccessObject;
+    }
 
     // Helper Methods (Existing Ones from PropertyDataAccessObject)
     /**
@@ -62,14 +64,6 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
         return new Identifier(attomId, geoIdV4);
     }
 
-    public Property getCurrentProperty() {
-        return propertyCache;
-    }
-
-    public void setCurrentProperty(Property property) {
-        this.propertyCache = property;
-    }
-
     // main logic of getting the top 3 relevent properties.
     /**
      * Calculates a similarity score between the property in the cache and the given property.
@@ -78,7 +72,7 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
      * @return A similarity score as an integer.
      */
     private int calculateSimilarityScore(Property property) {
-        final Summary cachedSummary = propertyCache.getSummary();
+        final Summary cachedSummary = propertyDataAccessObject.getCurrentProperty().getSummary();
         final Summary summary = property.getSummary();
 
         return calculateBedsScore(cachedSummary, summary)
@@ -132,19 +126,22 @@ public class ComparatorDataAccessObject implements ComparatorDataAccessInterface
     /**
      * Fetches comparable properties and returns the top 3 most similar properties to the cached property.
      *
-     * @param zipCode The area to search properties for.
      * @return A list of the top 3 most similar Property objects.
      * @throws ApiRequestException If properties cannot be fetched.
      * @throws ClientRequestException If there is a client request error.
      */
     @Override
-    public List<Property> getSaleComparables(Area zipCode) throws ApiRequestException {
-        List<Property> comparedProperties = new ArrayList<>();
+    public List<Property> getSaleComparables() throws ApiRequestException {
+        final List<Property> comparedProperties = new ArrayList<>();
 
         try {
             // Fetch JSON response from API
             final ComparatorClient client = new ComparatorClient();
-            final String responseJson = client.fetchComparablesByPropertyId(propertyCache.getIdentifier().getAttomId());
+            final String responseJson = client.fetchComparablesByPropertyId(
+                    propertyDataAccessObject
+                            .getCurrentProperty()
+                            .getIdentifier()
+                            .getAttomId());
 
             // Parse the JSON response to extract comparables
             final JsonNode rootNode = MAPPER.readTree(responseJson);

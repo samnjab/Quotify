@@ -55,7 +55,18 @@ public class ComparatorPresenter implements ComparatorOutputBoundary {
      *
      * @param properties the list of properties to update in the state.
      */
+    @Override
     public void updateProperties(List<Property> properties) {
         comparatorViewModel.getState().setProperties(properties);
+        viewManagerModel.firePropertyChanged();
+    }
+
+    /**
+     * Updates the ComparatorState to reflect the failed comparables fetch.
+     */
+    @Override
+    public void presentCompareFailed() {
+        comparatorViewModel.getState().setCompareFailed(true);
+        viewManagerModel.firePropertyChanged();
     }
 }

@@ -29,5 +29,14 @@ public interface ComparatorOutputBoundary {
      */
     void goToUserProfile();
 
+    /**
+     * Interface for updating the view with the fetched comparable properties.
+     * @param comparables A list of the comparable properties to be presented.
+     */
     void updateProperties(List<Property> comparables);
+
+    /**
+     * Interface for when the comparaables could not be retrieved for a given property.
+     */
+    void presentCompareFailed();
 }

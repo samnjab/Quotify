@@ -14,12 +14,7 @@ import quotify_app.app.factories.FuturePriceFactory;
 import quotify_app.app.factories.LandingFactory;
 import quotify_app.app.factories.LoginFactory;
 import quotify_app.app.factories.SignupFactory;
-import quotify_app.data_access.AreaDataAccessObject;
-import quotify_app.data_access.AreaStore;
-import quotify_app.data_access.DBUserDataAccessObject;
-import quotify_app.data_access.PredictionClient;
-import quotify_app.data_access.PredictionDataAccessObject;
-import quotify_app.data_access.PropertyDataAccessObject;
+import quotify_app.data_access.*;
 import quotify_app.entities.CommonUserFactory;
 import quotify_app.ui.ViewManager;
 
@@ -43,14 +38,17 @@ public class AppBuilder {
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
         final PredictionClient predictionClient = new PredictionClient();
+        final AreaStore areaStore = new AreaStore();
         final PredictionDataAccessObject predictionDataAccess = new PredictionDataAccessObject(predictionClient);
         final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(new CommonUserFactory());
-        final AreaDataAccessObject areaDataAccessObject = new AreaDataAccessObject(new AreaStore());
+        final AreaDataAccessObject areaDataAccessObject = new AreaDataAccessObject(areaStore);
         final PropertyDataAccessObject propertyDataAccessObject = new PropertyDataAccessObject();
+        final ComparatorDataAccessObject comparatorDataAccessObject = new ComparatorDataAccessObject(
+                propertyDataAccessObject);
         loginFactory.setUpController(signupFactory, viewManagerModel, userDataAccessObject);
         signupFactory.setUpController(loginFactory, viewManagerModel, userDataAccessObject);
         functionFactory.setUpController(viewManagerModel);
-        comparatorFactory.setUpController(viewManagerModel);
+        comparatorFactory.setUpController(viewManagerModel, comparatorDataAccessObject);
         currentPriceFactory.setUpController(viewManagerModel, predictionDataAccess, propertyDataAccessObject);
         futurePriceFactory.setUpController(viewManagerModel, propertyDataAccessObject, predictionDataAccess);
         landingFactory.setUpController(
@@ -208,7 +206,7 @@ public class AppBuilder {
         application.add(cardPanel);
 
         // Setting the initial view to LandingView
-        viewManagerModel.setState("function");
+        viewManagerModel.setState("landing");
         viewManagerModel.firePropertyChanged();
         return application;
     }

@@ -1,5 +1,7 @@
 package quotify_app.usecases.comparator;
 
+import quotify_app.data_access.exceptions.ClientRequestException;
+import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.entities.regionEntities.Area;
 
 /**
@@ -27,5 +29,8 @@ public interface ComparatorInputBoundary {
      */
     void goToUserProfile();
 
+    /**
+     * Interface for the getComparables controller function.
+     */
     void getComparables();
 }

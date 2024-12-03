@@ -12,24 +12,13 @@ import java.util.List;
  * Compare Properties Use Cases.
  */
 public interface ComparatorDataAccessInterface {
-    /**
-     * Returns the cached property.
-     * @return Property current property.
-     */
-    Property getCurrentProperty();
-
-    /**
-     * Caches the passed property for access throughout a session.
-     * @param property the selected property.
-     */
-    void setCurrentProperty(Property property);
 
     /**
      * Fetches and returns a list of properties by zipcode.
-     * @param zipCode the Area object containing zipCode of the properties to be fetched.
      * @return properties a list of Properties at zipCode.
      * @throws ApiRequestException if the Properties at zipCode cannot be fetched.
+     * @throws ClientRequestException if the ClientRequest is not properly formatted.
      */
-    List<Property> getSaleComparables(Area zipCode) throws ApiRequestException, ClientRequestException;
+    List<Property> getSaleComparables() throws ApiRequestException, ClientRequestException;
 
 }

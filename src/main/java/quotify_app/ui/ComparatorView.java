@@ -36,10 +36,16 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
     private final JButton generatePriceButton = new JButton(ComparatorViewModel.ESTIMATE_PRICE_BUTTON_LABEL);
     private final JButton newHouseButton = new JButton(ComparatorViewModel.NEW_HOUSE_BUTTON_LABEL);
     private final JButton userProfileButton = new JButton(ComparatorViewModel.USER_PROFILE_BUTTON_LABEL);
-    private final JButton comapreButton = new JButton(ComparatorViewModel.USER_PROFILE_BUTTON_LABEL);
+    private final JButton comapreButton = new JButton(ComparatorViewModel.COMPARE_BUTTON_LABEL);
 
     // Top panel to store title label and user profile button
     private final JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+    // Error panel to display error message when comparables can't be retrieved
+    private JPanel errorPanel;
+
+    // Wrapper panel for the error and bottom panels
+    private final JPanel bottomWrapperPanel = new JPanel(new BorderLayout());
 
     /**
      * Initializes the ComparatorView with the given ViewModel.
@@ -100,10 +106,50 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
         bottomPanel.add(generatePriceButton);
         bottomPanel.add(newHouseButton);
         bottomPanel.add(comapreButton);
-        add(bottomPanel, BorderLayout.SOUTH);
+
+        // Error panel initially hidden
+        errorPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        // Red BG for error panel
+        errorPanel.setBackground(java.awt.Color.RED);
+        final JLabel errorLabel = new JLabel("Error message placeholder");
+        errorLabel.setForeground(java.awt.Color.WHITE);
+        errorPanel.add(errorLabel);
+
+        // panel is initially hiden
+        errorPanel.setVisible(false);
+
+        // add(bottomPanel, BorderLayout.SOUTH);
+        // Wrap error and bottom panels
+        bottomWrapperPanel.add(errorPanel, BorderLayout.NORTH);
+        bottomWrapperPanel.add(bottomPanel, BorderLayout.SOUTH);
+        add(bottomWrapperPanel, BorderLayout.SOUTH);
 
         // Register action listeners
         addActionListeners();
+    }
+
+    /**
+     * Shows the error panel with the given message.
+     *
+     * @param errorMessage The error message to display.
+     */
+    private void showErrorPanel(String errorMessage) {
+        // Update error message
+        ((JLabel) errorPanel.getComponent(0)).setText(errorMessage);
+        // Show error panel
+        errorPanel.setVisible(true);
+        revalidate();
+        repaint();
+    }
+
+    /**
+     * Hides the error panel.
+     */
+    private void hideErrorPanel() {
+        // Hide error panel
+        errorPanel.setVisible(false);
+        revalidate();
+        repaint();
     }
 
     /**
@@ -141,10 +187,10 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (comparatorController != null) {
-                    comparatorController.
+                    comparatorController.getComparables();
                 }
             }
-        })
+        });
     }
 
     /**
@@ -172,6 +218,14 @@ public class ComparatorView extends JPanel implements PropertyChangeListener {
         }
         topPanel.revalidate();
         topPanel.repaint();
+
+        // Show or hide the error panel based on isCompareFailed
+        if (state.isCompareFailed()) {
+            showErrorPanel("Comparison failed: Please try again.");
+        }
+        else {
+            hideErrorPanel();
+        }
     }
 
 }

@@ -58,7 +58,9 @@ public class ComparatorDataAccessObjectTest {
     void setUp() {
         // Initialize the real PredictionClient and DataAccessObject
         final ComparatorClient client = new ComparatorClient();
-        comparatorDataAccessObject = new ComparatorDataAccessObject();
+        final PropertyDataAccessObject propertyDataAccessObject = new PropertyDataAccessObject();
+        propertyDataAccessObject.setCurrentProperty(property);
+        comparatorDataAccessObject = new ComparatorDataAccessObject(propertyDataAccessObject);
 
     }
 
@@ -67,12 +69,11 @@ public class ComparatorDataAccessObjectTest {
     void testGetSaleComparablesPass() throws ApiRequestException, ClientRequestException {
         // Set up property data for testing
 
-        comparatorDataAccessObject.setCurrentProperty(property);
         Area zipcode = new Area("94103");
 
 
         // Call getSaleComparables and verify the response
-        comparedProperties = comparatorDataAccessObject.getSaleComparables(zipcode);
+        comparedProperties = comparatorDataAccessObject.getSaleComparables();
 
         // Verify that the result contains three properties
         assertEquals(3, comparedProperties.size(), "The result should contain exactly three properties.");

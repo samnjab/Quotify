@@ -13,6 +13,7 @@ import java.util.List;
 public class ComparatorState {
     private boolean isLoggedIn;
     private List<Property> properties;
+    private boolean compareFailed;
 
     /**
      * Initializes the ComparatorState with default values.
@@ -21,11 +22,20 @@ public class ComparatorState {
         // Default to not logged in
         this.isLoggedIn = false;
         this.properties = new ArrayList<>();
+        this.compareFailed = false;
     }
 
     // Getter and setter for isLoggedIn
     public boolean isLoggedIn() {
         return isLoggedIn;
+    }
+
+    public boolean isCompareFailed() {
+        return compareFailed;
+    }
+
+    public void setCompareFailed(boolean compareFailed) {
+        this.compareFailed = compareFailed;
     }
 
     public void setLoggedIn(boolean loggedIn) {

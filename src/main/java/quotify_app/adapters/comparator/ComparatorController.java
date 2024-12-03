@@ -1,5 +1,6 @@
 package quotify_app.adapters.comparator;
 
+import quotify_app.data_access.exceptions.ClientRequestException;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.usecases.comparator.ComparatorInputBoundary;
 
@@ -43,5 +44,8 @@ public class ComparatorController {
         comparatorInteractor.goToUserProfile();
     }
 
-    public void getComparables() { comparatorInteractor.getComparables(); }
+    /**
+     * Gets the list of comparables for the Comparator View.
+     */
+    public void getComparables()  { comparatorInteractor.getComparables(); }
 }

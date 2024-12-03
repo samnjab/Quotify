@@ -30,7 +30,7 @@ public class ComparatorClient {
     public String fetchComparablesByPropertyId(String propId) throws ComparatorClientException {
         try {
             // Construct the complete API URL with query parameters
-            String url = BASE_URL + propId
+            final String url = BASE_URL + propId
                     + "?searchType=ZipCode"
                     + "&minComps=1"
                     + "&maxComps=10"
@@ -48,7 +48,7 @@ public class ComparatorClient {
             System.out.println("Request URL: " + url);
 
             // Create HTTP GET request
-            HttpRequest httpRequest = HttpRequest.newBuilder()
+            final HttpRequest httpRequest = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("Content-Type", "application/json")
                     .header("apikey", API_KEY) // Add API key
@@ -56,8 +56,9 @@ public class ComparatorClient {
                     .build();
 
             // Send HTTP request and get the response
-            HttpResponse<String> response = client.send(httpRequest);
+            final HttpResponse<String> response = client.send(httpRequest);
 
+            System.out.println(response.statusCode());
             // Check HTTP status code and handle errors
             if (response.statusCode() != okCode) {
                 throw new ComparatorClientException(
