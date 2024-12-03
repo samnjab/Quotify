@@ -1,11 +1,9 @@
 package quotify_app.usecases.comparator;
 
-import quotify_app.data_access.AreaStore;
 import quotify_app.data_access.exceptions.ApiRequestException;
 import quotify_app.data_access.exceptions.ClientRequestException;
-import quotify_app.entities.regionEntities.Area;
 import quotify_app.entities.regionEntities.Property;
-import quotify_app.usecases.landing.AreaOutputData;
+
 
 import java.util.List;
 
