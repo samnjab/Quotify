@@ -73,10 +73,6 @@ public class AddressInputData {
         final String streetNumber = parts[0];
         final String streetName = parts[1];
 
-        // Validate that the first part is a valid number
-        if (!streetNumber.matches("\\d+")) {
-            throw new IllegalArgumentException("Invalid address format. Street number should be numeric.");
-        }
         return new String[]{streetNumber, streetName};
     }
 

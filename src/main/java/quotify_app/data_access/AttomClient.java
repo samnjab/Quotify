@@ -6,6 +6,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import quotify_app.data_access.exceptions.ApiRequestException;
@@ -24,6 +25,8 @@ public class AttomClient {
     private static final HttpClient CLIENT = HttpClient.newHttpClient();
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    // parser
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     // helper methods:
 
     /**
@@ -35,14 +38,14 @@ public class AttomClient {
      */
     private static JsonNode sendApiRequest(String url) throws ApiRequestException, ClientRequestException {
         try {
-            HttpRequest request = HttpRequest.newBuilder()
+            final HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("Accept", "application/json")
                     .header("apikey", API_KEY)
                     .GET()
                     .build();
 
-            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            final HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != 200) {
                 throw new ApiRequestException("API request failed with HTTP status: " + response.statusCode());
@@ -61,11 +64,21 @@ public class AttomClient {
      * @param path Path to the desired array node.
      * @return The array node as a JsonNode.
      * @throws ApiRequestException if the node is not a valid array.
+     * @throws ClientRequestException if any Json parsing error occurs.
      */
-    private static JsonNode parseResponseNode(JsonNode rootNode, String... path) throws ApiRequestException {
+    private static JsonNode parseResponseNode(JsonNode rootNode, String... path)
+            throws ApiRequestException, ClientRequestException {
         JsonNode node = rootNode;
         for (String key : path) {
             node = node.path(key);
+        }
+        if (node.isTextual()) {
+            try {
+                node = objectMapper.readTree(node.asText());
+            }
+            catch (JsonProcessingException e) {
+                throw new ClientRequestException("Failed to parse JSON string to array: " + node.asText(), e);
+            }
         }
         if (!node.isArray()) {
             throw new ApiRequestException("Response does not contain a valid array at " + String.join(".", path));
@@ -115,8 +128,8 @@ public class AttomClient {
      */
     public static JsonNode fetchSnapshot(String zipCode, String minSize, String maxSize)
             throws ApiRequestException, ClientRequestException {
-        String url = BASE_URL + "snapshot?postalcode=" + zipCode + "&minUniversalSize=" + minSize + "&maxUniversalSize=" + maxSize;
-        JsonNode rootNode = sendApiRequest(url);
+        final String url = BASE_URL + "snapshot?postalcode=" + zipCode + "&minUniversalSize=" + minSize + "&maxUniversalSize=" + maxSize;
+        final JsonNode rootNode = sendApiRequest(url);
         return parseResponseNode(rootNode, "property");
     }
 
@@ -133,7 +146,7 @@ public class AttomClient {
             throws ApiRequestException, ClientRequestException {
         final String url = AREA_BASE_URL + "geoid/lookup/?geoIdV4=" + geoIdV4 + "&GeoType=" + type;
         final JsonNode rootNode = sendApiRequest(url);
-        return parseResponseNode(rootNode, "result", "item");
+        return parseResponseNode(rootNode, "response", "result", "package", "item");
     }
 
     /**
@@ -147,7 +160,7 @@ public class AttomClient {
             throws ApiRequestException, ClientRequestException {
         final String url = AREA_BASE_URL + "state/lookup";
         final JsonNode rootNode = sendApiRequest(url);
-        return parseResponseNode(rootNode, "result", "item");
+        return parseResponseNode(rootNode, "response", "result", "package", "item");
     }
 
     /**
@@ -179,8 +192,8 @@ public class AttomClient {
                 .append("&sqFeetRange=").append(sqFeetRange)
                 .append("&yearBuiltRange=").append(yearBuiltRange);
 
-        String url = urlBuilder.toString();
-        JsonNode rootNode = sendApiRequest(url);
+        final String url = urlBuilder.toString();
+        final JsonNode rootNode = sendApiRequest(url);
         return parseResponseNode(rootNode, "RESPONSE_DATA", "PROPERTY");
     }
 }

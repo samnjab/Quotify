@@ -53,7 +53,13 @@ public class AppBuilder {
         comparatorFactory.setUpController(viewManagerModel);
         currentPriceFactory.setUpController(viewManagerModel);
         futurePriceFactory.setUpController(viewManagerModel);
-        landingFactory.setUpController(viewManagerModel, areaDataAccessObject, propertyDataAccessObject);
+        landingFactory.setUpController(
+                viewManagerModel,
+                areaDataAccessObject,
+                propertyDataAccessObject,
+                signupFactory.getSignupViewModel(),
+                loginFactory.getLoginViewModel(),
+                functionFactory.getFunctionViewModel());
     }
 
     /**
@@ -158,7 +164,6 @@ public class AppBuilder {
         comparatorFactory.getComparatorView().setComparatorController(comparatorFactory.getComparatorController());
         return this;
     }
-
 
     /**
      * Adds the CurrentPrice Use Case to the application.

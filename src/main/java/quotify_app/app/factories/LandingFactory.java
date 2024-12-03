@@ -1,9 +1,12 @@
 package quotify_app.app.factories;
 
 import quotify_app.adapters.ViewManagerModel;
+import quotify_app.adapters.function.FunctionViewModel;
 import quotify_app.adapters.landing.LandingController;
 import quotify_app.adapters.landing.LandingPresenter;
 import quotify_app.adapters.landing.LandingViewModel;
+import quotify_app.adapters.login.LoginViewModel;
+import quotify_app.adapters.signup.SignupViewModel;
 import quotify_app.data_access.AreaDataAccessObject;
 import quotify_app.data_access.PropertyDataAccessObject;
 import quotify_app.ui.LandingView;
@@ -35,16 +38,24 @@ public class LandingFactory {
      * @param viewManagerModel The ViewManagerModel from the AppBuilder.
      * @param areaDataAccessObject the data access object for the area data.
      * @param propertyDataAccessObject the data access object for the property data.
+     * @param signupViewModel the signup viewModel.
+     * @param loginViewModel the login viewModel.
+     * @param functionViewModel the function viewModel.
      */
     public void setUpController(ViewManagerModel viewManagerModel,
                                 AreaDataAccessObject areaDataAccessObject,
-                                PropertyDataAccessObject propertyDataAccessObject) {
-        System.out.println("Setting up controlling");
+                                PropertyDataAccessObject propertyDataAccessObject,
+                                SignupViewModel signupViewModel,
+                                LoginViewModel loginViewModel,
+                                FunctionViewModel functionViewModel) {
 
         // Setup Presenter and Interactor for Landing with necessary dependencies
         final LandingOutputBoundary landingPresenter = new LandingPresenter(
                 landingViewModel,
-                viewManagerModel
+                viewManagerModel,
+                signupViewModel,
+                loginViewModel,
+                functionViewModel
         );
 
         final LandingInputBoundary landingInteractor = new LandingInteractor(

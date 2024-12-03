@@ -18,6 +18,7 @@ public class LandingInteractor implements LandingInputBoundary {
     private final AreaDataAccessInterface areaDataAccessObject;
     private final PropertyDataAccessInterface propertyDataAccessObject;
     private final LandingOutputBoundary landingPresenter;
+    private Property currentProperty;
     private final Map<String, String> areaTypeHierarchy = new HashMap<>();
 
     public LandingInteractor(AreaDataAccessInterface areaDataAccessInterface,
@@ -26,16 +27,17 @@ public class LandingInteractor implements LandingInputBoundary {
         this.areaDataAccessObject = areaDataAccessInterface;
         this.propertyDataAccessObject = propertyDataAccessInterface;
         this.landingPresenter = landingOutputBoundary;
+        this.currentProperty = new Property();
         this.areaTypeHierarchy.put("CN", "ST");
         this.areaTypeHierarchy.put("ST", "CS");
         this.areaTypeHierarchy.put("CS", "ZI");
     }
 
+    // Override methods:
     @Override
     public void fetchCountries() {
         try {
             final List<Area> countries = areaDataAccessObject.getCountries();
-            System.out.println("in landing interactor, fetched countries are " + countries);
             areaDataAccessObject.cacheAreas(countries, "CN");
             final AreaListOutputData outputData = areaDataAccessObject.getCache().getSubAreaList("CN");
             landingPresenter.prepareAreaListSuccessView(outputData);
@@ -95,9 +97,15 @@ public class LandingInteractor implements LandingInputBoundary {
     @Override
     public void selectAddress(AddressInputData addressInputData) {
         try {
+            // constructing address from addressInputData:
             final Address address = addressInputData.constructAddress();
+            // fetching property at address from data access:
             final Property property = propertyDataAccessObject.getPropertyAtAddress(address);
-            propertyDataAccessObject.setCurrentProperty(property);
+            // set currentProperty for caching later:
+            this.currentProperty = property;
+            // producing propertyOutputData:
+            final PropertyOutputData propertyOutputData = new PropertyOutputData(address, property);
+            landingPresenter.preparePropertySuccessView(propertyOutputData);
         }
         catch (ClientRequestException exception) {
             landingPresenter.prepareErrorView("A network error occurred while fetching address. Please try again.");
@@ -106,6 +114,13 @@ public class LandingInteractor implements LandingInputBoundary {
             landingPresenter.prepareErrorView("Failed to fetch address due to an API error: "
                     + exception.getMessage());
         }
+    }
+
+    @Override
+    public void selectPropertyInCache() {
+        // caching property in data access as current property:
+        propertyDataAccessObject.setCurrentProperty(currentProperty);
+        landingPresenter.prepareNextPageNavigation();
     }
 
     @Override

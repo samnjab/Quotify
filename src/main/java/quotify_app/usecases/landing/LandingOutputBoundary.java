@@ -36,6 +36,11 @@ public interface LandingOutputBoundary {
     void preparePropertyFailView(String errorMessage);
 
     /**
+     * Caches property as current property.
+     */
+    void prepareNextPageNavigation();
+
+    /**
      * Prepares an error message view for a general error.
      * @param errorMessage The message to be presented to the user.
      */

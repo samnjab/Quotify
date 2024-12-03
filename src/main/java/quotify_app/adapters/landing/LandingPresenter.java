@@ -3,7 +3,9 @@ package quotify_app.adapters.landing;
 import java.util.List;
 
 import quotify_app.adapters.ViewManagerModel;
-import quotify_app.entities.regionEntities.Address;
+import quotify_app.adapters.function.FunctionViewModel;
+import quotify_app.adapters.login.LoginViewModel;
+import quotify_app.adapters.signup.SignupViewModel;
 import quotify_app.entities.regionEntities.Area;
 import quotify_app.usecases.landing.AreaListOutputData;
 import quotify_app.usecases.landing.AreaOutputData;
@@ -17,6 +19,9 @@ import quotify_app.usecases.landing.PropertyOutputData;
 public class LandingPresenter implements LandingOutputBoundary {
 
     private final LandingViewModel landingViewModel;
+    private final SignupViewModel signupViewModel;
+    private final LoginViewModel loginViewModel;
+    private final FunctionViewModel functionViewModel;
     private final ViewManagerModel viewManagerModel;
 
     /**
@@ -24,10 +29,20 @@ public class LandingPresenter implements LandingOutputBoundary {
      *
      * @param landingViewModel  The view model for managing Landing Page state.
      * @param viewManagerModel  The view model for managing view transitions.
+     * @param signupViewModel the view model for sign up.
+     * @param loginViewModel the view model for login.
+     * @param functionViewModel the view model for function page.
      */
-    public LandingPresenter(LandingViewModel landingViewModel, ViewManagerModel viewManagerModel) {
+    public LandingPresenter(LandingViewModel landingViewModel,
+                            ViewManagerModel viewManagerModel,
+                            SignupViewModel signupViewModel,
+                            LoginViewModel loginViewModel,
+                            FunctionViewModel functionViewModel) {
         this.landingViewModel = landingViewModel;
         this.viewManagerModel = viewManagerModel;
+        this.signupViewModel = signupViewModel;
+        this.loginViewModel = loginViewModel;
+        this.functionViewModel = functionViewModel;
     }
 
     /**
@@ -36,7 +51,6 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void prepareAreaListSuccessView(AreaListOutputData areaListOutputData) {
-        System.out.println("presenter: preparing area list success view: " + areaListOutputData);
         if (!areaListOutputData.isSelectionFailed()) {
             final List<Area> areas = areaListOutputData.getAreas();
             final String type = areaListOutputData.getAreaType();
@@ -70,7 +84,6 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void prepareAreaListFailView(String errorMessage) {
-        System.out.println("presenter: preparing area list fail view: ");
         landingViewModel.setErrorMessage(errorMessage);
     }
 
@@ -80,7 +93,6 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void prepareAreaSuccessView(AreaOutputData areaOutputData) {
-        System.out.println("presenter: preparing area success view: " + areaOutputData);
         if (!areaOutputData.isSelectionFailed()) {
             final Area selectedArea = areaOutputData.getArea();
             final String type = selectedArea.getType();
@@ -120,14 +132,9 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void preparePropertySuccessView(PropertyOutputData propertyOutputData) {
-        System.out.println("presenter: preparing property success view: " + propertyOutputData);
-        final Address propertyAddress = propertyOutputData.getPropertyAddress();
-        landingViewModel.setPropertyAddress(propertyAddress);
+        landingViewModel.getState().setPropertyAddress(propertyOutputData.getPropertyAddress());
         landingViewModel.getState().setPropertyDetails(propertyOutputData.getPropertyDetails());
         landingViewModel.setPropertyFound(true);
-
-        // Transition to the property confirmation view
-        viewManagerModel.setState("propertyConfirmation");
     }
 
     /**
@@ -136,7 +143,6 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void preparePropertyFailView(String errorMessage) {
-        System.out.println("presenter: preparing property fail view: ");
         landingViewModel.setErrorMessage(errorMessage);
         landingViewModel.setPropertyFound(false);
     }
@@ -147,8 +153,15 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void prepareErrorView(String errorMessage) {
-        System.out.println("presenter: preparing error view: ");
         landingViewModel.setErrorMessage(errorMessage);
+    }
+
+    @Override
+    public void prepareNextPageNavigation() {
+        // Transition to function view
+        landingViewModel.getState().setPropertyConfirmed(true);
+        viewManagerModel.setState(functionViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 
     /**
@@ -156,8 +169,9 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void goToSignup() {
-        System.out.println("presenter: switching to signup: ");
-        viewManagerModel.setState("signup");
+        // Transition to signup view
+        viewManagerModel.setState(signupViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 
     /**
@@ -165,7 +179,8 @@ public class LandingPresenter implements LandingOutputBoundary {
      */
     @Override
     public void goToLogin() {
-        System.out.println("presenter: switching to login: ");
-        viewManagerModel.setState("login");
+        // Transition to login view
+        viewManagerModel.setState(loginViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 }
