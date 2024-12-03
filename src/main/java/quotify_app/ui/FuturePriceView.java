@@ -23,8 +23,6 @@ import quotify_app.usecases.future_pricing.FuturePropertyDataAccessInterface;
  */
 public class FuturePriceView extends JPanel implements PropertyChangeListener {
     private final String viewName;
-    private FuturePropertyDataAccessInterface futurePropertyDataAccessInterface;
-    private FuturePredictionDataAccessInterface futurePredictionDataAccessInterface;
     private FuturePriceController futurePriceController;
     private final FuturePriceViewModel futurePriceViewModel;
 

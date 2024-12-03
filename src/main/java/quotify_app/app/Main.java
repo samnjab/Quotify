@@ -19,6 +19,7 @@ public class Main {
                 .addLoginView()
                 .addFunctionView()
                 .addComparatorView()
+                .addUserProfileView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addFunctionUseCase()
@@ -31,6 +32,7 @@ public class Main {
                 .addCurrentPriceUseCase()
                 .addFuturePriceUseCase()
                 .addLandingUseCase()
+                .addUserProfileUseCase()
                 .build();
 
         application.pack();

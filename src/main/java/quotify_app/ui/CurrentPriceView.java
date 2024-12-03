@@ -75,10 +75,6 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
         final JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
-        // Show Current Price button
-        showCurrentPriceButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.add(showCurrentPriceButton);
-
         // Current Price Label
         currentPriceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(currentPriceLabel);
@@ -87,14 +83,15 @@ public class CurrentPriceView extends JPanel implements PropertyChangeListener {
         futurePricingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(futurePricingLabel);
 
-        futureButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.add(futureButton);
-
         add(centerPanel, BorderLayout.CENTER);
 
+        showCurrentPriceButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         // Bottom panel with Compare Property button
-        final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         bottomPanel.add(comparePropertyButton);
+        bottomPanel.add(showCurrentPriceButton);
+        bottomPanel.add(futureButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
         // Register action listeners
